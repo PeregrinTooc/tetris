@@ -4,8 +4,8 @@
   "description": "A Tetris-like game that runs in the browser.",
   "main": "src/main.js",
   "scripts": {
-    "start": "live-server public",
-    "build": "echo 'Build step can be added here.'"
+    "start": "vite",
+    "build": "vite build"
   },
   "keywords": [
     "tetris",
@@ -15,8 +15,7 @@
   ],
   "author": "Your Name",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
-    "live-server": "^1.2.1"
+    "vite": "^6.3.5"
   }
 }
