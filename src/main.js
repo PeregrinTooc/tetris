@@ -25,6 +25,11 @@ let player = {
     matrix: null,
 };
 
+const nextCanvas = document.getElementById('next-piece');
+const nextContext = nextCanvas.getContext('2d');
+
+let nextMatrix = null;
+
 function draw() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBoard();
@@ -48,6 +53,19 @@ function drawMatrix(matrix, offset) {
             if (value) {
                 context.fillStyle = colors[value];
                 context.fillRect((offset.x + x) * 24, (offset.y + y) * 24, 24, 24);
+            }
+        });
+    });
+}
+
+function drawNextPiece() {
+    nextContext.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+    if (!nextMatrix) return;
+    nextMatrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value) {
+                nextContext.fillStyle = colors[value];
+                nextContext.fillRect(x * 24, y * 24, 24, 24);
             }
         });
     });
@@ -82,8 +100,21 @@ function merge() {
     // Merge player piece into the board
 }
 
+function createPiece() {
+    // Example: T-shaped piece
+    return [
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 0, 0]
+    ];
+}
+
 function resetPlayer() {
-    // Reset player position and generate new piece
+    player.matrix = nextMatrix || createPiece();
+    player.position.y = 0;
+    player.position.x = (board[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
+    nextMatrix = createPiece();
+    drawNextPiece();
 }
 
 function resetGame() {
