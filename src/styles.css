@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000;
+}
+
+#game-board {
+    width: 240px;
+    height: 400px;
+    border: 2px solid #fff;
+    background-color: #111;
+    position: relative;
+    overflow: hidden;
+}
+
+.tetromino {
+    position: absolute;
+    background-color: #f00;
+}
+
+.line-clear {
+    background-color: #0f0;
+}

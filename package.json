@@ -1,0 +1,22 @@
+{
+  "name": "tetris-game",
+  "version": "1.0.0",
+  "description": "A Tetris-like game that runs in the browser.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "live-server public",
+    "build": "echo 'Build step can be added here.'"
+  },
+  "keywords": [
+    "tetris",
+    "game",
+    "javascript",
+    "browser"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}
