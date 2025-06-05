@@ -7,29 +7,19 @@ window.setTetrominoDropTime = function (ms) {
     tetrominoDropTime = ms;
 };
 
-function animateTetrominoFall(tetromino, boardHeight, step, dropTime) {
-    let top = 0;
-    function moveDown() {
-        top += step;
-        tetromino.style.top = top + "px";
-        if (top + step < boardHeight) {
-            setTimeout(moveDown, dropTime);
-        }
-    }
-    setTimeout(moveDown, dropTime);
-}
+
 
 document.getElementById("start-button").addEventListener("click", () => {
-    const tetromino = new Tetromino(96, 0, 24, document);
+    const tetromino = new Tetromino(5, document, 11, 20);
     document.getElementById("game-board").appendChild(tetromino.element);
-    animateTetrominoFall(tetromino.element, 400, 24, tetrominoDropTime);
+    tetromino.startFalling(tetrominoDropTime);
 
     document.onkeydown = function (e) {
         if (e.key === "ArrowLeft") {
-            tetromino.move("left", 24);
+            tetromino.move("left");
         }
         if (e.key === "ArrowRight") {
-            tetromino.move("right", 24);
+            tetromino.move("right");
         }
     };
 });

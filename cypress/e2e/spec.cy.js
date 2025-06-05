@@ -2,7 +2,7 @@ describe('Tetris Game Acceptance Tests', () => {
   beforeEach(() => {
     cy.visit('/index.html');
     cy.window().then((win) => {
-      win.setTetrominoDropTime(10);
+      win.setTetrominoDropTime(100);
     });
   });
   it('should display the game board when the page loads', () => {
@@ -38,17 +38,102 @@ describe('Tetris Game Acceptance Tests', () => {
     });
   });
 
+  it('should allow the player to move the tetromino to the left', () => {
+    cy.get('#start-button').click();
+    cy.get('.tetromino').then(($el) => {
+      const initialRight = parseInt($el.css('right'), 10);
+      cy.get('body').type('{leftarrow}');
+      cy.get('.tetromino').should(($el2) => {
+        const newRight = parseInt($el2.css('right'), 10);
+        expect(newRight).to.be.greaterThan(initialRight);
+      });
+    });
+  });
 
-  it.skip('should make the tetromino stop when it reaches the bottom after the drop time has passed', () => {
+  it('should prevent the tetromino from crossing left borders', () => {
+    cy.get("#start-button").click();
+    moveTetrominoToLeftEdge();
+    cy.get("body").type("{leftarrow}");
+    cy.get(".tetromino").then(($el) => {
+      const leftPosition = parseInt($el.css("left"), 10);
+      expect(leftPosition).to.equal(0);
+    });
+
+    function moveTetrominoToLeftEdge() {
+      cy.get(".tetromino").then(($el) => {
+        const moveLeft = () => {
+          cy.get(".tetromino").then(($tetromino) => {
+            const left = parseInt($tetromino.css("left"), 10);
+            if (left > 0) {
+              cy.get("body").type("{leftarrow}");
+              moveLeft();
+            }
+          });
+        };
+        moveLeft();
+      });
+    }
+  });
+
+  it('should prevent the tetromino from crossing right borders', () => {
+    cy.get("#start-button").click();
+    moveTetrominoToLeftEdge();
+    cy.get("body").type("{rightarrow}");
+    cy.get(".tetromino").then(($el) => {
+      const rightPosition = parseInt($el.css("right"), 10);
+      expect(rightPosition).to.equal(0);
+    });
+
+    function moveTetrominoToLeftEdge() {
+      cy.get(".tetromino").then(($el) => {
+        const moveRight = () => {
+          cy.get(".tetromino").then(($tetromino) => {
+            const right = parseInt($tetromino.css("right"), 10);
+            if (right > 0) {
+              cy.get("body").type("{rightarrow}");
+              moveRight();
+            }
+          });
+        };
+        moveRight();
+      });
+    }
+  });
+  it('should make the tetromino immobile when it reaches the bottom after the drop time has passed', () => {
+    cy.window().then((win) => {
+      win.setTetrominoDropTime(10);
+    });
+    cy.get('#start-button').click();
+    cy.wait(500);
+    let rightPosition;
+    cy.get(".tetromino").then(($el) => {
+      rightPosition = parseInt($el.css("right"), 10);
+    });
+    cy.get("body").type("{rightarrow}");
+    cy.get(".tetromino").then(($el) => {
+      const newPosition = parseInt($el.css("right"), 10);
+      expect(newPosition).to.equal(rightPosition);
+    });
 
   });
 
-  it.skip('should make the tetromino stop when it collides with another tetromino after the drop time has passed', () => {
+  it('should make the tetromino stop when it collides with another tetromino after the drop time has passed', () => {
+    cy.window().then((win) => {
+      win.setTetrominoDropTime(10);
+    });
+    cy.get('#start-button').click();
+    cy.wait(500);
+    cy.get('#start-button').click(); // Spawn a second tetromino - remove once automatic spawning is implemented
+    cy.wait(500);
+    cy.get('[data-tetromino-id="1"]').then(($el) => {
+      const topPositionFirstTetromino = parseInt($el.css('top'), 10);
+      cy.get('[data-tetromino-id="2"]').then(($el2) => {
+        const newTopPosition = parseInt($el2.css('top'), 10);
+        expect(newTopPosition).to.be.greaterThan(topPositionFirstTetromino);
+      });
+    });
 
   });
-
-
-
 
   it.skip('should preview the next tetromino in the next piece frame', () => {
 
