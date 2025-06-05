@@ -26,16 +26,44 @@ describe('Tetris Game Acceptance Tests', () => {
     validateTetrominoDrop();
   });
 
-  it.skip('should allow the player to move and rotate the tetromino', () => {
-    // Acceptance Test 4
+  it('should allow the player to move the tetromino to the right', () => {
+    cy.get('#start-button').click();
+    cy.get('.tetromino').then(($el) => {
+      const initialLeft = parseInt($el.css('left'), 10);
+      cy.get('body').type('{rightarrow}');
+      cy.get('.tetromino').should(($el2) => {
+        const newLeft = parseInt($el2.css('left'), 10);
+        expect(newLeft).to.be.greaterThan(initialLeft);
+      });
+    });
   });
+
+
+  it.skip('should make the tetromino stop when it reaches the bottom after the drop time has passed', () => {
+
+  });
+
+  it.skip('should make the tetromino stop when it collides with another tetromino after the drop time has passed', () => {
+
+  });
+
+
+
 
   it.skip('should preview the next tetromino in the next piece frame', () => {
-    // Acceptance Test 5
+
   });
 
+  it.skip('should spawn the next tetromino when the current one stops moving', () => { });
+
+  it.skip('should allow the player to drop the tetromino immediately', () => { });
+
+  it.skip('should detect and clear complete lines', () => { });
+
+
+
   it.skip('should detect and display game over when the stack reaches the top', () => {
-    // Acceptance Test 6
+
   });
 });
 
