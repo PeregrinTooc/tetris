@@ -27,7 +27,8 @@ body {
 #next-board {
     width: 112px;
     text-align: center;
-    color: #fff; /* Make text in next board white */
+    color: #fff;
+    /* Make text in next board white */
 }
 
 .tetromino {
@@ -37,4 +38,10 @@ body {
 
 .line-clear {
     background-color: #0f0;
+}
+
+h1,
+h3 {
+    color: #fff;
+    /* Inverse of black background */
 }
