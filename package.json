@@ -6,7 +6,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "test": "cypress open"
+    "test": "cypress run"
   },
   "keywords": [
     "tetris",

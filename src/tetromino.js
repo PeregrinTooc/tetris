@@ -1,9 +1,9 @@
 export class Tetromino {
-    constructor(left, top, size) {
-        this.element = this.createElement(left, top, size);
+    constructor(left, top, size, document) {
+        this.element = this.createElement(left, top, size, document);
     }
 
-    createElement(left, top, size) {
+    createElement(left, top, size, document) {
         const tetromino = document.createElement("div");
         tetromino.className = "tetromino";
         tetromino.style.width = size + "px";
