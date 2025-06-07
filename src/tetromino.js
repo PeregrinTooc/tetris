@@ -19,7 +19,6 @@ export class Tetromino {
         tetromino.style.left = this.left * this.size + "px";
         tetromino.style.top = top * this.size + "px";
         tetromino.setAttribute("data-tetromino-id", Tetromino.nextId++);
-        tetromino.setAttribute(("tabindex", "0"));
         return tetromino;
     }
 
