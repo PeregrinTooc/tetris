@@ -4,6 +4,7 @@
   "description": "A Tetris-like game that runs in the browser.",
   "main": "src/main.js",
   "scripts": {
+    "start": "vite",
     "dev": "vite",
     "build": "vite build",
     "test:unit": "jest",
