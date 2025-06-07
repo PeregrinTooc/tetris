@@ -1,4 +1,4 @@
-import { Tetromino } from "./tetromino.js";
+import { PreviewBoard } from "./preview-board.js";
 import { Board } from "./board.js";
 
 let tetrominoDropTime = 750;
@@ -11,7 +11,12 @@ window.setTetrominoDropTime = function (ms) {
     tetrominoDropTime = ms;
 };
 
-
+document.getElementById("game-board").addEventListener("gameover", () => {
+    const gameOverElement = document.createElement("div");
+    gameOverElement.id = "game-over";
+    gameOverElement.className = "game-over";
+    document.getElementById("game-board").appendChild(gameOverElement);
+});
 
 document.getElementById("start-button").addEventListener("click", () => {
     if (gameRunning) {
@@ -23,7 +28,8 @@ document.getElementById("start-button").addEventListener("click", () => {
 
 function startGame() {
     gameRunning = true;
-    board = new Board(20, 11, document);
+    const previewBoard = new PreviewBoard(document.getElementById("next-board"));
+    board = new Board(20, 11, document.getElementById("game-board"), previewBoard);
     document.getElementById("start-button").textContent = "Reset Game";
     spawnNewTetromino();
     document.onkeydown = function (e) {
@@ -40,16 +46,21 @@ function startGame() {
 }
 
 function resetGame() {
-    document.getElementById("game-board").innerHTML = "";
+    const gameOverElement = document.getElementById("game-over");
+    if (gameOverElement) {
+        gameOverElement.remove();
+    }
+    if (board) {
+        board.reset();
+    }
     document.getElementById("start-button").textContent = "Start Game";
-    document.onkeydown = null; // Remove event listeners
+    document.onkeydown = null;
     gameRunning = false;
     tetromino = null;
 }
 
 function spawnNewTetromino() {
-    tetromino = new Tetromino(5, document, board);
-    document.getElementById("game-board").appendChild(tetromino.element);
+    tetromino = board.spawnTetromino();
     tetromino.startFalling(tetrominoDropTime);
     tetromino.element.addEventListener("locked", () => {
         spawnNewTetromino();

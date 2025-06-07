@@ -1,9 +1,13 @@
+import { Tetromino } from "./tetromino.js";
+
 export class Board {
-    constructor(height, width, document) {
+    constructor(height, width, element, previewBoard) {
         this.height = height;
         this.width = width;
-        this.element = document.getElementById("game-board");
+        this.element = element;
+        this.previewBoard = previewBoard;
         this.tetrominos = new Set();
+        this.nextTetromino = null;
     }
 
     _canMove(tetromino, direction) {
@@ -13,6 +17,7 @@ export class Board {
             }
             for (let other of this.tetrominos) {
                 if (other !== tetromino && other.left === tetromino.left && other.top === tetromino.top + 1) {
+                    this._raiseGameOverIfStackReachesTop(tetromino);
                     return false;
                 }
             }
@@ -26,9 +31,18 @@ export class Board {
         }
         return false;
     }
+    _raiseGameOverIfStackReachesTop(tetromino) {
+        if (tetromino.top === 0) {
+            const gameOverEvent = new Event("gameover");
+            this.element.dispatchEvent(gameOverEvent);
+        }
+    }
+
 
     addTetromino(tetromino) {
         this.tetrominos.add(tetromino);
+        this.element.appendChild(tetromino.element);
+
     }
 
     moveTetromino(tetromino, direction) {
@@ -46,5 +60,17 @@ export class Board {
         }
         tetromino.updatePosition();
         return true;
+    }
+
+    reset() {
+        this.tetrominos.clear();
+        this.element.innerHTML = "";
+    }
+
+    spawnTetromino() {
+        const tetromino = this.nextTetromino || new Tetromino(5, document, this);
+        //this.nextTetromino = new Tetromino(5, document, this);
+        //this.previewBoard.showNextTetromino(this.nextTetromino);
+        return tetromino;
     }
 }

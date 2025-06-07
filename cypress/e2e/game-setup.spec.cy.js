@@ -42,13 +42,34 @@ describe("Tetris Game Setup", () => {
         cy.get(".tetromino").should("not.exist");
     });
 
-    it.skip("should preview the next tetromino in the next piece frame", () => {
+    it("should preview the next tetromino in the next piece frame", () => {
+        cy.get("#start-button").click();
+        cy.get("#next-piece").should("be.visible");
+        cy.get(".tetromino").then(($tetromino) => {
+            const nextTetrominoId = parseInt($tetromino.attr("data-tetromino-id"), 10) + 1;
+            cy.get("#next-piece").find(`[data-tetromino-id="${nextTetrominoId}"]`).should("exist");
+        });
     });
 
 
     it.skip("should detect and clear complete lines", () => {
     });
 
-    it.skip("should detect and display game over when the stack reaches the top", () => {
+    it("should detect and display game over when the stack reaches the top", () => {
+        cy.get("#start-button").click();
+        cy.get(".tetromino").then(($tetromino) => {
+            const initialTop = parseInt($tetromino.css("top"), 10);
+            // Move the tetromino down until it reaches the top
+            for (let i = 0; i <= 20; i++) {
+                cy.get("body").type("{downarrow}");
+            }
+            cy.get(".tetromino").should(($el) => {
+                const newTop = parseInt($el.css("top"), 10);
+                expect(newTop).to.be.greaterThan(initialTop);
+            });
+            cy.get("#game-over").should("be.visible");
+            cy.get("#start-button").click();
+            cy.get("#game-over").should("not.exist");
+        });
     });
 });

@@ -2,11 +2,11 @@ export class Tetromino {
     static nextId = 1;
     constructor(left, document, board) {
         this.board = board;
-        this.board.addTetromino(this);
         this.left = left;
         this.top = 0;
         this.size = 24;
         this.element = this.createElement(document);
+        this.board.addTetromino(this);
     }
 
     createElement(document) {
