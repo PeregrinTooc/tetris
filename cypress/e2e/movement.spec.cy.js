@@ -6,6 +6,11 @@ describe("Tetris Game Movement", () => {
         });
     });
 
+    afterEach(() => {
+        cy.get("#start-button").click(); // Reset the game after each test  
+        cy.get(".tetromino").should("not.exist");
+    });
+
     it("should make the tetromino fall automatically", () => {
         cy.get("#start-button").click();
         cy.wait(10);
@@ -78,13 +83,13 @@ describe("Tetris Game Movement", () => {
             win.setTetrominoDropTime(10);
         });
         cy.get("#start-button").click();
-        cy.wait(500);
+        cy.wait(1000);
         let rightPosition;
-        cy.get(".tetromino").then(($el) => {
+        cy.get("[data-tetromino-id=\"1\"]").then(($el) => {
             rightPosition = parseInt($el.css("right"), 10);
         });
         cy.get("body").type("{rightarrow}");
-        cy.get(".tetromino").then(($el) => {
+        cy.get("[data-tetromino-id=\"1\"]").then(($el) => {
             const newPosition = parseInt($el.css("right"), 10);
             expect(newPosition).to.equal(rightPosition);
         });
@@ -95,14 +100,15 @@ describe("Tetris Game Movement", () => {
             win.setTetrominoDropTime(10);
         });
         cy.get("#start-button").click();
-        cy.wait(500);
-        cy.get("#start-button").click();
-        cy.wait(500);
         cy.get("[data-tetromino-id=\"1\"]").then(($el) => {
+            cy.get("body").type("{downarrow}");
+            cy.wait(20);
             const topPositionFirstTetromino = parseInt($el.css("top"), 10);
             cy.get("[data-tetromino-id=\"2\"]").then(($el2) => {
+                cy.get("body").type("{downarrow}");
+                cy.wait(20);
                 const newTopPosition = parseInt($el2.css("top"), 10);
-                expect(topPositionFirstTetromino).to.be.greaterThan(newTopPosition);
+                expect(newTopPosition).to.be.greaterThan(topPositionFirstTetromino);
             });
         });
     });

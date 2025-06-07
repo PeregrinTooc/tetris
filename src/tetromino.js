@@ -36,7 +36,12 @@ export class Tetromino {
     }
 
     lock() {
+        if (this.locked) return;
+        this.locked = true;
         this.move = function () { };
+        this.drop = function () { };
+        const event = new Event("locked");
+        this.element.dispatchEvent(event);
     }
 
     startFalling(dropTime) {
