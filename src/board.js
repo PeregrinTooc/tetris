@@ -8,7 +8,15 @@ export class Board {
 
     _canMove(tetromino, direction) {
         if (direction === "down") {
-            return tetromino.top < this.height;
+            if (tetromino.top >= this.height) {
+                return false;
+            }
+            for (let other of this.tetrominos) {
+                if (other !== tetromino && other.left === tetromino.left && other.top === tetromino.top + 1) {
+                    return false;
+                }
+            }
+            return true;
         }
         if (direction === "left") {
             return tetromino.left > 0;

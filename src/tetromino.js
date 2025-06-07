@@ -2,8 +2,7 @@ export class Tetromino {
     static nextId = 1;
     constructor(left, document, board) {
         this.board = board;
-        this.boardHeight = board.height;
-        this.boardWidth = board.width;
+        this.board.addTetromino(this);
         this.left = left;
         this.top = 0;
         this.size = 24;

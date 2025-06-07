@@ -117,7 +117,7 @@ describe('Tetris Game Acceptance Tests', () => {
 
   });
 
-  it('should make the tetromino stop when it collides with another tetromino after the drop time has passed', () => {
+  it('should make the tetromino stop when it sits on another tetromino after the drop time has passed', () => {
     cy.window().then((win) => {
       win.setTetrominoDropTime(10);
     });
@@ -129,7 +129,7 @@ describe('Tetris Game Acceptance Tests', () => {
       const topPositionFirstTetromino = parseInt($el.css('top'), 10);
       cy.get('[data-tetromino-id="2"]').then(($el2) => {
         const newTopPosition = parseInt($el2.css('top'), 10);
-        expect(newTopPosition).to.be.greaterThan(topPositionFirstTetromino);
+        expect(topPositionFirstTetromino).to.be.greaterThan(newTopPosition);
       });
     });
 
