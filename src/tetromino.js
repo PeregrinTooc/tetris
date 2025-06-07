@@ -19,7 +19,7 @@ export class Tetromino {
         tetromino.style.left = this.left * this.size + "px";
         tetromino.style.top = top * this.size + "px";
         tetromino.setAttribute("data-tetromino-id", Tetromino.nextId++);
-        console.log("Tetromino created with ID:", tetromino.getAttribute("data-tetromino-id"));
+        tetromino.setAttribute(("tabindex", "0"));
         return tetromino;
     }
 
