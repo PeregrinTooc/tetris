@@ -1,63 +1,72 @@
 # Tetris Game
 
-This is a simple Tetris-like game implemented in JavaScript that runs in the browser. The game can be hosted on a static webpage, such as GitHub Pages, and is designed to be easily run on localhost for development purposes.
+A browser-based Tetris implementation using JavaScript, developed with Test-Driven Development.
+
+## Features
+
+- Classic Tetris gameplay
+- Preview of next piece
+- Score tracking
+- Game over detection
+- Keyboard controls
 
 ## Project Structure
 
 ```
-tetris-game
-├── public
-│   └── index.html        # Main HTML document
-├── src
-│   ├── main.js          # Main JavaScript file
-│   ├── game.js          # Game logic
-│   ├── utils.js         # Utility functions
-│   └── styles.css       # Styles for the game
-├── package.json          # NPM configuration file
-└── README.md             # Project documentation
+tetris-game/
+├── src/                  # Source files
+│   ├── main.js          # Game initialization
+│   ├── board.js         # Game board logic
+│   ├── tetromino.js     # Tetromino behavior
+│   └── preview-board.js # Next piece preview
+├── cypress/             # Acceptance tests
+├── tests/              # Unit tests
+├── styles.css         # Game styling
+└── index.html         # Main HTML
 ```
 
-## Getting Started
+## Development
 
-To run the game locally, follow these steps:
-
-1. **Clone the repository:**
-   ```
+1. **Setup:**
+   ```bash
    git clone <repository-url>
    cd tetris-game
-   ```
-
-2. **Install dependencies:**
-   ```
    npm install
    ```
 
-3. **Run the game:**
+2. **Run locally:**
+   ```bash
+   npm run dev
    ```
-   npm start
-   ```
+   Access at `http://localhost:5173`
 
-   This will start a local server, and you can access the game in your browser at `http://localhost:3000`.
+3. **Run tests:**
+   ```bash
+   # Run all tests
+   npm test
 
-## Deploying to GitHub Pages
+   # Run only unit tests
+   npm run test:unit
 
-To deploy the game to GitHub Pages, follow these steps:
-
-1. **Build the project:**
-   ```
-   npm run build
-   ```
-
-2. **Push the `public` folder to the `gh-pages` branch:**
-   ```
-   git add public
-   git commit -m "Deploy to GitHub Pages"
-   git push origin gh-pages
+   # Run only acceptance tests
+   npm run test:e2e
    ```
 
-3. **Access your game:**
-   Your game will be available at `https://<username>.github.io/<repository-name>/`.
+## Deployment
+
+The game automatically deploys to GitHub Pages when pushing to main:
+
+1. All tests must pass
+2. Changes are merged to main
+3. GitHub Actions builds and deploys
+4. Access at `https://<username>.github.io/tetris-game/`
+
+## Controls
+
+- **←/→**: Move piece left/right
+- **↓**: Drop piece
+- **Space**: Start/Reset game
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License
