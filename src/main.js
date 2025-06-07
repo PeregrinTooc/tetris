@@ -1,6 +1,9 @@
 import { Tetromino } from "./tetromino.js";
+import { Board } from "./board.js";
 
 let tetrominoDropTime = 1000;
+
+const board = new Board(20, 11, document);
 
 // Allow tests or game logic to set the drop time
 window.setTetrominoDropTime = function (ms) {
@@ -10,7 +13,7 @@ window.setTetrominoDropTime = function (ms) {
 
 
 document.getElementById("start-button").addEventListener("click", () => {
-    const tetromino = new Tetromino(5, document, 11, 20);
+    const tetromino = new Tetromino(5, document, board);
     document.getElementById("game-board").appendChild(tetromino.element);
     tetromino.startFalling(tetrominoDropTime);
 

@@ -1,50 +1,49 @@
 export class Tetromino {
     static nextId = 1;
-    constructor(left, document, boardWidth, boardHeight) {
-        this.boardHeight = boardHeight;
-        this.boardWidth = boardWidth;
+    constructor(left, document, board) {
+        this.board = board;
+        this.boardHeight = board.height;
+        this.boardWidth = board.width;
         this.left = left;
+        this.top = 0;
         this.size = 24;
         this.element = this.createElement(document);
-
     }
 
     createElement(document) {
-        const top = 0;
         const tetromino = document.createElement("div");
         tetromino.className = "tetromino";
         tetromino.style.width = this.size + "px";
         tetromino.style.height = this.size + "px";
         tetromino.style.position = "absolute";
         tetromino.style.left = this.left * this.size + "px";
-        tetromino.style.top = top * this.size + "px";
+        tetromino.style.top = this.top * this.size + "px";
         tetromino.setAttribute("data-tetromino-id", Tetromino.nextId++);
         return tetromino;
     }
 
     move(direction) {
-        if (direction === "left") {
-            this.left = Math.max(0, this.left - 1);
-            this.element.style.left = (this.left * this.size) + "px";
-        }
-        if (direction === "right") {
-            this.left = Math.min(this.boardWidth - 1, this.left + 1);
-            this.element.style.left = (this.left * this.size) + "px";
-        }
+        this.board.moveTetromino(this, direction);
+    }
+
+    updatePosition() {
+        this.element.style.top = this.top * this.size + "px";
+        this.element.style.left = this.left * this.size + "px";
+    }
+
+    lock() {
+        this.move = function () { };
     }
 
     startFalling(dropTime) {
-        let top = 0;
-        const that = this;
-        function moveDown() {
-            top += that.size;
-            that.element.style.top = top + "px";
-            if (top + that.size <= that.boardHeight * that.size) {
-                setTimeout(moveDown, dropTime);
+        const moveDown = () => {
+            const canContinue = this.board.moveTetromino(this, "down");
+            if (canContinue) {
+                setTimeout(() => this.startFalling(dropTime), dropTime);
             } else {
-                that.move = function () { };
+                this.lock();
             }
-        }
+        };
         setTimeout(moveDown, dropTime);
     }
 }
