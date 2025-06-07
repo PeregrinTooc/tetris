@@ -25,6 +25,11 @@ export class Tetromino {
         this.board.moveTetromino(this, direction);
     }
 
+    drop() {
+        while (this.board.moveTetromino(this, "down")) { }
+        this.lock();
+    }
+
     updatePosition() {
         this.element.style.top = this.top * this.size + "px";
         this.element.style.left = this.left * this.size + "px";

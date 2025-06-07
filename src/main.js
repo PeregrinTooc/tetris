@@ -24,5 +24,8 @@ document.getElementById("start-button").addEventListener("click", () => {
         if (e.key === "ArrowRight") {
             tetromino.move("right");
         }
+        if (e.key === "ArrowDown") {
+            tetromino.drop();
+        }
     };
 });

@@ -50,6 +50,22 @@ describe('Tetris Game Acceptance Tests', () => {
     });
   });
 
+  it('should allow the player to drop the tetromino immediately when pressing the down key', () => {
+    cy.window().then((win) => {
+      win.setTetrominoDropTime(2147483647);
+    });
+    cy.get('#start-button').click();
+    cy.get('.tetromino').then(($el) => {
+      const initialTop = parseInt($el.css('top'), 10);
+      cy.get('body').type('{downarrow}');
+      cy.get('.tetromino').should(($el2) => {
+        const newTop = parseInt($el2.css('top'), 10);
+        expect(newTop).to.equal(480);
+      });
+
+    });
+  });
+
   it('should prevent the tetromino from crossing left borders', () => {
     cy.get("#start-button").click();
     moveTetrominoToLeftEdge();
@@ -141,7 +157,7 @@ describe('Tetris Game Acceptance Tests', () => {
 
   it.skip('should spawn the next tetromino when the current one stops moving', () => { });
 
-  it.skip('should allow the player to drop the tetromino immediately', () => { });
+
 
   it.skip('should detect and clear complete lines', () => { });
 
@@ -161,4 +177,4 @@ function validateTetrominoDrop() {
       expect(topAfterSecondMove).to.be.greaterThan(topAfterFirstMove);
     });
   });
-}
+};
