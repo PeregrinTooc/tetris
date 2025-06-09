@@ -67,7 +67,7 @@ export class Board {
         this.element.innerHTML = "";
     }
 
-    spawnTetromino() {
+    spawnTetromino(document) {
         const tetromino = this.nextTetromino || new Tetromino(5, document, this);
         //this.nextTetromino = new Tetromino(5, document, this);
         //this.previewBoard.showNextTetromino(this.nextTetromino);

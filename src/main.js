@@ -60,7 +60,7 @@ function resetGame() {
 }
 
 function spawnNewTetromino() {
-    tetromino = board.spawnTetromino();
+    tetromino = board.spawnTetromino(document);
     tetromino.startFalling(tetrominoDropTime);
     tetromino.element.addEventListener("locked", () => {
         spawnNewTetromino();
