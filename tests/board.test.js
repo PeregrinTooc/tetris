@@ -1,14 +1,25 @@
 import { Board } from "../src/board.js";
+import { Tetromino } from "../src/tetromino.js";
 
 describe("Board", () => {
     let board;
     let mockElement;
     let mockPreviewBoard;
+    let mockDocument;
 
     beforeEach(() => {
+        mockDocument = {
+            createElement: jest.fn(() => ({
+                style: {},
+                className: "",
+                setAttribute: jest.fn(),
+                dispatchEvent: jest.fn(),
+            }))
+        };
         mockElement = {
             appendChild: jest.fn(),
-            innerHTML: ""
+            innerHTML: "",
+            dispatchEvent: jest.fn()
         };
         mockPreviewBoard = {
             showNextTetromino: jest.fn()
@@ -41,7 +52,7 @@ describe("Board", () => {
         expect(board._canMove(tetromino, "right")).toBe(false);
     });
 
-    test.skip("should detect tetromino collisions", () => {
+    test("should detect tetromino collisions", () => {
         const tetromino1 = { left: 5, top: 1 };
         const tetromino2 = { left: 5, top: 0 };
         board.tetrominos.add(tetromino1);
@@ -54,5 +65,15 @@ describe("Board", () => {
         const tetromino = { top: 0, left: 5 };
         board._raiseGameOverIfStackReachesTop(tetromino);
         expect(mockDispatchEvent).toHaveBeenCalled();
+    });
+
+    test("should make tetromino immobile when at bottom", () => {
+        const tetromino = new Tetromino(5, mockDocument, board);
+        tetromino.drop();
+        expect(tetromino.locked).toBe(true);
+        tetromino.move("left");
+        expect(tetromino.left).toBe(5);
+        tetromino.move("right");
+        expect(tetromino.left).toBe(5);
     });
 });

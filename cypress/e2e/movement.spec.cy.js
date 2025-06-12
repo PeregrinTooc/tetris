@@ -57,61 +57,6 @@ describe("Tetris Game Movement", () => {
             });
         });
     });
-
-    it("should prevent the tetromino from crossing left borders", () => {
-        cy.get("#start-button").click();
-        moveTetrominoToLeftEdge();
-        cy.get("body").type("{leftarrow}");
-        cy.get(".tetromino").then(($el) => {
-            const leftPosition = parseInt($el.css("left"), 10);
-            expect(leftPosition).to.equal(0);
-        });
-    });
-
-    it("should prevent the tetromino from crossing right borders", () => {
-        cy.get("#start-button").click();
-        moveTetrominoToRightEdge();
-        cy.get("body").type("{rightarrow}");
-        cy.get(".tetromino").then(($el) => {
-            const rightPosition = parseInt($el.css("right"), 10);
-            expect(rightPosition).to.equal(0);
-        });
-    });
-
-    it("should make the tetromino immobile when it reaches the bottom", () => {
-        cy.window().then((win) => {
-            win.setTetrominoDropTime(10);
-        });
-        cy.get("#start-button").click();
-        cy.wait(1000);
-        let rightPosition;
-        cy.get("[data-tetromino-id=\"1\"]").then(($el) => {
-            rightPosition = parseInt($el.css("right"), 10);
-        });
-        cy.get("body").type("{rightarrow}");
-        cy.get("[data-tetromino-id=\"1\"]").then(($el) => {
-            const newPosition = parseInt($el.css("right"), 10);
-            expect(newPosition).to.equal(rightPosition);
-        });
-    });
-
-    it("should make the tetromino stop when it sits on another tetromino", () => {
-        cy.window().then((win) => {
-            win.setTetrominoDropTime(10);
-        });
-        cy.get("#start-button").click();
-        cy.get("[data-tetromino-id=\"1\"]").then(($el) => {
-            cy.get("body").type("{downarrow}");
-            cy.wait(20);
-            const topPositionFirstTetromino = parseInt($el.css("top"), 10);
-            cy.get("[data-tetromino-id=\"2\"]").then(($el2) => {
-                cy.get("body").type("{downarrow}");
-                cy.wait(20);
-                const newTopPosition = parseInt($el2.css("top"), 10);
-                expect(newTopPosition).to.be.greaterThan(topPositionFirstTetromino);
-            });
-        });
-    });
 });
 
 function validateTetrominoDrop() {

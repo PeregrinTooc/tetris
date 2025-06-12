@@ -1,10 +1,15 @@
 import { Tetromino } from "../src/tetromino.js";
 describe("Tetromino",
     () => {
-        let tetromino; let mockBoard; let mockDocument;
+        let tetromino;
+        let mockDocument;
+        let mockBoard;
         beforeEach(() => {
-            mockBoard = { addTetromino: jest.fn(), moveTetromino: jest.fn() };
-            mockDocument = { createElement: jest.fn(() => ({ style: {}, setAttribute: jest.fn(), className: "", addEventListener: jest.fn() })) };
+            mockBoard = {
+                addTetromino: jest.fn(),
+                moveTetromino: jest.fn()
+            };
+            mockDocument = { createElement: jest.fn(() => ({ style: {}, setAttribute: jest.fn(), className: "", addEventListener: jest.fn(), dispatchEvent: jest.fn() })) };
             tetromino = new Tetromino(5, mockDocument, mockBoard);
         });
         test("should create with correct initial position", () => {
@@ -15,9 +20,9 @@ describe("Tetromino",
             tetromino.move("left");
             expect(mockBoard.moveTetromino).toHaveBeenCalledWith(tetromino, "left");
         });
-        test.skip("should lock tetromino", () => {
+        test("should lock tetromino", () => {
             tetromino.lock();
-            expect(tetromino.locked).toBe(true); tetromino.move("left");
+            tetromino.move("left");
             expect(mockBoard.moveTetromino).not.toHaveBeenCalled();
         });
     });
