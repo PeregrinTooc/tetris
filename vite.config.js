@@ -1,8 +1,7 @@
 export default {
-    base: "./",
+    base: "/tetris-game/",
     build: {
         outDir: "dist",
-        assetsDir: "assets",
-        emptyOutDir: true
+        assetsDir: "assets"
     }
 }
