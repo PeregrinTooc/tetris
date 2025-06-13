@@ -53,6 +53,19 @@ describe("Tetris Game Setup", () => {
 
 
     it.skip("should detect and clear complete lines", () => {
+        cy.get("#start-button").click();
+        cy.get(".tetromino").then(($tetromino) => {
+            const initialTop = parseInt($tetromino.css("top"), 10);
+            // Move the tetromino down to create a complete line
+            for (let i = 0; i < 20; i++) {
+                cy.get("body").type("{downarrow}");
+            }
+            cy.get(".tetromino").should(($el) => {
+                const newTop = parseInt($el.css("top"), 10);
+                expect(newTop).to.be.greaterThan(initialTop);
+            });
+            cy.get("#game-board").find(".line-complete").should("exist");
+        });
     });
 
     it("should detect and display game over when the stack reaches the top", () => {

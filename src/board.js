@@ -24,9 +24,19 @@ export class Board {
             return true;
         }
         if (direction === "left") {
+            for (let other of this.tetrominos) {
+                if (other !== tetromino && other.top === tetromino.top && other.left === tetromino.left - 1) {
+                    return false;
+                }
+            }
             return tetromino.left > 0;
         }
         if (direction === "right") {
+            for (let other of this.tetrominos) {
+                if (other !== tetromino && other.top === tetromino.top && other.left === tetromino.left + 1) {
+                    return false;
+                }
+            }
             return tetromino.left < this.width - 1;
         }
         return false;
@@ -44,6 +54,7 @@ export class Board {
         this.element.appendChild(tetromino.element);
 
     }
+
 
     moveTetromino(tetromino, direction) {
         if (!this._canMove(tetromino, direction)) {

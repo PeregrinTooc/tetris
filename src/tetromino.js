@@ -35,6 +35,11 @@ export class Tetromino {
         this.element.style.left = this.left * this.size + "px";
     }
 
+    remove() {
+        this.element.remove();
+        this.board.tetrominos.delete(this);
+    }
+
     lock() {
         if (this.locked) return;
         this.locked = true;

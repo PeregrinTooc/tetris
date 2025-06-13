@@ -14,6 +14,7 @@ describe("Board", () => {
                 className: "",
                 setAttribute: jest.fn(),
                 dispatchEvent: jest.fn(),
+                remove: jest.fn(),
             }))
         };
         mockElement = {
@@ -75,5 +76,13 @@ describe("Board", () => {
         expect(tetromino.left).toBe(5);
         tetromino.move("right");
         expect(tetromino.left).toBe(5);
+    });
+
+    test("tetrominos should block movement", () => {
+        const blockingTetromino = new Tetromino(5, mockDocument, board);
+        const movingTetromino = new Tetromino(4, mockDocument, board);
+        expect(board.moveTetromino(movingTetromino, "right")).toBe(false);
+        movingTetromino.left = 6;
+        expect(board.moveTetromino(movingTetromino, "left")).toBe(false);
     });
 });
