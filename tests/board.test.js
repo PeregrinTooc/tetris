@@ -54,8 +54,10 @@ describe("Board", () => {
     });
 
     test("should detect tetromino collisions", () => {
-        const tetromino1 = { left: 5, top: 1 };
-        const tetromino2 = { left: 5, top: 0 };
+        const tetromino1 = new Tetromino(5, mockDocument, board);
+        tetromino1.top = 1;
+        const tetromino2 = new Tetromino(5, mockDocument, board);
+        tetromino2.top = 0;
         board.tetrominos.add(tetromino1);
         expect(board._canMove(tetromino2, "down")).toBe(false);
     });

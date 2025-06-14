@@ -11,35 +11,27 @@ export class Board {
     }
 
     _canMove(tetromino, direction) {
-        if (direction === "down") {
-            if (tetromino.top >= this.height) {
+        const hasCollision = Array.from(this.tetrominos).some(other =>
+            other.blocksMovement(direction, tetromino)
+        );
+
+        if (hasCollision) {
+            if (direction === "down") {
+                this._raiseGameOverIfStackReachesTop(tetromino);
+            }
+            return false;
+        }
+
+        switch (direction) {
+            case "down":
+                return tetromino.top < this.height;
+            case "left":
+                return tetromino.left > 0;
+            case "right":
+                return tetromino.left < this.width - 1;
+            default:
                 return false;
-            }
-            for (let other of this.tetrominos) {
-                if (other !== tetromino && other.left === tetromino.left && other.top === tetromino.top + 1) {
-                    this._raiseGameOverIfStackReachesTop(tetromino);
-                    return false;
-                }
-            }
-            return true;
         }
-        if (direction === "left") {
-            for (let other of this.tetrominos) {
-                if (other !== tetromino && other.top === tetromino.top && other.left === tetromino.left - 1) {
-                    return false;
-                }
-            }
-            return tetromino.left > 0;
-        }
-        if (direction === "right") {
-            for (let other of this.tetrominos) {
-                if (other !== tetromino && other.top === tetromino.top && other.left === tetromino.left + 1) {
-                    return false;
-                }
-            }
-            return tetromino.left < this.width - 1;
-        }
-        return false;
     }
     _raiseGameOverIfStackReachesTop(tetromino) {
         if (tetromino.top === 0) {

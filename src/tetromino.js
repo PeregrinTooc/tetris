@@ -40,6 +40,19 @@ export class Tetromino {
         this.board.tetrominos.delete(this);
     }
 
+    blocksMovement(direction, movingTetromino) {
+        if (this === movingTetromino) return false;
+        if (direction === "left") {
+            return this.top === movingTetromino.top && this.left === movingTetromino.left - 1
+        }
+        if (direction === "right") {
+            return this.top === movingTetromino.top && this.left === movingTetromino.left + 1;
+        }
+        if (direction === "down") {
+            return this.left === movingTetromino.left && this.top === movingTetromino.top + 1;
+        }
+    }
+
     lock() {
         if (this.locked) return;
         this.locked = true;
