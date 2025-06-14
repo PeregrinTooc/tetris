@@ -73,4 +73,17 @@ export class Tetromino {
         };
         setTimeout(moveDown, dropTime);
     }
+
+    isWithinBounds(direction, boardWidth, boardHeight) {
+        switch (direction) {
+            case "down":
+                return this.top < boardHeight;
+            case "left":
+                return this.left > 0;
+            case "right":
+                return this.left < boardWidth - 1;
+            default:
+                return false;
+        }
+    }
 }

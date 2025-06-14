@@ -29,25 +29,25 @@ describe("Board", () => {
     });
 
     test("should add tetromino to board", () => {
-        const mockTetromino = { element: {} };
-        board.addTetromino(mockTetromino);
-        expect(mockElement.appendChild).toHaveBeenCalledWith(mockTetromino.element);
+        const tetromino = new Tetromino(5, mockDocument, board);
+        board.addTetromino(tetromino);
+        expect(mockElement.appendChild).toHaveBeenCalledWith(tetromino.element);
     });
 
     test("should move tetromino within boundaries", () => {
-        const mockTetromino = { left: 5, top: 5, updatePosition: jest.fn() };
-        expect(board.moveTetromino(mockTetromino, "left")).toBe(true);
-        expect(mockTetromino.left).toBe(4);
+        const tetromino = new Tetromino(5, mockDocument, board);
+        expect(board.moveTetromino(tetromino, "left")).toBe(true);
+        expect(tetromino.left).toBe(4);
     });
 
     test("should prevent movement outside boundaries", () => {
-        const mockTetromino = { left: 0, top: 5, updatePosition: jest.fn() };
-        expect(board.moveTetromino(mockTetromino, "left")).toBe(false);
-        expect(mockTetromino.left).toBe(0);
+        const tetromino = new Tetromino(0, mockDocument, board);
+        expect(board.moveTetromino(tetromino, "left")).toBe(false);
+        expect(tetromino.left).toBe(0);
     });
 
     test("should check movement boundaries", () => {
-        const tetromino = { left: 0, top: 0 };
+        const tetromino = new Tetromino(0, mockDocument, board);
         expect(board._canMove(tetromino, "left")).toBe(false);
         tetromino.left = 10;
         expect(board._canMove(tetromino, "right")).toBe(false);

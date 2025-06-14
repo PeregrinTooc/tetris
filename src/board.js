@@ -22,16 +22,7 @@ export class Board {
             return false;
         }
 
-        switch (direction) {
-            case "down":
-                return tetromino.top < this.height;
-            case "left":
-                return tetromino.left > 0;
-            case "right":
-                return tetromino.left < this.width - 1;
-            default:
-                return false;
-        }
+        return tetromino.isWithinBounds(direction, this.width, this.height);
     }
     _raiseGameOverIfStackReachesTop(tetromino) {
         if (tetromino.top === 0) {
