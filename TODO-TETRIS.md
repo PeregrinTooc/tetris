@@ -12,7 +12,7 @@
 - [ ] Tetromino rotation (clockwise/counterclockwise)
 - [ ] All 7 tetromino shapes (I, O, T, S, Z, J, L)
 - [ ] Hold piece functionality
-- [ ] Hard drop (instantly drop tetromino)
+- ~~Hard drop (instantly drop tetromino)~~
 - [ ] Soft drop (faster drop)
 - [ ] Increasing speed/level progression
 - [ ] Scoring system (points for line clears, soft/hard drop)

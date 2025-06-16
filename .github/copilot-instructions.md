@@ -19,3 +19,7 @@ When writing unit tests, ensure they cover the functionality of individual compo
 Use unit tests as the primary means of verifying the functionality of the code. Acceptance tests should be used to verify the overall functionality of the game and the UI functionality.
 
 When writing code, ensure it is well-structured and follows best practices. Use ES6+ features where appropriate, such as arrow functions, destructuring, and template literals.
+
+When a new edge case is discovered, add it to the file `TODO-TETRIS.md` in the root of the repository. This file is used to track missing features and test cases for the Tetris game.
+
+When implementing new features or fixing bugs, ensure that you update the `TODO-TETRIS.md` file accordingly. This helps keep track of what has been implemented and what still needs to be done.
