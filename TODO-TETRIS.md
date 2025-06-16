@@ -28,7 +28,7 @@
 ### UI/UX
 - ~~Start/Reset game button~~
 - ~~Game over message~~
-- ~~Preview of next piece~~
+- [ ] Preview of next piece
 - [ ] Display for score, level, and lines cleared
 - [ ] Responsive/mobile-friendly UI
 - [ ] Pause/resume functionality
@@ -53,6 +53,7 @@
 - [ ] Line clear is detected and board updates
 - [ ] Score/level/lines UI updates
 - [ ] Hold and hard drop actions
+- [ ] Preview of next piece is shown
 - [ ] Pause/resume works
 - [ ] Mobile/responsive controls
 
@@ -68,6 +69,7 @@
 - [ ] Line clear logic
 - [ ] Scoring and level logic
 - [ ] Hold/next piece logic
+- [ ] Preview of next piece logic
 - [ ] Ghost piece logic
 - [ ] Wall kick logic
 - [ ] Lock delay logic
