@@ -87,4 +87,12 @@ describe("Board", () => {
         movingTetromino.left = 6;
         expect(board.moveTetromino(movingTetromino, "left")).toBe(false);
     });
+
+    test("should reset the board and clear tetrominos", () => {
+        const tetromino = new Tetromino(5, mockDocument, board);
+        board.tetrominos.add(tetromino);
+        board.reset();
+        expect(board.tetrominos.size).toBe(0);
+        expect(mockElement.innerHTML).toBe("");
+    });
 });

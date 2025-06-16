@@ -65,6 +65,8 @@
 - ~~Tetromino locks and becomes immobile~~
 - ~~Tetromino delegates movement to board~~
 - ~~Tetromino initial position is correct~~
+- ~~Board resets and clears tetrominos~~
+- ~~PreviewBoard shows next tetromino~~
 - [ ] Tetromino rotation logic
 - [ ] Line clear logic
 - [ ] Scoring and level logic
