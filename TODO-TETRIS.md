@@ -23,7 +23,7 @@
 - [ ] Multiple line clears (double, triple, Tetris)
 - [ ] Ghost piece (shows where tetromino will land)
 - [ ] Wall kicks (rotation near walls)
-- [ ] Lock delay (brief pause before locking)
+- ~~Lock delay (brief pause before locking)~~
 
 ### UI/UX
 - ~~Start/Reset game button~~
