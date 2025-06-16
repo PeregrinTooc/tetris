@@ -12,8 +12,7 @@
     "test:e2e": "cypress run",
     "test": "npm run test:unit && npm run test:e2e",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist",
-    "test:all": "powershell -File .\\run-tests.ps1"
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [
     "tetris",
