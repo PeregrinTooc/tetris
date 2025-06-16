@@ -72,9 +72,6 @@ export class Tetromino {
   }
 
   startFalling() {
-    if (this.fallListener) {
-      document.removeEventListener("tick", this.fallListener);
-    }
     this.fallListener = () => {
       if (!this.locked) {
         const canContinue = this.board.moveTetromino(this, "down");
