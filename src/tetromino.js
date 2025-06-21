@@ -1,5 +1,8 @@
 export class Tetromino {
   static nextId = 1;
+  static createNew(left, document, board, seed = 0) {
+    return new Tetromino(left, document, board, seed);
+  }
   constructor(left, document, board) {
     this.board = board;
     this.left = left;

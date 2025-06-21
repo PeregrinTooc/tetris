@@ -17,6 +17,9 @@ Never delete tests or assertions without eplicit consent from the developer. If 
 When writing acceptance tests, ensure they cover the user stories and requirements of the game. Use Cypress for acceptance testing and Jest for unit testing.
 When writing unit tests, ensure they cover the functionality of individual components and functions. Use Jest for unit testing.
 Use unit tests as the primary means of verifying the functionality of the code. Acceptance tests should be used to verify the overall functionality of the game and the UI functionality.
+In unit tests, do not mock out dependencies to other code written in this repository. Instead, use the actual implementations of those dependencies to ensure that the tests are testing the real functionality of the code.
+
+When writing code, ensure it is well-documented. Use JSDoc comments to document functions and classes where necessary. This helps other developers understand the code and its functionality.
 
 When writing code, ensure it is well-structured and follows best practices. Use ES6+ features where appropriate, such as arrow functions, destructuring, and template literals.
 
