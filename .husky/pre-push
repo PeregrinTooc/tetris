@@ -4,8 +4,8 @@ if nc -z localhost 5173; then
 else
 	npm run dev &
 	SERVER_PID=$!
-	trap 'kill $SERVER_PID; wait $SERVER_PID' EXIT
 	SERVER_STARTED=1
+	trap 'if [ "$SERVER_STARTED" = "1" ]; then kill $SERVER_PID 2>/dev/null; wait $SERVER_PID 2>/dev/null; fi' EXIT
 fi
 
 npx wait-on http://localhost:5173
@@ -21,9 +21,4 @@ TEST_RESULT=$?
 if [ $TEST_RESULT -ne 0 ]; then
   echo 'Tests failed. Push aborted.'
   exit 1
-fi
-
-if [ "$SERVER_STARTED" = "1" ]; then
-	kill $SERVER_PID
-	wait $SERVER_PID
 fi
