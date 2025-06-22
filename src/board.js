@@ -62,8 +62,11 @@ export class Board {
     const tetromino =
       this.nextTetromino || Tetromino.createNew(5, document, this);
     tetromino.startFalling();
-    //this.nextTetromino = Tetromino.createNew(5, document, this);
-    //this.previewBoard.showNextTetromino(this.nextTetromino);
+    // Show next tetromino in preview
+    this.nextTetromino = Tetromino.createNew(5, document, null);
+    if (this.previewBoard && this.previewBoard.showNextTetromino) {
+      this.previewBoard.showNextTetromino(this.nextTetromino);
+    }
     return tetromino;
   }
 }
