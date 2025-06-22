@@ -1,6 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 npm run dev &
 SERVER_PID=$!
 npx wait-on http://localhost:5173
