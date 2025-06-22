@@ -62,8 +62,13 @@ export class Board {
     let tetromino;
     if (this.nextTetromino) {
       // Remove from preview before promoting to main board
-      if (this.previewBoard && this.previewBoard.previewContainer.contains(this.nextTetromino.element)) {
-        this.previewBoard.previewContainer.removeChild(this.nextTetromino.element);
+      if (
+        this.previewBoard &&
+        this.previewBoard.previewContainer.contains(this.nextTetromino.element)
+      ) {
+        this.previewBoard.previewContainer.removeChild(
+          this.nextTetromino.element
+        );
       }
       tetromino = this.nextTetromino;
       tetromino.board = this;

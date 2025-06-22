@@ -28,7 +28,7 @@
 ### UI/UX
 - ~~Start/Reset game button~~
 - ~~Game over message~~
-- [ ] Preview of next piece
+- ~~Preview of next piece~~
 - [ ] Display for score, level, and lines cleared
 - [ ] Responsive/mobile-friendly UI
 - [ ] Pause/resume functionality
