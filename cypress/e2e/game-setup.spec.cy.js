@@ -41,13 +41,13 @@ describe("Tetris Game Setup", () => {
     cy.get("[data-tetromino-id]").should("not.exist");
   });
 
-  it.skip("should preview the next tetromino in the next piece frame", () => {
+  it("should preview the next tetromino in the next piece frame", () => {
     cy.get("#start-button").click();
-    cy.get("#next-piece").should("be.visible");
+    cy.get("#preview-container").should("be.visible");
     cy.get('[data-tetromino-id="1"]').then(($tetromino) => {
       const nextTetrominoId =
         parseInt($tetromino.attr("data-tetromino-id"), 10) + 1;
-      cy.get("#next-piece")
+      cy.get("#preview-container")
         .find(`[data-tetromino-id="${nextTetrominoId}"]`)
         .should("exist");
     });
