@@ -1,26 +1,39 @@
-This repository contains a Tetris Game. It uses ATDD and TDD to develop the game. The code is written in JavaScript and uses cypress for acceptance testing and jest for unit testing.
+This repository contains a Tetris Game. It uses ATDD and TDD to develop the game. The code is written in JavaScript and uses Cypress for acceptance testing and Jest for unit testing.
 
-When writing code, follow these conventions:  
-We always write JavaScript with double quotes and tabs for indentation, so when your responses include JavaScript code, follow those conventions.
+**Coding Conventions:**
 
-Functions shall exceed 10 lines only if absolutely necessary. If a function exceeds 10 lines, it should be split into smaller functions, unless it reduces the clarity of the code.
-Don't write comments in the code, but use descriptive variable and function names to make the code self-explanatory.
+- Always use double quotes and tabs for indentation in JavaScript code.
+- Functions should not exceed 10 lines unless absolutely necessary. If a function is longer, split it into smaller functions unless it reduces clarity.
+- Do not write comments in the code. Use descriptive variable and function names to make the code self-explanatory.
+- Write reusable and modular functions. Avoid hardcoding values; use parameters instead.
+- Use `const` for variables that do not change and `let` for variables that may change. Avoid using `var`.
+- Use object oriented programming (OOP) principles where appropriate. Prefer classes, objects and methods over procedural code.
 
-When writing functions, ensure they are reusable and modular. Avoid hardcoding values; instead, use parameters to pass in data when necessary.
+**Test-Driven Development (TDD) Rules:**
 
-Never write production code without first writing a test for it. Always write tests before implementing the functionality.
-When writing tests, ensure they are clear and descriptive. Use meaningful names for test cases to indicate what they are testing.
-When writing the production code to pass the tests, ensure that the code is clean, efficient, and follows best practices.
-When writing tests, ensure they are isolated and do not depend on external state. Use mocks or stubs where necessary to isolate the functionality being tested.
-Never delete tests or assertions without eplicit consent from the developer. If a test is failing, fix the code to make it pass instead of deleting the test.
+- Never write production code without first writing a test for it.
+- Always write the test before implementing the functionality.
+- After writing the test, run it and make sure it fails.
+- Only then, implement the production code to make the test pass.
+- If you ever write production code before a test, immediately revert the code, add the test, and then re-implement the code to pass the test.
+- Tests must be clear, descriptive, and use meaningful names for test cases.
+- Tests must be isolated and not depend on external state. Use mocks or stubs only for external dependencies, not for code within this repository.
+- Never delete tests or assertions without explicit consent from the developer. If a test fails, fix the code to make it pass instead of deleting the test.
 
-When writing acceptance tests, ensure they cover the user stories and requirements of the game. Use Cypress for acceptance testing and Jest for unit testing.
-When writing unit tests, ensure they cover the functionality of individual components and functions. Use Jest for unit testing.
-Use unit tests as the primary means of verifying the functionality of the code. Acceptance tests should be used to verify the overall functionality of the game and the UI functionality.
-In unit tests, do not mock out dependencies to other code written in this repository. Instead, use the actual implementations of those dependencies to ensure that the tests are testing the real functionality of the code.
+**Testing Practices:**
 
-When writing code, ensure it is well-structured and follows best practices. Use ES6+ features where appropriate, such as arrow functions, destructuring, and template literals.
+- Use Cypress for acceptance (E2E) tests and Jest for unit tests.
+- Acceptance tests should cover user stories and requirements of the game.
+- Unit tests should cover the functionality of individual components and functions.
+- Use unit tests as the primary means of verifying code functionality. Use acceptance tests to verify overall game and UI functionality.
+- In unit tests, always use the actual implementations of dependencies from this repository (do not mock them).
 
-When a new edge case is discovered, add it to the file `TODO-TETRIS.md` in the root of the repository. This file is used to track missing features and test cases for the Tetris game.
+**Code Quality:**
 
-When implementing new features or fixing bugs, ensure that you update the `TODO-TETRIS.md` file accordingly. This helps keep track of what has been implemented and what still needs to be done.
+- Ensure code is well-structured and follows best practices.
+- Use ES6+ features where appropriate (arrow functions, destructuring, template literals, etc.).
+
+**Project Management:**
+
+- When a new edge case is discovered, add it to `TODO-TETRIS.md` in the root of the repository.
+- When implementing new features or fixing bugs, update `TODO-TETRIS.md` accordingly to track progress.
