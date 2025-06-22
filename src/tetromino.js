@@ -3,13 +3,16 @@ export class Tetromino {
   static createNew(left, document, board, seed = 0) {
     return new Tetromino(left, document, board, seed);
   }
-  constructor(left, document, board) {
+  constructor(left, document, board, seed = 0) {
     this.board = board;
     this.left = left;
     this.top = 0;
     this.size = 24;
+    this.seed = seed;
     this.element = this.createElement(document);
-    this.board.addTetromino(this);
+    if (this.board) {
+      this.board.addTetromino(this);
+    }
   }
 
   createElement(document) {
@@ -25,10 +28,12 @@ export class Tetromino {
   }
 
   move(direction) {
+    if (!this.board) return;
     this.board.moveTetromino(this, direction);
   }
 
   drop() {
+    if (!this.board) return;
     while (this.board.moveTetromino(this, "down")) {}
     this.lock();
   }
@@ -75,12 +80,12 @@ export class Tetromino {
   }
 
   startFalling() {
+    if (!this.board) return;
     this.fallListener = () => {
-      if (!this.locked) {
+      if (!this.locked && this.board) {
         const canContinue = this.board.moveTetromino(this, "down");
         if (!canContinue) {
           this.lock();
-          document.removeEventListener("tick", this.fallListener);
         }
       }
     };

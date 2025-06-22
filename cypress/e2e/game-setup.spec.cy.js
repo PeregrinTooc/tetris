@@ -24,8 +24,8 @@ describe("Tetris Game Setup", () => {
     cy.get('[data-tetromino-id="1"]').then(($tetromino) => {
       cy.get("body").type("{downarrow}");
       cy.wait(10);
-      cy.get("[data-tetromino-id]").should("have.length", 2);
-      cy.get('[data-tetromino-id="2"]').then(($newTetromino) => {});
+      cy.get("#game-board [data-tetromino-id]").should("have.length", 2);
+      cy.get('#game-board [data-tetromino-id="2"]').then(($newTetromino) => {});
     });
   });
 

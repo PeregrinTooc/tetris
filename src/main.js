@@ -61,6 +61,10 @@ function resetGame() {
   if (board) {
     board.reset();
   }
+  const previewContainer = document.querySelector("#preview-container");
+  if (previewContainer) {
+    previewContainer.innerHTML = "";
+  }
   document.getElementById("start-button").textContent = "Start Game";
   document.onkeydown = null;
   gameRunning = false;

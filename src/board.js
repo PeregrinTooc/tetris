@@ -59,8 +59,19 @@ export class Board {
   }
 
   spawnTetromino(document) {
-    const tetromino =
-      this.nextTetromino || Tetromino.createNew(5, document, this);
+    let tetromino;
+    if (this.nextTetromino) {
+      // Remove from preview before promoting to main board
+      if (this.previewBoard && this.previewBoard.previewContainer.contains(this.nextTetromino.element)) {
+        this.previewBoard.previewContainer.removeChild(this.nextTetromino.element);
+      }
+      tetromino = this.nextTetromino;
+      tetromino.board = this;
+      this.tetrominos.add(tetromino);
+      this.element.appendChild(tetromino.element);
+    } else {
+      tetromino = Tetromino.createNew(5, document, this);
+    }
     tetromino.startFalling();
     // Show next tetromino in preview
     this.nextTetromino = Tetromino.createNew(5, document, null);
