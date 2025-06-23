@@ -36,7 +36,20 @@ body {
     background-color: #f00;
 }
 
+.tetromino-t {
+	background: none;
+}
 
+.tetromino-t .block {
+	background: purple;
+	border: 1px solid #333;
+}
+
+.block {
+	width: 24px;
+	height: 24px;
+	position: absolute;
+}
 
 .line-clear {
     background-color: #0f0;

@@ -1,5 +1,6 @@
 import { PreviewBoard } from "./preview-board.js";
 import { Board } from "./board.js";
+import { Queue } from "./queue.js";
 
 let tetrominoDropTime = 750;
 let tetromino;
@@ -7,10 +8,15 @@ let gameRunning = false;
 let board;
 let tickIntervalId;
 const TICK_EVENT_NAME = "tick";
+let tetrominoSeedQueue = new Queue();
 
 // Allow tests or game logic to set the drop time
 window.setTetrominoDropTime = function (ms) {
   tetrominoDropTime = ms;
+};
+
+window.pushTetrominoSeed = function (seed) {
+  tetrominoSeedQueue.enqueue(Number(seed));
 };
 
 document.getElementById("game-board").addEventListener("gameover", () => {
@@ -35,7 +41,8 @@ function startGame() {
     20,
     11,
     document.getElementById("game-board"),
-    previewBoard
+    previewBoard,
+    tetrominoSeedQueue
   );
   document.getElementById("start-button").textContent = "Reset Game";
   spawnNewTetromino();

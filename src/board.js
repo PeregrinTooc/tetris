@@ -1,13 +1,14 @@
 import { Tetromino } from "./tetromino.js";
 
 export class Board {
-  constructor(height, width, element, previewBoard) {
+  constructor(height, width, element, previewBoard, tetrominoSeedQueue) {
     this.height = height;
     this.width = width;
     this.element = element;
     this.previewBoard = previewBoard;
     this.tetrominos = new Set();
     this.nextTetromino = null;
+    this.tetrominoSeedQueue = tetrominoSeedQueue;
   }
 
   _canMove(tetromino, direction) {
@@ -61,7 +62,6 @@ export class Board {
   spawnTetromino(document) {
     let tetromino;
     if (this.nextTetromino) {
-      // Remove from preview before promoting to main board
       if (
         this.previewBoard &&
         this.previewBoard.previewContainer.contains(this.nextTetromino.element)
@@ -75,11 +75,23 @@ export class Board {
       this.tetrominos.add(tetromino);
       this.element.appendChild(tetromino.element);
     } else {
-      tetromino = Tetromino.createNew(5, document, this);
+      tetromino = Tetromino.createNew(
+        5,
+        document,
+        this,
+        this.tetrominoSeedQueue.dequeue()
+      );
+      this.tetrominos.add(tetromino);
+      this.element.appendChild(tetromino.element);
     }
     tetromino.startFalling();
     // Show next tetromino in preview
-    this.nextTetromino = Tetromino.createNew(5, document, null);
+    this.nextTetromino = Tetromino.createNew(
+      5,
+      document,
+      null,
+      this.tetrominoSeedQueue.dequeue()
+    );
     if (this.previewBoard && this.previewBoard.showNextTetromino) {
       this.previewBoard.showNextTetromino(this.nextTetromino);
     }
