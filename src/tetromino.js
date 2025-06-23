@@ -19,20 +19,20 @@ export class Tetromino {
   }
 
   createElement(document) {
-    return Tetromino.createDiv(
-      document,
-      this.getClassName(),
-      this.left,
-      this.top,
-      this.size
-    );
+    return this.createDiv(document, this.getClassName());
   }
 
   getClassName() {
     return "tetromino";
   }
 
-  static createDiv(document, className, left, top, size) {
+  createDiv(
+    document,
+    className,
+    left = this.left,
+    top = this.top,
+    size = this.size
+  ) {
     const tetromino = document.createElement("div");
     tetromino.className = className;
     tetromino.style.width = size + "px";
@@ -123,7 +123,7 @@ export class Tetromino {
   }
 }
 
-export class TetrominoT extends Tetromino {
+class TetrominoT extends Tetromino {
   constructor(left, document, board) {
     super(left, document, null);
     this.type = "T";
@@ -139,13 +139,7 @@ export class TetrominoT extends Tetromino {
   }
 
   createElement(document) {
-    const tetromino = Tetromino.createDiv(
-      document,
-      this.getClassName(),
-      this.left,
-      this.top,
-      this.size
-    );
+    const tetromino = this.createDiv(document, this.getClassName());
     const blocks = [
       { x: 0, y: 0 },
       { x: -1, y: 0 },
@@ -153,13 +147,7 @@ export class TetrominoT extends Tetromino {
       { x: 0, y: 1 },
     ];
     blocks.forEach(({ x, y }) => {
-      const block = Tetromino.createDiv(
-        document,
-        "block",
-        x,
-        y,
-        this.size
-      );
+      const block = this.createDiv(document, "block", x, y);
       tetromino.appendChild(block);
     });
     return tetromino;
