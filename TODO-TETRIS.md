@@ -9,7 +9,7 @@
 - ~~Player can move tetromino left/right/down~~
 - ~~Tetromino locks when it can't move down~~
 - ~~Game over when stack reaches the top~~
-- [ ] Tetromino rotation (clockwise/counterclockwise)
+- ~~Tetromino rotation (clockwise/counterclockwise)~~ (T-shape, counter-clockwise, ArrowUp)
 - [ ] All 7 tetromino shapes (I, O, T, S, Z, J, L)
 - [ ] Hold piece functionality
 - ~~Hard drop (instantly drop tetromino)~~
@@ -48,7 +48,7 @@
 - ~~Player can move tetromino left/right/down~~
 - ~~Tetromino locks and new tetromino spawns~~
 - ~~Game over is detected and displayed~~
-- [ ] Tetromino rotation via keyboard
+- ~~Tetromino rotation via keyboard~~ (T-shape, ArrowUp)
 - [ ] All tetromino shapes appear
 - [ ] Line clear is detected and board updates
 - [ ] Score/level/lines UI updates
@@ -67,7 +67,7 @@
 - ~~Tetromino initial position is correct~~
 - ~~Board resets and clears tetrominos~~
 - ~~PreviewBoard shows next tetromino~~
-- [ ] Tetromino rotation logic
+- ~~Tetromino rotation logic~~ (T-shape)
 - [ ] Line clear logic
 - [ ] Scoring and level logic
 - [ ] Hold/next piece logic

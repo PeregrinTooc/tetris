@@ -15,17 +15,17 @@ describe("Tetris Game Setup", () => {
 
   it('should start the game and spawn a tetromino when "Start Game" is clicked', () => {
     cy.get("#start-button").click();
-    cy.get(".tetromino").should("exist");
+    cy.get("#game-board .tetromino").should("exist");
     cy.get("#game-over").should("not.exist");
   });
 
   it("should spawn the next tetromino when the current one stops moving", () => {
     cy.get("#start-button").click();
-    cy.get('[data-tetromino-id="1"]').then(($tetromino) => {
+    cy.get('#game-board [data-tetromino-id="1"]').then(($tetromino) => {
       cy.get("body").type("{downarrow}");
       cy.wait(10);
-      cy.get(".tetromino").should("have.length", 2);
-      cy.get('[data-tetromino-id="2"]').then(($newTetromino) => {});
+      cy.get("#game-board .tetromino").should("have.length", 2);
+      cy.get('#game-board [data-tetromino-id="2"]').then(($newTetromino) => {});
     });
   });
 
@@ -36,21 +36,9 @@ describe("Tetris Game Setup", () => {
 
   it("should clear the game board when the game is restarted and reset the text to Start Game", () => {
     cy.get("#start-button").click();
-    cy.get(".tetromino").should("exist");
+    cy.get("#game-board .tetromino").should("exist");
     cy.get("#start-button").click();
-    cy.get(".tetromino").should("not.exist");
-  });
-
-  it.skip("should preview the next tetromino in the next piece frame", () => {
-    cy.get("#start-button").click();
-    cy.get("#next-piece").should("be.visible");
-    cy.get(".tetromino").then(($tetromino) => {
-      const nextTetrominoId =
-        parseInt($tetromino.attr("data-tetromino-id"), 10) + 1;
-      cy.get("#next-piece")
-        .find(`[data-tetromino-id="${nextTetrominoId}"]`)
-        .should("exist");
-    });
+    cy.get("#game-board .tetromino").should("not.exist");
   });
 
   it.skip("should detect and clear complete lines", () => {
