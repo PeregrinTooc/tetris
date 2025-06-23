@@ -4,7 +4,10 @@ export class Tetromino {
     if (seed === 0) {
       return new TetrominoT(left, document, board);
     }
-    return new Tetromino(left, document, board, seed);
+    if (seed === 1337) {
+      return new Tetromino(left, document, board, seed);
+    }
+    throw new Error("Unsupported tetromino seed: " + seed);
   }
 
   constructor(left, document, board) {
@@ -198,7 +201,12 @@ class TetrominoT extends Tetromino {
     const tetromino = this.createDiv(document, this.getClassName());
     const blocks = this.getBlockPositions();
     blocks.forEach(({ x, y }) => {
-      const block = this.createDiv(document, "block", x - this.left, y - this.top);
+      const block = this.createDiv(
+        document,
+        "block",
+        x - this.left,
+        y - this.top
+      );
       tetromino.appendChild(block);
     });
     return tetromino;

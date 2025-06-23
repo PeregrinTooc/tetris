@@ -1,6 +1,20 @@
 import { PreviewBoard } from "./preview-board.js";
 import { Board } from "./board.js";
-import { Queue } from "./queue.js";
+
+class TetrominoSeedQueue {
+	constructor() {
+		this.items = [];
+	}
+	enqueue(item) {
+		this.items.push(item);
+	}
+	dequeue() {
+		if (this.items.length === 0) {
+			return 1337;
+		}
+		return this.items.shift();
+	}
+}
 
 let tetrominoDropTime = 750;
 let tetromino;
@@ -8,7 +22,7 @@ let gameRunning = false;
 let board;
 let tickIntervalId;
 const TICK_EVENT_NAME = "tick";
-let tetrominoSeedQueue = new Queue();
+let tetrominoSeedQueue = new TetrominoSeedQueue();
 
 // Allow tests or game logic to set the drop time
 window.setTetrominoDropTime = function (ms) {

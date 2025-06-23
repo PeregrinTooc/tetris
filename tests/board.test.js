@@ -6,6 +6,7 @@ describe("Board", () => {
   let mockElement;
   let mockPreviewBoard;
   let mockDocument;
+  let stubQueue;
 
   beforeEach(() => {
     mockDocument = {
@@ -25,38 +26,39 @@ describe("Board", () => {
     mockPreviewBoard = {
       showNextTetromino: jest.fn(),
     };
-    board = new Board(20, 11, mockElement, mockPreviewBoard);
+    stubQueue = { dequeue: () => 1337 };
+    board = new Board(20, 11, mockElement, mockPreviewBoard, stubQueue);
   });
 
   test("should add tetromino to board", () => {
-    const tetromino = Tetromino.createNew(5, mockDocument, board);
+    const tetromino = Tetromino.createNew(5, mockDocument, board, 1337);
     board.addTetromino(tetromino);
     expect(mockElement.appendChild).toHaveBeenCalledWith(tetromino.element);
   });
 
   test("should move tetromino within boundaries", () => {
-    const tetromino = Tetromino.createNew(5, mockDocument, board);
+    const tetromino = Tetromino.createNew(5, mockDocument, board, 1337);
     expect(board.moveTetromino(tetromino, "left")).toBe(true);
     expect(tetromino.left).toBe(4);
   });
 
   test("should prevent movement outside boundaries", () => {
-    const tetromino = Tetromino.createNew(0, mockDocument, board);
+    const tetromino = Tetromino.createNew(0, mockDocument, board, 1337);
     expect(board.moveTetromino(tetromino, "left")).toBe(false);
     expect(tetromino.left).toBe(0);
   });
 
   test("should check movement boundaries", () => {
-    const tetromino = Tetromino.createNew(0, mockDocument, board);
+    const tetromino = Tetromino.createNew(0, mockDocument, board, 1337);
     expect(board._canMove(tetromino, "left")).toBe(false);
     tetromino.left = 10;
     expect(board._canMove(tetromino, "right")).toBe(false);
   });
 
   test("should detect tetromino collisions", () => {
-    const tetromino1 = Tetromino.createNew(5, mockDocument, board);
+    const tetromino1 = Tetromino.createNew(5, mockDocument, board, 1337);
     tetromino1.top = 1;
-    const tetromino2 = Tetromino.createNew(5, mockDocument, board);
+    const tetromino2 = Tetromino.createNew(5, mockDocument, board, 1337);
     tetromino2.top = 0;
     board.tetrominos.add(tetromino1);
     expect(board._canMove(tetromino2, "down")).toBe(false);
@@ -71,7 +73,7 @@ describe("Board", () => {
   });
 
   test("should make tetromino immobile when at bottom", () => {
-    const tetromino = Tetromino.createNew(5, mockDocument, board);
+    const tetromino = Tetromino.createNew(5, mockDocument, board, 1337);
     tetromino.drop();
     expect(tetromino.locked).toBe(true);
     tetromino.move("left");
@@ -81,15 +83,15 @@ describe("Board", () => {
   });
 
   test("tetrominos should block movement", () => {
-    const blockingTetromino = Tetromino.createNew(5, mockDocument, board);
-    const movingTetromino = Tetromino.createNew(4, mockDocument, board);
+    const blockingTetromino = Tetromino.createNew(5, mockDocument, board, 1337);
+    const movingTetromino = Tetromino.createNew(4, mockDocument, board, 1337);
     expect(board.moveTetromino(movingTetromino, "right")).toBe(false);
     movingTetromino.left = 6;
     expect(board.moveTetromino(movingTetromino, "left")).toBe(false);
   });
 
   test("should reset the board and clear tetrominos", () => {
-    const tetromino = Tetromino.createNew(5, mockDocument, board);
+    const tetromino = Tetromino.createNew(5, mockDocument, board, 1337);
     board.tetrominos.add(tetromino);
     board.reset();
     expect(board.tetrominos.size).toBe(0);

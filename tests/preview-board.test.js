@@ -6,6 +6,7 @@ describe("PreviewBoard", () => {
   let element;
   let previewBoard;
   let board;
+  let stubQueue;
   beforeEach(() => {
     element = document.createElement("div");
     const previewContainer = document.createElement("div");
@@ -15,10 +16,11 @@ describe("PreviewBoard", () => {
     previewContainer.appendChild(nextPiece);
     element.appendChild(previewContainer);
     previewBoard = new PreviewBoard(element);
-    board = new Board(20, 11, document.createElement("div"), previewBoard);
+    stubQueue = { dequeue: () => 1337 };
+    board = new Board(20, 11, document.createElement("div"), previewBoard, stubQueue);
   });
   test("should clear preview container and add tetromino element", () => {
-    const tetromino = Tetromino.createNew(5, document, board);
+    const tetromino = Tetromino.createNew(5, document, board, 1337);
     previewBoard.showNextTetromino(tetromino);
     expect(previewBoard.previewContainer.innerHTML).toContain("tetromino");
   });

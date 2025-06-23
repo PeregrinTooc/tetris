@@ -9,14 +9,17 @@ describe("Tetromino", () => {
   const nextPiece = document.createElement("div");
   nextPiece.id = "next-piece";
   element.appendChild(nextPiece);
+  let stubQueue;
   beforeEach(() => {
+    stubQueue = { dequeue: () => 1337 };
     board = new Board(
       20,
       11,
       document.createElement("div"),
-      new PreviewBoard(element)
+      new PreviewBoard(element),
+      stubQueue
     );
-    tetromino = Tetromino.createNew(5, document, board);
+    tetromino = Tetromino.createNew(5, document, board, 1337);
   });
   test("should create with correct initial position", () => {
     expect(tetromino.left).toBe(5);
