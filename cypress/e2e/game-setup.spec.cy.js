@@ -3,6 +3,7 @@ describe("Tetris Game Setup", () => {
     cy.visit("/index.html");
     cy.window().then((win) => {
       win.setTetrominoDropTime(100000);
+      for (let i = 0; i < 10; i++) win.pushTetrominoSeed(1337);
     });
   });
 

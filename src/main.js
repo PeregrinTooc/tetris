@@ -2,18 +2,18 @@ import { PreviewBoard } from "./preview-board.js";
 import { Board } from "./board.js";
 
 class TetrominoSeedQueue {
-	constructor() {
-		this.items = [];
-	}
-	enqueue(item) {
-		this.items.push(item);
-	}
-	dequeue() {
-		if (this.items.length === 0) {
-			return 1337;
-		}
-		return this.items.shift();
-	}
+  constructor() {
+    this.items = [];
+  }
+  enqueue(item) {
+    this.items.push(item);
+  }
+  dequeue() {
+    if (this.items.length === 0) {
+      return 0;
+    }
+    return this.items.shift();
+  }
 }
 
 let tetrominoDropTime = 750;
