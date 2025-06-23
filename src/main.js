@@ -56,6 +56,11 @@ function startGame() {
     if (e.key === "ArrowDown") {
       tetromino.drop();
     }
+    if (e.key === "ArrowUp") {
+      if (tetromino.rotate) {
+        tetromino.rotate();
+      }
+    }
   };
   startTicking();
 }
