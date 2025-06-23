@@ -19,6 +19,7 @@ This repository contains a Tetris Game. It uses ATDD and TDD to develop the game
 - Tests must be clear, descriptive, and use meaningful names for test cases.
 - Tests must be isolated and not depend on external state. Use mocks or stubs only for external dependencies, not for code within this repository.
 - Never delete tests or assertions without explicit consent from the developer. If a test fails, fix the code to make it pass instead of deleting the test.
+- When fixing bugs, always write a test that reproduces the bug first and make sure that the test fails. Only then, implement the fix to make the test pass. Never fix a bug without a failing test that reproduces it.
 
 **Testing Practices:**
 
