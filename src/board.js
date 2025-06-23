@@ -61,6 +61,7 @@ export class Board {
 
   spawnTetromino(document) {
     let tetromino;
+    const center = Math.floor(this.width / 2);
     if (this.nextTetromino) {
       if (
         this.previewBoard &&
@@ -74,24 +75,27 @@ export class Board {
       tetromino.board = this;
       this.tetrominos.add(tetromino);
       this.element.appendChild(tetromino.element);
+      tetromino.updatePosition();
     } else {
       tetromino = Tetromino.createNew(
-        5,
+        center,
         document,
         this,
         this.tetrominoSeedQueue.dequeue()
       );
       this.tetrominos.add(tetromino);
       this.element.appendChild(tetromino.element);
+      tetromino.updatePosition();
     }
     tetromino.startFalling();
     // Show next tetromino in preview
     this.nextTetromino = Tetromino.createNew(
-      5,
+      center,
       document,
       null,
       this.tetrominoSeedQueue.dequeue()
     );
+    this.nextTetromino.updatePosition();
     if (this.previewBoard && this.previewBoard.showNextTetromino) {
       this.previewBoard.showNextTetromino(this.nextTetromino);
     }
