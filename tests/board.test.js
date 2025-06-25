@@ -58,9 +58,9 @@ describe("Board", () => {
   test("should detect tetromino collisions", () => {
     const tetromino1 = Tetromino.createNew(5, mockDocument, board, 1337);
     tetromino1.top = 1;
+    tetromino1.lock();
     const tetromino2 = Tetromino.createNew(5, mockDocument, board, 1337);
     tetromino2.top = 0;
-    board.tetrominos.add(tetromino1);
     expect(board._canMove(tetromino2, "down")).toBe(false);
   });
 
@@ -84,6 +84,7 @@ describe("Board", () => {
 
   test("tetrominos should block movement", () => {
     const blockingTetromino = Tetromino.createNew(5, mockDocument, board, 1337);
+    blockingTetromino.lock();
     const movingTetromino = Tetromino.createNew(4, mockDocument, board, 1337);
     expect(board.moveTetromino(movingTetromino, "right")).toBe(false);
     movingTetromino.left = 6;
