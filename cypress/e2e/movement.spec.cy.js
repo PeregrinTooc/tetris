@@ -51,7 +51,7 @@ describe("Tetris Game Movement", () => {
     cy.get("#start-button").click();
     cy.get(".tetromino").then(($el) => {
       const initialTop = parseInt($el.css("top"), 10);
-      cy.get("body").type("{downarrow}");
+      cy.get("body").type(" ");
       cy.get(".tetromino").should(($el2) => {
         const newTop = parseInt($el2.css("top"), 10);
         expect(newTop).to.equal(480);

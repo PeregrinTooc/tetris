@@ -59,8 +59,10 @@ function startGame() {
     tetrominoSeedQueue
   );
   document.getElementById("start-button").textContent = "Reset Game";
+  document.getElementById("start-button").blur();
   spawnNewTetromino();
   document.onkeydown = function (e) {
+    if (!gameRunning || !tetromino) return;
     if (e.key === "ArrowLeft") {
       tetromino.move("left");
     }
@@ -68,6 +70,10 @@ function startGame() {
       tetromino.move("right");
     }
     if (e.key === "ArrowDown") {
+      tetromino.drop();
+    }
+    if (e.key === " " || e.key === "Space" || e.key === "Spacebar") {
+      if (e.preventDefault) e.preventDefault();
       tetromino.drop();
     }
     if (e.key === "ArrowUp") {
