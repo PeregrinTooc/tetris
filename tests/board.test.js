@@ -16,6 +16,9 @@ describe("Board", () => {
         setAttribute: jest.fn(),
         dispatchEvent: jest.fn(),
         remove: jest.fn(),
+        appendChild: jest.fn(),
+        firstChild: null,
+        removeChild: jest.fn(),
       })),
     };
     mockElement = {
@@ -30,32 +33,32 @@ describe("Board", () => {
     board = new Board(20, 11, mockElement, mockPreviewBoard, stubQueue);
   });
 
-  test("should add tetromino to board", () => {
+  test("adds a tetromino element to the board DOM", () => {
     const tetromino = Tetromino.createNew(5, mockDocument, board, 1337);
     board.addTetromino(tetromino);
     expect(mockElement.appendChild).toHaveBeenCalledWith(tetromino.element);
   });
 
-  test("should move tetromino within boundaries", () => {
+  test("moves tetromino left within board boundaries", () => {
     const tetromino = Tetromino.createNew(5, mockDocument, board, 1337);
     expect(board.moveTetromino(tetromino, "left")).toBe(true);
     expect(tetromino.left).toBe(4);
   });
 
-  test("should prevent movement outside boundaries", () => {
+  test("prevents tetromino from moving left outside board boundaries", () => {
     const tetromino = Tetromino.createNew(0, mockDocument, board, 1337);
     expect(board.moveTetromino(tetromino, "left")).toBe(false);
     expect(tetromino.left).toBe(0);
   });
 
-  test("should check movement boundaries", () => {
+  test("returns false for movement outside left/right boundaries in _canMove", () => {
     const tetromino = Tetromino.createNew(0, mockDocument, board, 1337);
     expect(board._canMove(tetromino, "left")).toBe(false);
     tetromino.left = 10;
     expect(board._canMove(tetromino, "right")).toBe(false);
   });
 
-  test("should detect tetromino collisions", () => {
+  test("detects collision when tetromino moves down onto a locked tetromino", () => {
     const tetromino1 = Tetromino.createNew(5, mockDocument, board, 1337);
     tetromino1.top = 1;
     tetromino1.lock();
@@ -64,7 +67,7 @@ describe("Board", () => {
     expect(board._canMove(tetromino2, "down")).toBe(false);
   });
 
-  test("should raise game over when stack reaches top", () => {
+  test("dispatches game over event when a tetromino is added at the top row", () => {
     const mockDispatchEvent = jest.fn();
     board.element.dispatchEvent = mockDispatchEvent;
     const tetromino = { top: 0, left: 5 };
@@ -72,7 +75,7 @@ describe("Board", () => {
     expect(mockDispatchEvent).toHaveBeenCalled();
   });
 
-  test("should make tetromino immobile when at bottom", () => {
+  test("locks tetromino at the bottom and prevents further movement", () => {
     const tetromino = Tetromino.createNew(5, mockDocument, board, 1337);
     tetromino.drop();
     expect(tetromino.locked).toBe(true);
@@ -82,7 +85,7 @@ describe("Board", () => {
     expect(tetromino.left).toBe(5);
   });
 
-  test("tetrominos should block movement", () => {
+  test("prevents movement when another tetromino blocks the path (left/right)", () => {
     const blockingTetromino = Tetromino.createNew(5, mockDocument, board, 1337);
     blockingTetromino.lock();
     const movingTetromino = Tetromino.createNew(4, mockDocument, board, 1337);
@@ -91,11 +94,53 @@ describe("Board", () => {
     expect(board.moveTetromino(movingTetromino, "left")).toBe(false);
   });
 
-  test("should reset the board and clear tetrominos", () => {
+  test("reset clears all tetrominos and board DOM", () => {
     const tetromino = Tetromino.createNew(5, mockDocument, board, 1337);
     board.tetrominos.add(tetromino);
     board.reset();
     expect(board.tetrominos.size).toBe(0);
     expect(mockElement.innerHTML).toBe("");
+  });
+
+  test("T tetromino drop results in one block on the floor and three above", () => {
+    const tetromino = Tetromino.createNew(5, mockDocument, board, 0);
+    tetromino.drop();
+    const positions = tetromino.getBlockPositions();
+    const floorBlocks = positions.filter((p) => p.y === 20);
+    const aboveBlocks = positions.filter((p) => p.y === 19);
+    expect(floorBlocks.length).toBe(1);
+    expect(aboveBlocks.length).toBe(3);
+  });
+
+  test("blocksMovement returns true if any block of a tetromino would collide moving right (T shape, left arm)", () => {
+    const tTetromino = Tetromino.createNew(5, mockDocument, board, 0);
+    tTetromino.top = 10;
+    const singleTetromino = Tetromino.createNew(4, mockDocument, board, 1337);
+    singleTetromino.top = 10;
+    singleTetromino.left = 3;
+    const result = tTetromino.blocksMovement("right", singleTetromino);
+    expect(result).toBe(true);
+  });
+
+  test("blocksMovement returns true if any block of a tetromino would collide moving left (T shape, right arm)", () => {
+    const tTetromino = Tetromino.createNew(5, mockDocument, board, 0);
+    tTetromino.top = 10;
+    const singleTetromino = Tetromino.createNew(6, mockDocument, board, 1337);
+    singleTetromino.top = 10;
+    singleTetromino.left = 7;
+    const result = tTetromino.blocksMovement("left", singleTetromino);
+    expect(result).toBe(true);
+  });
+
+  test("blocksMovement returns true if any block of a tetromino would collide moving down (T shape, left arm)", () => {
+    const tTetromino = Tetromino.createNew(5, mockDocument, board, 0);
+    tTetromino.top = 10;
+    const singleTetromino = Tetromino.createNew(4, mockDocument, board, 1337);
+    singleTetromino.top = 9;
+    const tBlocks = tTetromino.getBlockPositions();
+    const sBlocks = singleTetromino.getBlockPositions();
+    const sBlocksMoved = sBlocks.map(({ x, y }) => ({ x, y: y + 1 }));
+    const result = tTetromino.blocksMovement("down", singleTetromino);
+    expect(result).toBe(true);
   });
 });

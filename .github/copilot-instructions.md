@@ -38,3 +38,5 @@ This repository contains a Tetris Game. It uses ATDD and TDD to develop the game
 
 - When a new edge case is discovered, add it to `TODO-TETRIS.md` in the root of the repository.
 - When implementing new features or fixing bugs, update `TODO-TETRIS.md` accordingly to track progress.
+- the "npm test" command runs both Cypress and Jest tests. Husky will run this command before pushing code to ensure all tests pass.
+- Frequently commit your changes with clear, descriptive commit messages, tag them as 'WIP' if they are not yet complete. This helps reverting to stable previous states if needed.

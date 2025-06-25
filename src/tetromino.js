@@ -54,8 +54,24 @@ export class Tetromino {
 
   drop() {
     if (!this.board) return;
-    while (this.board.moveTetromino(this, "down")) {}
+    while (this.canDrop()) {
+      this.board.moveTetromino(this, "down");
+    }
     this.lock();
+  }
+
+  canDrop() {
+    if (!this.board) return false;
+    const positions = this.getBlockPositions();
+    return positions.every(
+      ({ x, y }) =>
+        y < this.board.height &&
+        !Array.from(this.board.tetrominos).some(
+          (other) =>
+            other !== this &&
+            other.getBlockPositions().some((p) => p.x === x && p.y === y + 1)
+        )
+    );
   }
 
   updatePosition() {
@@ -70,24 +86,16 @@ export class Tetromino {
 
   blocksMovement(direction, movingTetromino) {
     if (this === movingTetromino) return false;
-    if (direction === "left") {
-      return (
-        this.top === movingTetromino.top &&
-        this.left === movingTetromino.left - 1
-      );
-    }
-    if (direction === "right") {
-      return (
-        this.top === movingTetromino.top &&
-        this.left === movingTetromino.left + 1
-      );
-    }
-    if (direction === "down") {
-      return (
-        this.left === movingTetromino.left &&
-        this.top === movingTetromino.top + 1
-      );
-    }
+    const thisBlocks = this.getBlockPositions();
+    const movingBlocks = movingTetromino.getBlockPositions();
+    let dx = 0,
+      dy = 0;
+    if (direction === "left") dx = -1;
+    if (direction === "right") dx = 1;
+    if (direction === "down") dy = 1;
+    return movingBlocks.some(({ x, y }) =>
+      thisBlocks.some(({ x: bx, y: by }) => bx === x + dx && by === y + dy)
+    );
   }
 
   lock() {
@@ -123,6 +131,10 @@ export class Tetromino {
       default:
         return false;
     }
+  }
+
+  getBlockPositions() {
+    return [{ x: this.left, y: this.top }];
   }
 }
 

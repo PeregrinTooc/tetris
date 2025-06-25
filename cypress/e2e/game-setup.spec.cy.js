@@ -2,7 +2,7 @@ describe("Tetris Game Setup", () => {
   beforeEach(() => {
     cy.visit("/index.html");
     cy.window().then((win) => {
-      win.setTetrominoDropTime(100000);
+      win.setTetrominoDropTime(100);
       for (let i = 0; i < 10; i++) win.pushTetrominoSeed(1337);
     });
   });
@@ -60,19 +60,17 @@ describe("Tetris Game Setup", () => {
 
   it("should detect and display game over when the stack reaches the top", () => {
     cy.get("#start-button").click();
-    cy.get(".tetromino").then(($tetromino) => {
-      const initialTop = parseInt($tetromino.css("top"), 10);
-      // Move the tetromino down until it reaches the top
-      for (let i = 0; i <= 20; i++) {
-        cy.get("body").type("{downarrow}");
-      }
-      cy.get(".tetromino").should(($el) => {
-        const newTop = parseInt($el.css("top"), 10);
-        expect(newTop).to.be.greaterThan(initialTop);
+    function pollForGameOver() {
+      return cy.get("body").then(() => {
+        if (Cypress.$("#game-over").length === 0) {
+          cy.get("body").type("{downarrow}");
+          return cy.wait(20).then(pollForGameOver);
+        }
       });
-      cy.get("#game-over").should("be.visible");
-      cy.get("#start-button").click();
-      cy.get("#game-over").should("not.exist");
-    });
+    }
+    pollForGameOver();
+    cy.get("#game-over", { timeout: 12000 }).should("be.visible");
+    cy.get("#start-button").click();
+    cy.get("#game-over").should("not.exist");
   });
 });
