@@ -1,0 +1,45 @@
+import { Tetromino } from "../src/tetromino.js";
+import { Board } from "../src/board.js";
+import { PreviewBoard } from "../src/preview-board.js";
+
+describe("TetrominoI", () => {
+	let tetromino;
+	let board;
+	const element = document.createElement("div");
+	const nextPiece = document.createElement("div");
+	nextPiece.id = "next-piece";
+	element.appendChild(nextPiece);
+	let stubQueue;
+	beforeEach(() => {
+		stubQueue = { dequeue: () => 1 };
+		board = new Board(
+			20,
+			11,
+			document.createElement("div"),
+			new PreviewBoard(element),
+			stubQueue
+		);
+		tetromino = Tetromino.createNew(5, document, board, 1);
+	});
+	test("should create I tetromino with correct initial position and shape", () => {
+		expect(tetromino.left).toBe(5);
+		expect(tetromino.top).toBe(0);
+		const positions = tetromino.getBlockPositions();
+		expect(positions).toEqual([
+			{ x: 5, y: 0 },
+			{ x: 4, y: 0 },
+			{ x: 6, y: 0 },
+			{ x: 7, y: 0 }
+		]);
+	});
+	test("should rotate I tetromino to vertical", () => {
+		tetromino.rotate();
+		const positions = tetromino.getBlockPositions();
+		expect(positions).toEqual([
+			{ x: 5, y: 0 },
+			{ x: 5, y: -1 },
+			{ x: 5, y: 1 },
+			{ x: 5, y: 2 }
+		]);
+	});
+});

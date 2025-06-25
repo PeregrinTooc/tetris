@@ -45,6 +45,15 @@ body {
 	border: 1px solid #333;
 }
 
+.tetromino-i {
+	background: none;
+}
+
+.tetromino-i .block {
+	background: cyan;
+	border: 1px solid #333;
+}
+
 .block {
 	width: 24px;
 	height: 24px;

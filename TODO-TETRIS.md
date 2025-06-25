@@ -10,6 +10,7 @@
 - ~~Tetromino locks when it can't move down~~
 - ~~Game over when stack reaches the top~~
 - ~~Tetromino rotation (clockwise/counterclockwise)~~ (T-shape, counter-clockwise, ArrowUp)
+- [x] Add I tetromino shape with seed 1 (including tests and implementation)
 - [ ] All 7 tetromino shapes (I, O, T, S, Z, J, L)
 - [ ] Hold piece functionality
 - ~~Hard drop (instantly drop tetromino)~~
