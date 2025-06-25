@@ -4,15 +4,17 @@ import { Board } from "./board.js";
 class TetrominoSeedQueue {
   constructor() {
     this.items = [];
+    this.availableSeeds = [0, 1];
   }
   enqueue(item) {
     this.items.push(item);
   }
   dequeue() {
-    if (this.items.length === 0) {
-      return 0;
+    if (this.items.length > 0) {
+      return this.items.shift();
     }
-    return this.items.shift();
+    const randomIndex = Math.floor(Math.random() * this.availableSeeds.length);
+    return this.availableSeeds[randomIndex];
   }
 }
 
