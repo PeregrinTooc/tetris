@@ -8,18 +8,22 @@ else
 	SERVER_STARTED=1
 fi
 
-cleanup() {
+wait_for_server() {
+	npx wait-on http://localhost:5173
+	return $?
+}
+
+stop_server() {
 	if [ "$SERVER_STARTED" = "1" ] && [ -n "$SERVER_PID" ]; then
 		kill $SERVER_PID 2>/dev/null
 		wait $SERVER_PID 2>/dev/null || true
 	fi
 }
 
-npx wait-on http://localhost:5173
-RESULT=$?
-if [ $RESULT -ne 0 ]; then
+wait_for_server
+if [ $? -ne 0 ]; then
 	echo 'Vite server did not start. Push aborted.'
-	[ "$SERVER_STARTED" = "1" ] && kill $SERVER_PID 2>/dev/null && wait $SERVER_PID 2>/dev/null || true
+	stop_server
 	exit 1
 fi
 
@@ -27,9 +31,9 @@ npm test
 TEST_RESULT=$?
 if [ $TEST_RESULT -ne 0 ]; then
 	echo 'Tests failed. Push aborted.'
-	[ "$SERVER_STARTED" = "1" ] && kill $SERVER_PID 2>/dev/null && wait $SERVER_PID 2>/dev/null || true
+	stop_server
 	exit $TEST_RESULT
 fi
 
-[ "$SERVER_STARTED" = "1" ] && kill $SERVER_PID 2>/dev/null && wait $SERVER_PID 2>/dev/null || true
+stop_server
 exit 0
