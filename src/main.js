@@ -71,9 +71,6 @@ function startGame() {
     if (e.key === "ArrowRight") {
       tetromino.move("right");
     }
-    if (e.key === "ArrowDown") {
-      tetromino.drop();
-    }
     if (e.key === " " || e.key === "Space" || e.key === "Spacebar") {
       if (e.preventDefault) e.preventDefault();
       tetromino.drop();
