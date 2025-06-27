@@ -1,3 +1,5 @@
+const spaceBar = " ";
+
 describe("Tetris Game Setup", () => {
   beforeEach(() => {
     cy.visit("/index.html");
@@ -23,7 +25,7 @@ describe("Tetris Game Setup", () => {
   it("should spawn the next tetromino when the current one stops moving", () => {
     cy.get("#start-button").click();
     cy.get('#game-board [data-tetromino-id="1"]').then(($tetromino) => {
-      cy.get("body").type("{downarrow}");
+      cy.get("body").type(spaceBar);
       cy.wait(10);
       cy.get("#game-board .tetromino").should("have.length", 2);
       cy.get('#game-board [data-tetromino-id="2"]').then(($newTetromino) => {});
@@ -48,7 +50,7 @@ describe("Tetris Game Setup", () => {
       const initialTop = parseInt($tetromino.css("top"), 10);
       // Move the tetromino down to create a complete line
       for (let i = 0; i < 20; i++) {
-        cy.get("body").type("{downarrow}");
+        cy.get("body").type(spaceBar);
       }
       cy.get(".tetromino").should(($el) => {
         const newTop = parseInt($el.css("top"), 10);
@@ -63,7 +65,7 @@ describe("Tetris Game Setup", () => {
     function pollForGameOver() {
       return cy.get("body").then(() => {
         if (Cypress.$("#game-over").length === 0) {
-          cy.get("body").type("{downarrow}");
+          cy.get("body").type(spaceBar);
           return cy.wait(20).then(pollForGameOver);
         }
       });
