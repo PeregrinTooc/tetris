@@ -37,27 +37,37 @@ body {
 }
 
 .tetromino-t {
-	background: none;
+    background: none;
 }
 
 .tetromino-t .block {
-	background: purple;
-	border: 1px solid #333;
+    background: purple;
+    border: 1px solid #333;
 }
 
+.tetromino-o {
+    background: none;
+}
+
+.tetromino-o .block {
+    background: #ffe066;
+    border: 1px solid #333;
+}
+
+
 .tetromino-i {
-	background: none;
+    background: none;
 }
 
 .tetromino-i .block {
-	background: cyan;
-	border: 1px solid #333;
+    background: cyan;
+    border: 1px solid #333;
 }
 
 .block {
-	width: 24px;
-	height: 24px;
-	position: absolute;
+    width: 24px;
+    height: 24px;
+    position: absolute;
 }
 
 .line-clear {

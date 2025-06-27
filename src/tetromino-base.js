@@ -1,8 +1,5 @@
 export class Tetromino {
   static nextId = 1;
-  static createNew(left, document, board, seed) {
-    throw new Error("Use the factory in tetromino.js");
-  }
 
   constructor(left, document, board) {
     this.board = board;
@@ -95,8 +92,8 @@ export class Tetromino {
   lock() {
     if (this.locked) return;
     this.locked = true;
-    this.move = function () {};
-    this.drop = function () {};
+    this.move = function () { };
+    this.drop = function () { };
     const event = new Event("locked");
     this.element.dispatchEvent(event);
   }
