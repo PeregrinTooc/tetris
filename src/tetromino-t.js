@@ -17,13 +17,15 @@ export class TetrominoT extends Tetromino {
   }
 
   getBlockPositions() {
-    const positions = [
-      { x: this.left, y: this.top },
-      { x: this.left - 1, y: this.top },
-      { x: this.left + 1, y: this.top },
-      { x: this.left, y: this.top + 1 },
-    ];
-    if (this.rotation % 4 === 1) {
+    if (this.rotation % 4 === 0) {
+      return [
+        { x: this.left, y: this.top },
+        { x: this.left - 1, y: this.top },
+        { x: this.left + 1, y: this.top },
+        { x: this.left, y: this.top + 1 },
+      ];
+    }
+    if (this.rotation % 4 === 3) {
       return [
         { x: this.left, y: this.top },
         { x: this.left + 1, y: this.top },
@@ -39,19 +41,19 @@ export class TetrominoT extends Tetromino {
         { x: this.left, y: this.top - 1 },
       ];
     }
-    if (this.rotation % 4 === 3) {
+    if (this.rotation % 4 === 1) {
       return [
         { x: this.left, y: this.top },
-        { x: this.left, y: this.top - 1 },
         { x: this.left - 1, y: this.top },
+        { x: this.left, y: this.top - 1 },
         { x: this.left, y: this.top + 1 },
       ];
     }
-    return positions;
+    return [];
   }
 
   rotate() {
-    this.rotation = (this.rotation + 1) % 4;
+    this.rotation++;
     this.updateBlocks();
   }
 
@@ -59,6 +61,10 @@ export class TetrominoT extends Tetromino {
     while (this.element.firstChild) {
       this.element.removeChild(this.element.firstChild);
     }
+    this._renderBlocks(this.element);
+  }
+
+  _renderBlocks(element) {
     const blocks = this.getBlockPositions();
     blocks.forEach(({ x, y }) => {
       const block = this.createDiv(
@@ -67,22 +73,13 @@ export class TetrominoT extends Tetromino {
         x - this.left,
         y - this.top
       );
-      this.element.appendChild(block);
+      element.appendChild(block);
     });
   }
 
   createElement(document) {
     const tetromino = this.createDiv(document, this.getClassName());
-    const blocks = this.getBlockPositions();
-    blocks.forEach(({ x, y }) => {
-      const block = this.createDiv(
-        document,
-        "block",
-        x - this.left,
-        y - this.top
-      );
-      tetromino.appendChild(block);
-    });
+    this._renderBlocks(tetromino);
     return tetromino;
   }
 }
