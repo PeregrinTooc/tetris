@@ -1,4 +1,4 @@
-import { Tetromino } from "./tetromino.js";
+import { TetrominoFactory } from "./tetromino.js";
 
 export class Board {
   constructor(height, width, element, previewBoard, tetrominoSeedQueue) {
@@ -77,7 +77,7 @@ export class Board {
       this.element.appendChild(tetromino.element);
       tetromino.updatePosition();
     } else {
-      tetromino = Tetromino.createNew(
+      tetromino = TetrominoFactory.createNew(
         center,
         document,
         this,
@@ -89,7 +89,7 @@ export class Board {
     }
     tetromino.startFalling();
     // Show next tetromino in preview
-    this.nextTetromino = Tetromino.createNew(
+    this.nextTetromino = TetrominoFactory.createNew(
       center,
       document,
       null,

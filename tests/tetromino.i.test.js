@@ -1,4 +1,4 @@
-import { Tetromino } from "../src/tetromino.js";
+import { TetrominoFactory } from "../src/tetromino.js";
 import { Board } from "../src/board.js";
 import { PreviewBoard } from "../src/preview-board.js";
 
@@ -19,7 +19,7 @@ describe("TetrominoI", () => {
       new PreviewBoard(element),
       stubQueue
     );
-    tetromino = Tetromino.createNew(5, document, board, 1);
+    tetromino = TetrominoFactory.createNew(5, document, board, 1);
   });
   test("should create I tetromino with correct initial position and shape", () => {
     expect(tetromino.left).toBe(5);

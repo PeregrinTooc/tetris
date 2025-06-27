@@ -1,5 +1,5 @@
 import { PreviewBoard } from "../src/preview-board.js";
-import { Tetromino } from "../src/tetromino.js";
+import { TetrominoFactory } from "../src/tetromino.js";
 import { Board } from "../src/board.js";
 
 describe("PreviewBoard", () => {
@@ -17,10 +17,16 @@ describe("PreviewBoard", () => {
     element.appendChild(previewContainer);
     previewBoard = new PreviewBoard(element);
     stubQueue = { dequeue: () => 1337 };
-    board = new Board(20, 11, document.createElement("div"), previewBoard, stubQueue);
+    board = new Board(
+      20,
+      11,
+      document.createElement("div"),
+      previewBoard,
+      stubQueue
+    );
   });
   test("should clear preview container and add tetromino element", () => {
-    const tetromino = Tetromino.createNew(5, document, board, 1337);
+    const tetromino = TetrominoFactory.createNew(5, document, board, 1337);
     previewBoard.showNextTetromino(tetromino);
     expect(previewBoard.previewContainer.innerHTML).toContain("tetromino");
   });
