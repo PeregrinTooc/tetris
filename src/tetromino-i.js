@@ -33,39 +33,4 @@ export class TetrominoI extends Tetromino {
     ];
   }
 
-  rotate() {
-    this.rotation = (this.rotation + 1) % 2;
-    this.updateBlocks();
-  }
-
-  updateBlocks() {
-    while (this.element.firstChild) {
-      this.element.removeChild(this.element.firstChild);
-    }
-    const blocks = this.getBlockPositions();
-    blocks.forEach(({ x, y }) => {
-      const block = this.createDiv(
-        document,
-        "block",
-        x - this.left,
-        y - this.top
-      );
-      this.element.appendChild(block);
-    });
-  }
-
-  createElement(document) {
-    const tetromino = this.createDiv(document, this.getClassName());
-    const blocks = this.getBlockPositions();
-    blocks.forEach(({ x, y }) => {
-      const block = this.createDiv(
-        document,
-        "block",
-        x - this.left,
-        y - this.top
-      );
-      tetromino.appendChild(block);
-    });
-    return tetromino;
-  }
 }

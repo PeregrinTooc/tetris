@@ -29,29 +29,5 @@ export class TetrominoO extends Tetromino {
         // O tetromino does not rotate, so no action needed    
     }
 
-    updateBlocks() {
-        while (this.element.firstChild) {
-            this.element.removeChild(this.element.firstChild);
-        }
-        this._renderBlocks(this.element);
-    }
 
-    _renderBlocks(element) {
-        const blocks = this.getBlockPositions();
-        blocks.forEach(({ x, y }) => {
-            const block = this.createDiv(
-                document,
-                "block",
-                x - this.left,
-                y - this.top
-            );
-            element.appendChild(block);
-        });
-    }
-
-    createElement(document) {
-        const tetromino = this.createDiv(document, this.getClassName());
-        this._renderBlocks(tetromino);
-        return tetromino;
-    }
 }
