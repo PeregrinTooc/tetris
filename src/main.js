@@ -36,6 +36,7 @@ window.pushTetrominoSeed = function (seed) {
 };
 
 document.getElementById("game-board").addEventListener("gameover", () => {
+  stopTicking();
   const gameOverElement = document.createElement("div");
   gameOverElement.id = "game-over";
   gameOverElement.className = "game-over";

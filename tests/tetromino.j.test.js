@@ -19,7 +19,7 @@ describe("TetrominoJ", () => {
       new PreviewBoard(element),
       stubQueue
     );
-    tetromino = TetrominoFactory.createNew(5, document, board, 4);
+    tetromino = TetrominoFactory.createNew(5, document, board, 3);
   });
   test("should create J tetromino with correct initial position and shape", () => {
     expect(tetromino.left).toBe(5);

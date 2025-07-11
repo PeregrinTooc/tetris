@@ -75,4 +75,22 @@ describe("Tetris Game Setup", () => {
     cy.get("#start-button").click();
     cy.get("#game-over").should("not.exist");
   });
+
+  it("should stop ticking and not spawn new tetrominoes after game over", () => {
+    cy.get("#start-button").click();
+    function pollForGameOver() {
+      return cy.get("body").then(() => {
+        if (Cypress.$("#game-over").length === 0) {
+          cy.get("body").type(spaceBar);
+          return cy.wait(20).then(pollForGameOver);
+        }
+      });
+    }
+    pollForGameOver();
+    cy.get("#game-over", { timeout: 12000 }).should("be.visible");
+    cy.get(".tetromino").then(($tetrominoesBefore) => {
+      cy.wait(500);
+      cy.get(".tetromino").should("have.length", $tetrominoesBefore.length);
+    });
+  });
 });
