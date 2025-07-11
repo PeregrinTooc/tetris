@@ -64,6 +64,15 @@ body {
     border: 1px solid #333;
 }
 
+.tetromino-j {
+    background: none;
+}
+
+.tetromino-j .block {
+    background-color: #1e90ff;
+    border: 1px solid #333;
+}
+
 .block {
     width: 24px;
     height: 24px;

@@ -2,6 +2,7 @@ import { Tetromino } from "./tetromino-base.js";
 import { TetrominoT } from "./tetromino-t.js";
 import { TetrominoI } from "./tetromino-i.js";
 import { TetrominoO } from "./tetromino-o.js";
+import { TetrominoJ } from "./tetromino-j.js";
 
 export class TetrominoFactory {
   static createNew(left, document, board, seed) {
@@ -13,6 +14,9 @@ export class TetrominoFactory {
     }
     if (seed === 2) {
       return new TetrominoO(left, document, board);
+    }
+    if (seed === 3) {
+      return new TetrominoJ(left, document, board);
     }
     if (seed === 1337) {
       return new Tetromino(left, document, board, seed);
