@@ -17,39 +17,47 @@ export class TetrominoT extends Tetromino {
   }
 
   getBlockPositions() {
-    if (this.rotation % 4 === 0) {
-      return [
-        { x: this.left, y: this.top },
-        { x: this.left - 1, y: this.top },
-        { x: this.left + 1, y: this.top },
-        { x: this.left, y: this.top + 1 },
-      ];
+    // Block order and pivot match test expectations
+    switch (this.rotation % 4) {
+      case 0:
+        // Up
+        return [
+          { x: this.left, y: this.top },
+          { x: this.left - 1, y: this.top },
+          { x: this.left + 1, y: this.top },
+          { x: this.left, y: this.top + 1 },
+        ];
+      case 1:
+        // Right
+        return [
+          { x: this.left, y: this.top },
+          { x: this.left, y: this.top - 1 },
+          { x: this.left, y: this.top + 1 },
+          { x: this.left + 1, y: this.top },
+        ];
+      case 2:
+        // Down
+        return [
+          { x: this.left, y: this.top },
+          { x: this.left - 1, y: this.top },
+          { x: this.left + 1, y: this.top },
+          { x: this.left, y: this.top - 1 },
+        ];
+      case 3:
+        // Left
+        return [
+          { x: this.left, y: this.top },
+          { x: this.left, y: this.top - 1 },
+          { x: this.left, y: this.top + 1 },
+          { x: this.left - 1, y: this.top },
+        ];
+      default:
+        return [
+          { x: this.left, y: this.top },
+          { x: this.left, y: this.top },
+          { x: this.left, y: this.top },
+          { x: this.left, y: this.top },
+        ];
     }
-    if (this.rotation % 4 === 3) {
-      return [
-        { x: this.left, y: this.top },
-        { x: this.left + 1, y: this.top },
-        { x: this.left, y: this.top - 1 },
-        { x: this.left, y: this.top + 1 },
-      ];
-    }
-    if (this.rotation % 4 === 2) {
-      return [
-        { x: this.left, y: this.top },
-        { x: this.left + 1, y: this.top },
-        { x: this.left - 1, y: this.top },
-        { x: this.left, y: this.top - 1 },
-      ];
-    }
-    if (this.rotation % 4 === 1) {
-      return [
-        { x: this.left, y: this.top },
-        { x: this.left - 1, y: this.top },
-        { x: this.left, y: this.top - 1 },
-        { x: this.left, y: this.top + 1 },
-      ];
-    }
-    return [];
   }
-
 }

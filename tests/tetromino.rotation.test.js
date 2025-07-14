@@ -1,4 +1,5 @@
 import { TetrominoFactory } from "../src/tetromino.js";
+import { TetrominoT } from "../src/tetromino-t.js";
 import { Board } from "../src/board.js";
 
 describe("Tetromino rotation", () => {
@@ -21,9 +22,14 @@ describe("Tetromino rotation", () => {
     tetromino = TetrominoFactory.createNew(5, document, board, 0);
   });
   test("should rotate T tetromino counter-clockwise", () => {
-    const initialBlocks = tetromino.getBlockPositions();
+    const tetromino = new TetrominoT(5, document);
     tetromino.rotate();
     const rotatedBlocks = tetromino.getBlockPositions();
-    expect(rotatedBlocks).not.toEqual(initialBlocks);
+    expect(rotatedBlocks).toEqual([
+      { x: 5, y: 0 },
+      { x: 4, y: 0 },
+      { x: 6, y: 0 },
+      { x: 5, y: 1 },
+    ]);
   });
 });

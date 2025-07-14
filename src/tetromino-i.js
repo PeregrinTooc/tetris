@@ -17,20 +17,23 @@ export class TetrominoI extends Tetromino {
   }
 
   getBlockPositions() {
+    // Tetris SRS: pivot is the second block from the left (horizontal) or from the top (vertical)
     if (this.rotation % 2 === 0) {
+      // Horizontal: [left-1, left, left+1, left+2] at y=top
       return [
-        { x: this.left, y: this.top },
         { x: this.left - 1, y: this.top },
+        { x: this.left, y: this.top },
         { x: this.left + 1, y: this.top },
         { x: this.left + 2, y: this.top },
       ];
+    } else {
+      // Vertical: [left, top-1], [left, top], [left, top+1], [left, top+2]
+      return [
+        { x: this.left, y: this.top - 1 },
+        { x: this.left, y: this.top },
+        { x: this.left, y: this.top + 1 },
+        { x: this.left, y: this.top + 2 },
+      ];
     }
-    return [
-      { x: this.left, y: this.top },
-      { x: this.left, y: this.top - 1 },
-      { x: this.left, y: this.top + 1 },
-      { x: this.left, y: this.top + 2 },
-    ];
   }
-
 }

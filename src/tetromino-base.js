@@ -92,8 +92,8 @@ export class Tetromino {
   lock() {
     if (this.locked) return;
     this.locked = true;
-    this.move = function () { };
-    this.drop = function () { };
+    this.move = function () {};
+    this.drop = function () {};
     const event = new Event("locked");
     this.element.dispatchEvent(event);
   }
@@ -128,9 +128,41 @@ export class Tetromino {
     return [{ x: this.left, y: this.top }];
   }
 
-
-  rotate() {
+  rotate(board) {
+    // Save current state
+    const prevRotation = this.rotation;
+    // Preview next rotation
     this.rotation++;
+    const previewPositions = this.getBlockPositions();
+    const width = board ? board.width : this.board ? this.board.width : 10;
+    const height = board ? board.height : this.board ? this.board.height : 20;
+    // Check boundaries
+    const inBounds = previewPositions.every(
+      ({ x, y }) => x >= 0 && x < width && y >= 0 && y < height
+    );
+    // Check collisions
+    let collision = false;
+    if (board && board.tetrominos) {
+      for (const other of board.tetrominos) {
+        if (other === this) continue;
+        const otherBlocks = other.getBlockPositions();
+        if (
+          previewPositions.some((pos) =>
+            otherBlocks.some((b) => b.x === pos.x && b.y === pos.y)
+          )
+        ) {
+          collision = true;
+          break;
+        }
+      }
+    }
+    if (!inBounds || collision) {
+      // Revert rotation
+      this.rotation = prevRotation;
+      // No need to update blocks, as nothing changed
+      return;
+    }
+    // If valid, update blocks
     this.updateBlocks();
   }
 
@@ -159,5 +191,4 @@ export class Tetromino {
     this._renderBlocks(tetromino);
     return tetromino;
   }
-
 }

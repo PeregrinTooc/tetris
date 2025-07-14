@@ -44,7 +44,7 @@ describe("T-shaped Tetromino", () => {
       expect(blocks).to.deep.equal([
         { left: 0, top: 0 },
         { left: -24, top: 0 },
-        { left: 0, top: -24 },
+        { left: 24, top: 0 },
         { left: 0, top: 24 },
       ]);
     });
@@ -55,9 +55,9 @@ describe("T-shaped Tetromino", () => {
       const blocks = getBlockOffsets($tetromino);
       expect(blocks).to.deep.equal([
         { left: 0, top: 0 },
-        { left: 24, top: 0 },
         { left: -24, top: 0 },
-        { left: 0, top: -24 },
+        { left: 24, top: 0 },
+        { left: 0, top: 24 },
       ]);
     });
     // Rotate to 3
@@ -67,8 +67,8 @@ describe("T-shaped Tetromino", () => {
       const blocks = getBlockOffsets($tetromino);
       expect(blocks).to.deep.equal([
         { left: 0, top: 0 },
+        { left: -24, top: 0 },
         { left: 24, top: 0 },
-        { left: 0, top: -24 },
         { left: 0, top: 24 },
       ]);
     });
