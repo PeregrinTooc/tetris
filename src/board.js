@@ -12,18 +12,17 @@ export class Board {
   }
 
   _canMove(tetromino, direction) {
+    // Only check for collisions, not boundaries
     const hasCollision = Array.from(this.tetrominos).some((other) =>
       other.blocksMovement(direction, tetromino)
     );
-
     if (hasCollision) {
       if (direction === "down") {
         this._raiseGameOverIfStackReachesTop(tetromino);
       }
       return false;
     }
-
-    return tetromino.isWithinBounds(direction, this.width, this.height);
+    return true;
   }
   _raiseGameOverIfStackReachesTop(tetromino) {
     if (tetromino.top === 0) {
@@ -38,6 +37,19 @@ export class Board {
   }
 
   moveTetromino(tetromino, direction) {
+    // Preview the move for all blocks
+    let dx = 0,
+      dy = 0;
+    if (direction === "left") dx = -1;
+    if (direction === "right") dx = 1;
+    if (direction === "down") dy = 1;
+    const previewBlocks = tetromino
+      .getBlockPositions()
+      .map(({ x, y }) => ({ x: x + dx, y: y + dy }));
+    const inBounds = previewBlocks.every(
+      ({ x, y }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
+    );
+    if (!inBounds) return false;
     if (!this._canMove(tetromino, direction)) {
       return false;
     }

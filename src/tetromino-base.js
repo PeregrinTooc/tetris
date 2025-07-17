@@ -52,16 +52,24 @@ export class Tetromino {
   }
 
   canDrop() {
-    if (!this.board) return false;
-    const positions = this.getBlockPositions();
-    return positions.every(
+    if (!this.board || this.locked) return false;
+    // Preview the move for all blocks
+    const previewBlocks = this.getBlockPositions().map(({ x, y }) => ({
+      x,
+      y: y + 1,
+    }));
+    const inBounds = previewBlocks.every(
       ({ x, y }) =>
-        y < this.board.height &&
-        !Array.from(this.board.tetrominos).some(
-          (other) =>
-            other !== this &&
-            other.getBlockPositions().some((p) => p.x === x && p.y === y + 1)
-        )
+        x >= 0 && x < this.board.width && y >= 0 && y <= this.board.height
+    );
+    if (!inBounds) return false;
+    // Check for collision with other tetrominos
+    return !Array.from(this.board.tetrominos).some(
+      (other) =>
+        other !== this &&
+        other
+          .getBlockPositions()
+          .some((p) => previewBlocks.some((b) => b.x === p.x && b.y === p.y))
     );
   }
 
@@ -112,16 +120,18 @@ export class Tetromino {
   }
 
   isWithinBounds(direction, boardWidth, boardHeight) {
-    switch (direction) {
-      case "down":
-        return this.top < boardHeight;
-      case "left":
-        return this.left > 0;
-      case "right":
-        return this.left < boardWidth - 1;
-      default:
-        return false;
-    }
+    // Calculate the new positions for all blocks after the move
+    let dx = 0,
+      dy = 0;
+    if (direction === "left") dx = -1;
+    if (direction === "right") dx = 1;
+    if (direction === "down") dy = 1;
+    // Check all blocks, not just the pivot
+    return this.getBlockPositions().every(({ x, y }) => {
+      const nx = x + dx;
+      const ny = y + dy;
+      return nx >= 0 && nx < boardWidth && ny >= 0 && ny <= boardHeight;
+    });
   }
 
   getBlockPositions() {
@@ -138,7 +148,7 @@ export class Tetromino {
     const height = board ? board.height : this.board ? this.board.height : 20;
     // Check boundaries
     const inBounds = previewPositions.every(
-      ({ x, y }) => x >= 0 && x < width && y >= 0 && y < height
+      ({ x, y }) => x >= 0 && x < width && y >= 0 && y <= height
     );
     // Check collisions
     let collision = false;

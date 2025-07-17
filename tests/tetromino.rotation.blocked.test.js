@@ -51,10 +51,10 @@ describe("Tetromino rotation with boundaries and collisions", () => {
     tetromino.top = 18;
     tetromino.rotate(board);
     expect(tetromino.getBlockPositions().map(({ x, y }) => [x, y])).toEqual([
-      [3, 18],
+      [4, 17],
       [4, 18],
-      [5, 18],
-      [6, 18],
+      [4, 19],
+      [4, 20],
     ]);
   });
 

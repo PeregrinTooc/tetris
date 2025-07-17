@@ -36,4 +36,36 @@ describe("Tetromino", () => {
     tetromino.move("left");
     expect(moveTetrominoSpy).not.toHaveBeenCalled();
   });
+  test("should not move left past the left border", () => {
+    tetromino.left = 0;
+    tetromino.move("left");
+    expect(tetromino.left).toBe(0);
+  });
+  test("should not move right past the right border", () => {
+    tetromino.left = board.width - 1;
+    tetromino.move("right");
+    expect(tetromino.left).toBe(board.width - 1);
+  });
+  test("I tetromino blocks should not go out of left border", () => {
+    // Place I tetromino so all blocks are in-bounds
+    tetromino = TetrominoFactory.createNew(2, document, board, 1); // 1 = I
+    tetromino.left = 1; // leftmost block at 0
+    const before = tetromino.getBlockPositions().map((b) => b.x);
+    expect(Math.min(...before)).toBe(0);
+    tetromino.move("left");
+    const after = tetromino.getBlockPositions().map((b) => b.x);
+    // Should not move, still at left edge
+    expect(Math.min(...after)).toBe(0);
+  });
+  test("I tetromino blocks should not go out of right border", () => {
+    // Place I tetromino so all blocks are in-bounds
+    tetromino = TetrominoFactory.createNew(board.width - 3, document, board, 1); // 1 = I
+    tetromino.left = board.width - 3; // rightmost block at width-1
+    const before = tetromino.getBlockPositions().map((b) => b.x);
+    expect(Math.max(...before)).toBe(board.width - 1);
+    tetromino.move("right");
+    const after = tetromino.getBlockPositions().map((b) => b.x);
+    // Should not move, still at right edge
+    expect(Math.max(...after)).toBe(board.width - 1);
+  });
 });

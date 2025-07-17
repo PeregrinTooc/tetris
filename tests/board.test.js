@@ -51,11 +51,15 @@ describe("Board", () => {
     expect(tetromino.left).toBe(0);
   });
 
-  test("returns false for movement outside left/right boundaries in _canMove", () => {
+  test("prevents tetromino from moving left or right outside board boundaries (via moveTetromino)", () => {
     const tetromino = TetrominoFactory.createNew(0, mockDocument, board, 1337);
-    expect(board._canMove(tetromino, "left")).toBe(false);
+    const leftResult = board.moveTetromino(tetromino, "left");
+    expect(leftResult).toBe(false);
+    expect(tetromino.left).toBe(0);
     tetromino.left = 10;
-    expect(board._canMove(tetromino, "right")).toBe(false);
+    const rightResult = board.moveTetromino(tetromino, "right");
+    expect(rightResult).toBe(false);
+    expect(tetromino.left).toBe(10);
   });
 
   test("detects collision when tetromino moves down onto a locked tetromino", () => {
@@ -112,14 +116,14 @@ describe("Board", () => {
     expect(mockElement.innerHTML).toBe("");
   });
 
-  test("T tetromino drop results in one block on the floor and three above", () => {
+  test("T tetromino drop results in correct blocks on the floor", () => {
     const tetromino = TetrominoFactory.createNew(5, mockDocument, board, 0);
     tetromino.drop();
     const positions = tetromino.getBlockPositions();
     const floorBlocks = positions.filter((p) => p.y === 20);
-    const aboveBlocks = positions.filter((p) => p.y === 19);
-    expect(floorBlocks.length).toBe(1);
-    expect(aboveBlocks.length).toBe(3);
+    const aboveFloorBlocks = positions.filter((p) => p.y === 19);
+    expect(floorBlocks.length).toBe(1); // Only the pivot block is at y === 20
+    expect(aboveFloorBlocks.length).toBe(3); // The arms are at y === 19
   });
 
   test("blocksMovement returns true if any block of a tetromino would collide moving right (T shape, left arm)", () => {
