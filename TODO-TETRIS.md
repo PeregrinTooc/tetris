@@ -66,7 +66,7 @@
 - [ ] Score/level/lines UI updates
 - [X] Hard drop action
 - [ ] Hold action
-- [ ] Preview of next piece is shown
+- [x] Preview of next piece is shown
 - [ ] Pause/resume works
 - [ ] Mobile/responsive controls
 
