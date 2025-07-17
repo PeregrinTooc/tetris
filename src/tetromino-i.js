@@ -5,7 +5,7 @@ export class TetrominoI extends Tetromino {
     super(left, document, null);
     this.type = "I";
     this.rotation = 0;
-    this.element = this.createElement(document);
+    this.element = this._createElement(document);
     if (board) {
       this.board = board;
       board.addTetromino(this);
