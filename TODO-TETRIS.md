@@ -61,10 +61,11 @@
 - [x] Tetromino locks and new tetromino spawns
 - [x] Game over is detected and displayed
 - [x] Tetromino rotation via keyboard (T-shape, ArrowUp)
-- [ ] All tetromino shapes appear
+- [x] All tetromino shapes appear
 - [ ] Line clear is detected and board updates
 - [ ] Score/level/lines UI updates
-- [ ] Hold and hard drop actions
+- [X] Hard drop action
+- [ ] Hold action
 - [ ] Preview of next piece is shown
 - [ ] Pause/resume works
 - [ ] Mobile/responsive controls
