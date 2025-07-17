@@ -73,6 +73,15 @@ body {
     border: 1px solid #333;
 }
 
+.tetromino-l {
+    background: none;
+}
+
+.tetromino-l .block {
+    background-color: orange;
+    border: 1px solid #333;
+}
+
 .block {
     width: 24px;
     height: 24px;

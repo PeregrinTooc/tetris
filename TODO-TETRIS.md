@@ -12,6 +12,7 @@
 - ~~Tetromino rotation (clockwise/counterclockwise)~~ (T-shape, counter-clockwise, ArrowUp)
 - [x] Add I tetromino shape with seed 1 (including tests and implementation)
 - [x] Add J tetromino shape (class, test, style, and factory integration)
+- [x] Add L tetromino shape (class, test, style, and factory integration)
 - [ ] All 7 tetromino shapes (I, O, T, S, Z, J, L)
 - [ ] Hold piece functionality
 - ~~Hard drop (instantly drop tetromino)~~

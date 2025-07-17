@@ -4,7 +4,7 @@ import { Board } from "./board.js";
 class TetrominoSeedQueue {
   constructor() {
     this.items = [];
-    this.availableSeeds = [0, 1, 2, 3];
+    this.availableSeeds = [0, 1, 2, 3, 4];
   }
   enqueue(item) {
     this.items.push(item);
