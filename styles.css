@@ -82,6 +82,24 @@ body {
     border: 1px solid #333;
 }
 
+.tetromino-z {
+    background: none;
+}
+
+.tetromino-z .block {
+    background-color: #e53935;
+    border: 1px solid #333;
+}
+
+.tetromino-s {
+    background: none;
+}
+
+.tetromino-s .block {
+    background-color: #43a047;
+    border: 1px solid #333;
+}
+
 .block {
     width: 24px;
     height: 24px;

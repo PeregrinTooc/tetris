@@ -3,41 +3,49 @@
 ## Features
 
 ### Core Gameplay
-- ~~Classic Tetris gameplay (falling blocks, stacking, game over)~~
-- ~~Game board with correct dimensions~~
-- ~~Tetrominoes spawn at the top and fall automatically~~
-- ~~Player can move tetromino left/right/down~~
-- ~~Tetromino locks when it can't move down~~
-- ~~Game over when stack reaches the top~~
-- ~~Tetromino rotation (clockwise/counterclockwise)~~ (T-shape, counter-clockwise, ArrowUp)
+
+- [x] Classic Tetris gameplay (falling blocks, stacking, game over)
+- [x] Game board with correct dimensions
+- [x] Tetrominoes spawn at the top and fall automatically
+- [x] Player can move tetromino left/right/down
+- [x] Tetromino locks when it can't move down
+- [x] Game over when stack reaches the top
+- [x] Tetromino rotation (clockwise/counterclockwise) (T-shape, counter-clockwise, ArrowUp)
 - [x] Add I tetromino shape with seed 1 (including tests and implementation)
 - [x] Add J tetromino shape (class, test, style, and factory integration)
 - [x] Add L tetromino shape (class, test, style, and factory integration)
-- [ ] All 7 tetromino shapes (I, O, T, S, Z, J, L)
+- [x] Add Z tetromino shape (class, test, style, and factory integration)
+- [x] Add S tetromino shape (class, test, style, and factory integration)
+- [x] Add O tetromino shape (class, test, style, and factory integration)
+- [x] Add T tetromino shape (class, test, style, and factory integration)
+- [x] All 7 tetromino shapes (I, O, T, S, Z, J, L) implemented
 - [ ] Hold piece functionality
-- ~~Hard drop (instantly drop tetromino)~~
+- [x] Hard drop (instantly drop tetromino)
 - [ ] Soft drop (faster drop)
 - [ ] Increasing speed/level progression
 - [ ] Scoring system (points for line clears, soft/hard drop)
 - [ ] Sound effects and music
 
 ### Board & Line Mechanics
+
 - [ ] Line clear detection and removal
 - [ ] Multiple line clears (double, triple, Tetris)
 - [ ] Ghost piece (shows where tetromino will land)
 - [ ] Wall kicks (rotation near walls)
-- ~~Lock delay (brief pause before locking)~~
+- [x] Lock delay (brief pause before locking)
 
 ### UI/UX
-- ~~Start/Reset game button~~
-- ~~Game over message~~
-- ~~Preview of next piece~~
+
+- [x] Start/Reset game button
+- [x] Game over message
+- [x] Preview of next piece
 - [ ] Display for score, level, and lines cleared
 - [ ] Responsive/mobile-friendly UI
 - [ ] Pause/resume functionality
 - [ ] Settings (volume, controls, etc.)
 
 ### Accessibility
+
 - [ ] Keyboard remapping
 - [ ] Colorblind mode
 - [ ] Screen reader support
@@ -45,13 +53,14 @@
 ## Test Coverage
 
 ### Acceptance (Cypress)
-- ~~Game board, start button, and next piece preview are visible on load~~
-- ~~Game starts and spawns tetromino on start~~
-- ~~Tetromino falls automatically~~
-- ~~Player can move tetromino left/right/down~~
-- ~~Tetromino locks and new tetromino spawns~~
-- ~~Game over is detected and displayed~~
-- ~~Tetromino rotation via keyboard~~ (T-shape, ArrowUp)
+
+- [x] Game board, start button, and next piece preview are visible on load
+- [x] Game starts and spawns tetromino on start
+- [x] Tetromino falls automatically
+- [x] Player can move tetromino left/right/down
+- [x] Tetromino locks and new tetromino spawns
+- [x] Game over is detected and displayed
+- [x] Tetromino rotation via keyboard (T-shape, ArrowUp)
 - [ ] All tetromino shapes appear
 - [ ] Line clear is detected and board updates
 - [ ] Score/level/lines UI updates
@@ -61,16 +70,17 @@
 - [ ] Mobile/responsive controls
 
 ### Unit (Jest)
-- ~~Board adds tetromino~~
-- ~~Tetromino movement within boundaries~~
-- ~~Tetromino blocked by board edges or other tetrominos~~
-- ~~Game over event when stack reaches top~~
-- ~~Tetromino locks and becomes immobile~~
-- ~~Tetromino delegates movement to board~~
-- ~~Tetromino initial position is correct~~
-- ~~Board resets and clears tetrominos~~
-- ~~PreviewBoard shows next tetromino~~
-- ~~Tetromino rotation logic~~ (T-shape)
+
+- [x] Board adds tetromino
+- [x] Tetromino movement within boundaries
+- [x] Tetromino blocked by board edges or other tetrominos
+- [x] Game over event when stack reaches top
+- [x] Tetromino locks and becomes immobile
+- [x] Tetromino delegates movement to board
+- [x] Tetromino initial position is correct
+- [x] Board resets and clears tetrominos
+- [x] PreviewBoard shows next tetromino
+- [x] Tetromino rotation logic (T-shape)
 - [ ] Line clear logic
 - [ ] Scoring and level logic
 - [ ] Hold/next piece logic
@@ -82,7 +92,7 @@
 ---
 
 **Legend:**
-- ~~Implemented~~
+- [x] Implemented
 - [ ] Missing/To Do
 
 This document tracks the current and missing features and test cases for a well-rounded Tetris game. Please update as features and tests are added.
