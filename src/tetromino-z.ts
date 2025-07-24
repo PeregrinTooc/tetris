@@ -1,7 +1,9 @@
-import { Tetromino } from "./tetromino-base.js";
+import { Tetromino, BlockPosition } from "./tetromino-base";
 
 export class TetrominoZ extends Tetromino {
-	constructor(left, document, board) {
+	type: string;
+
+	constructor(left: number, document: Document, board: any) {
 		super(left, document, null);
 		this.type = "Z";
 		this.rotation = 0;
@@ -12,14 +14,13 @@ export class TetrominoZ extends Tetromino {
 		}
 	}
 
-	getClassName() {
+	getClassName(): string {
 		return "tetromino tetromino-z";
 	}
 
-	getBlockPositions() {
+	getBlockPositions(): BlockPosition[] {
 		switch (this.rotation % 2) {
 			case 0:
-				// Horizontal
 				return [
 					{ x: this.left, y: this.top },
 					{ x: this.left + 1, y: this.top },
@@ -27,7 +28,6 @@ export class TetrominoZ extends Tetromino {
 					{ x: this.left - 1, y: this.top + 1 }
 				];
 			case 1:
-				// Vertical
 				return [
 					{ x: this.left, y: this.top },
 					{ x: this.left, y: this.top + 1 },

@@ -1,29 +1,24 @@
-import { TetrominoFactory } from "../src/tetromino.js";
-import { TetrominoT } from "../src/tetromino-t.js";
-import { Board } from "../src/board.js";
+import { describe, beforeEach, test, expect } from "@jest/globals";
+import { TetrominoFactory } from "../src/tetromino";
+import { TetrominoT } from "../src/tetromino-t";
+import { Board } from "../src/board";
 
 describe("Tetromino rotation", () => {
-  let tetromino;
-  let board;
-  let stubQueue;
+  let tetromino: TetrominoT;
+  let board: Board;
+  let stubQueue: any;
   const element = document.createElement("div");
   const nextPiece = document.createElement("div");
   nextPiece.id = "next-piece";
   element.appendChild(nextPiece);
   beforeEach(() => {
     stubQueue = { dequeue: () => 0 };
-    board = new Board(
-      20,
-      11,
-      document.createElement("div"),
-      undefined,
-      stubQueue
-    );
-    tetromino = TetrominoFactory.createNew(5, document, board, 0);
+    board = new Board(20, 11, document.createElement("div"), null, stubQueue);
+    tetromino = TetrominoFactory.createNew(5, document, board, 0) as TetrominoT;
   });
   test("should rotate T tetromino counter-clockwise", () => {
-    const tetromino = new TetrominoT(5, document);
-    tetromino.rotate();
+    const tetromino = new TetrominoT(5, document, board);
+    tetromino.rotate(board);
     const rotatedBlocks = tetromino.getBlockPositions();
     expect(rotatedBlocks).toEqual([
       { x: 5, y: 0 },

@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "ESNext",
+		"moduleResolution": "Node",
+		"esModuleInterop": true,
+		"allowJs": true,
+		"checkJs": false,
+		"outDir": "dist",
+		"rootDir": ".",
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true,
+		"types": ["jest", "cypress"]
+	},
+	"include": [
+		"src/**/*.ts",
+		"tests/**/*.ts",
+		"cypress/**/*.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"dist"
+	]
+}

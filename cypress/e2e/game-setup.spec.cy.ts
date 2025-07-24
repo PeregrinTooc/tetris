@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 const spaceBar = " ";
 
 describe("Tetris Game Setup", () => {
@@ -62,11 +64,11 @@ describe("Tetris Game Setup", () => {
 
   it("should detect and display game over when the stack reaches the top", () => {
     cy.get("#start-button").click();
-    function pollForGameOver() {
-      return cy.get("body").then(() => {
+    function pollForGameOver(): any {
+      return cy.get("body").then((): any => {
         if (Cypress.$("#game-over").length === 0) {
           cy.get("body").type(spaceBar);
-          return cy.wait(20).then(pollForGameOver);
+          return cy.wait(20).then((): any => pollForGameOver());
         }
       });
     }
@@ -78,11 +80,11 @@ describe("Tetris Game Setup", () => {
 
   it("should stop ticking and not spawn new tetrominoes after game over", () => {
     cy.get("#start-button").click();
-    function pollForGameOver() {
-      return cy.get("body").then(() => {
+    function pollForGameOver(): any {
+      return cy.get("body").then((): any => {
         if (Cypress.$("#game-over").length === 0) {
           cy.get("body").type(spaceBar);
-          return cy.wait(20).then(pollForGameOver);
+          return cy.wait(20).then((): any => pollForGameOver());
         }
       });
     }

@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe("T-shaped Tetromino", () => {
   beforeEach(() => {
     cy.visit("/index.html");
@@ -17,10 +19,12 @@ describe("T-shaped Tetromino", () => {
 
   it("should rotate the T tetromino clockwise and match expected block positions", () => {
     cy.get("#game-board .tetromino").first().as("tetromino");
-    function getBlockOffsets($tetromino) {
+    function getBlockOffsets(
+      $tetromino: JQuery<HTMLElement>
+    ): { left: number; top: number }[] {
       return $tetromino
         .find(".block")
-        .map((i, el) => ({
+        .map((i: number, el: HTMLElement) => ({
           left: parseInt(el.style.left, 10),
           top: parseInt(el.style.top, 10),
         }))
