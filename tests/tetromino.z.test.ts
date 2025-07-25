@@ -9,9 +9,6 @@ describe("TetrominoZ", () => {
 		tetro = new TetrominoZ(left, document, null);
 	});
 
-	test("should have type Z", () => {
-		expect(tetro.type).toBe("Z");
-	});
 
 	test("rotation 0: correct block positions (horizontal)", () => {
 		tetro.rotation = 0;

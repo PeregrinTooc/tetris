@@ -18,7 +18,7 @@ describe("Tetromino rotation", () => {
   });
   test("should rotate T tetromino counter-clockwise", () => {
     const tetromino = new TetrominoT(5, document, board);
-    tetromino.rotate(board);
+    tetromino.rotate();
     const rotatedBlocks = tetromino.getBlockPositions();
     expect(rotatedBlocks).toEqual([
       { x: 5, y: 0 },

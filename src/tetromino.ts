@@ -6,9 +6,10 @@ import { TetrominoJ } from "./tetromino-j";
 import { TetrominoL } from "./tetromino-l";
 import { TetrominoZ } from "./tetromino-z";
 import { TetrominoS } from "./tetromino-s";
+import { Board } from "./board";
 
 export class TetrominoFactory {
-	static createNew(left: number, document: Document, board: any, seed: number): Tetromino {
+	static createNew(left: number, document: Document, board: Board | null, seed: number): Tetromino {
 		if (seed === 0) {
 			return new TetrominoT(left, document, board);
 		}

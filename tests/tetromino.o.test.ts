@@ -22,7 +22,7 @@ describe("O-shaped Tetromino", () => {
 	test("should not rotate (remain same shape)", () => {
 		const tetromino = TetrominoFactory.createNew(5, document, board, 2);
 		const originalShape = tetromino.getBlockPositions();
-		tetromino.rotate(board);
+		tetromino.rotate();
 		expect(tetromino.getBlockPositions()).toEqual(originalShape);
 	});
 });

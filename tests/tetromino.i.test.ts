@@ -8,18 +8,14 @@ describe("TetrominoI", () => {
 	let tetromino: TetrominoI;
 	let board: Board;
 	const element = document.createElement("div");
-	const nextPiece = document.createElement("div");
-	nextPiece.id = "next-piece";
-	element.appendChild(nextPiece);
-	let stubQueue: any;
+
 	beforeEach(() => {
-		stubQueue = { dequeue: () => 1 };
 		board = new Board(
 			20,
 			11,
 			document.createElement("div"),
 			new PreviewBoard(element),
-			stubQueue
+			{ dequeue: () => 1 } // Mocked TetrominoSeedQueue			
 		);
 		tetromino = TetrominoFactory.createNew(5, document, board, 1) as TetrominoI;
 	});
@@ -38,7 +34,7 @@ describe("TetrominoI", () => {
 
 	test("should rotate I tetromino to vertical", () => {
 		const tetromino = new TetrominoI(5, document, board);
-		tetromino.rotate(board);
+		tetromino.rotate();
 		const positions = tetromino.getBlockPositions();
 		expect(positions).toEqual([
 			{ x: 4, y: 0 },

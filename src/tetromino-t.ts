@@ -1,18 +1,7 @@
 import { Tetromino, BlockPosition } from "./tetromino-base";
 
 export class TetrominoT extends Tetromino {
-	type: string;
 
-	constructor(left: number, document: Document, board: any) {
-		super(left, document, null);
-		this.type = "T";
-		this.rotation = 0;
-		this.element = this._createElement(document);
-		if (board) {
-			this.board = board;
-			board.addTetromino(this);
-		}
-	}
 
 	getClassName(): string {
 		return "tetromino tetromino-t";

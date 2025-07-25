@@ -1,3 +1,5 @@
+import { Board } from "./board";
+
 export interface BlockPosition {
 	x: number;
 	y: number;
@@ -14,7 +16,7 @@ export class Tetromino {
 	element: HTMLElement;
 	fallListener?: () => void;
 
-	constructor(left: number, document: Document, board: any) {
+	constructor(left: number, document: Document, board: Board | null) {
 		this.left = left;
 		this.top = 0;
 		this.size = 24;
@@ -150,7 +152,8 @@ export class Tetromino {
 		);
 	}
 
-	rotate(board: any): void {
+	rotate(): void {
+		const board = this.board as Board;
 		const prevRotation = this.rotation;
 		this.rotation++;
 		const previewBlocks = this.getBlockPositions();

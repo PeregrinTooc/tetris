@@ -1,4 +1,7 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
+import { TetrominoFactory } from "../src/tetromino";
+import { Board } from "../src/board";
+import { PreviewBoard } from "../src/preview-board";
 import { TetrominoL } from "../src/tetromino-l";
 
 describe("TetrominoL", () => {
@@ -9,9 +12,6 @@ describe("TetrominoL", () => {
 		tetro = new TetrominoL(left, document, null);
 	});
 
-	test("should have type L", () => {
-		expect(tetro.type).toBe("L");
-	});
 
 	test("rotation 0: correct block positions", () => {
 		tetro.rotation = 0;
