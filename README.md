@@ -59,7 +59,7 @@ The game automatically deploys to GitHub Pages when pushing to main:
 1. All tests must pass
 2. Changes are merged to main
 3. GitHub Actions builds and deploys
-4. Access at `https://<username>.github.io/tetris-game/`
+4. Access at `[https://peregrintooc.github.io/tetris-game/](https://peregrintooc.github.io/tetris/)`
 
 ## Controls
 
