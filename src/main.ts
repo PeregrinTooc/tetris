@@ -91,6 +91,9 @@ function startGame(): void {
 		if (e.key === "ArrowRight") {
 			tetromino.move("right");
 		}
+		if (e.key === "ArrowDown") {
+			tetromino.move("down");
+		}
 		if (e.key === " " || e.key === "Space" || e.key === "Spacebar") {
 			if (e.preventDefault) e.preventDefault();
 			tetromino.drop();
