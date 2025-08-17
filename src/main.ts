@@ -143,7 +143,7 @@ function stopTicking(): void {
 
 function spawnNewTetromino(): void {
 	tetromino = board.spawnTetromino(document);
-	tetromino.element.addEventListener("locked", () => {
+	tetromino.addEventListener("locked", () => {
 		spawnNewTetromino();
 	});
 }

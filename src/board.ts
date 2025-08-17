@@ -4,7 +4,7 @@ import { TetrominoFactory } from "./tetromino";
 interface PreviewBoard {
 	element: HTMLElement;
 	previewContainer: HTMLElement;
-	showNextTetromino?: (tetromino: any) => void;
+	showNextTetromino?: (tetromino: Tetromino) => void;
 }
 
 interface TetrominoSeedQueue {
@@ -19,7 +19,9 @@ export class Board {
 	tetrominos: Set<any>;
 	nextTetromino: Tetromino | null = null;
 	tetrominoSeedQueue: TetrominoSeedQueue;
-	activeTetromino: Tetromino | null = null;
+	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
+	activeTetromino: Tetromino;
+	occupiedPositions: Array<{ x: number, y: number }> = [];
 
 	constructor(
 		height: number,
@@ -37,33 +39,45 @@ export class Board {
 		this.tetrominoSeedQueue = tetrominoSeedQueue;
 	}
 
-	_canMove(tetromino: any, direction: string): boolean {
-		const hasCollision = Array.from(this.tetrominos).some((other: any) =>
-			other.blocksMovement(direction, tetromino)
-		);
-		if (hasCollision) {
+	_canMove(direction: string): boolean {
+		if (this.hasCollision(direction)) {
 			if (direction === "down") {
-				this._raiseGameOverIfStackReachesTop(tetromino);
+				this._raiseGameOverIfStackReachesTop();
 			}
 			return false;
 		}
 		return true;
 	}
 
-	_raiseGameOverIfStackReachesTop(tetromino: any): void {
-		if (tetromino.top === 0) {
+	private hasCollision(direction: string): boolean {
+		const dx = direction === "left" ? -1 : direction === "right" ? 1 : 0;
+		const dy = direction === "down" ? 1 : 0;
+		const movingBlocks = this.activeTetromino!.getBlockPositions()
+			.map(({ x, y }) => ({ x: x + dx, y: y + dy }));
+
+		return movingBlocks.some(({ x, y }) =>
+			this.occupiedPositions.some(({ x: bx, y: by }) => bx === x && by === y)
+		);
+	}
+
+	_raiseGameOverIfStackReachesTop(): void {
+		if (this.activeTetromino.top === 0) {
 			const gameOverEvent = new Event("gameover");
 			this.element.dispatchEvent(gameOverEvent);
 		}
 	}
 
-	addTetromino(tetromino: any): void {
+	addTetromino(tetromino: Tetromino): void {
 		this.tetrominos.add(tetromino);
 		this.element.appendChild(tetromino.element);
 		this.activeTetromino = tetromino;
+		tetromino.addEventListener("locked", (event: Event) => {
+			const customEvent = event as CustomEvent;
+			customEvent.detail.forEach((position: any) => { this.occupiedPositions.push(position) });
+		})
 	}
 
-	moveTetromino(tetromino: any, direction: string): boolean {
+	moveTetromino(tetromino: Tetromino, direction: string): boolean {
 		let dx = 0, dy = 0;
 		if (direction === "left") dx = -1;
 		if (direction === "right") dx = 1;
@@ -75,7 +89,7 @@ export class Board {
 			({ x, y }: { x: number; y: number }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
 		);
 		if (!inBounds) return false;
-		if (!this._canMove(tetromino, direction)) {
+		if (!this._canMove(direction)) {
 			return false;
 		}
 		if (direction === "left") {
@@ -98,7 +112,7 @@ export class Board {
 
 	spawnTetromino(document: Document): any {
 		this.waitUntilLocked();
-		let tetromino: any;
+		let tetromino: Tetromino;
 		const center = Math.floor(this.width / 2);
 		if (this.nextTetromino) {
 			if (
@@ -111,8 +125,7 @@ export class Board {
 			}
 			tetromino = this.nextTetromino;
 			tetromino.board = this;
-			this.tetrominos.add(tetromino);
-			this.element.appendChild(tetromino.element);
+			this.addTetromino(tetromino);
 			tetromino.updatePosition();
 		} else {
 			tetromino = TetrominoFactory.createNew(
@@ -121,8 +134,6 @@ export class Board {
 				this,
 				this.tetrominoSeedQueue.dequeue()
 			);
-			this.tetrominos.add(tetromino);
-			this.element.appendChild(tetromino.element);
 			tetromino.updatePosition();
 		}
 		tetromino.startFalling();

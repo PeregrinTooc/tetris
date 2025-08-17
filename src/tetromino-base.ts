@@ -27,17 +27,17 @@ export class Tetromino {
 		if (this.board) this.board.addTetromino(this);
 	}
 
-	_createElement(document: Document): HTMLElement {
+	private _createElement(document: Document): HTMLElement {
 		const el = this._createDiv(document, this.getClassName());
 		this._renderBlocks(el, document);
 		return el;
 	}
 
-	getClassName(): string {
+	public getClassName(): string {
 		return "tetromino";
 	}
 
-	_createDiv(document: Document, className: string, left: number = 0, top: number = 0, size: number = this.size): HTMLElement {
+	private _createDiv(document: Document, className: string, left: number = 0, top: number = 0, size: number = this.size): HTMLElement {
 		const div = document.createElement("div");
 		div.className = className;
 		div.style.width = size + "px";
@@ -49,87 +49,42 @@ export class Tetromino {
 		return div;
 	}
 
-	getBlockPositions(): BlockPosition[] {
+	public getBlockPositions(): BlockPosition[] {
 		return [{ x: this.left, y: this.top }];
 	}
 
-	move(direction: string): void {
+	public move(direction: string): void {
 		if (!this.board || this.locked) return;
 		this.board.moveTetromino(this, direction);
 	}
 
-	drop(): void {
+	public drop(): void {
 		if (!this.board || this.locked) return;
-		while (this.canDrop()) {
-			this.board.moveTetromino(this, "down");
+		while (this.board.moveTetromino(this, "down")) {
+			// Keep moving down until we can't anymore
 		}
 		this.lock();
 	}
 
-	canDrop(): boolean {
-		if (!this.board || this.locked) return false;
-		const nextBlocks = this.getBlockPositions().map(({ x, y }) => ({
-			x,
-			y: y + 1,
-		}));
-		return this._inBounds(nextBlocks) && !this._collides(nextBlocks);
+	public addEventListener(event: string, listener: EventListener): void {
+		this.element.addEventListener(event, listener);
 	}
 
-	_inBounds(blocks: BlockPosition[]): boolean {
-		const width = this.board ? this.board.width : 10;
-		const height = this.board ? this.board.height : 20;
-		return blocks.every(
-			({ x, y }) => x >= 0 && x < width && y >= 0 && y <= height
-		);
-	}
-
-	_collides(blocks: BlockPosition[]): boolean {
-		if (!this.board) return false;
-		for (const other of this.board.tetrominos) {
-			if (other === this) continue;
-			const otherBlocks = other.getBlockPositions();
-			if (
-				blocks.some((pos) =>
-					otherBlocks.some((b: BlockPosition) => b.x === pos.x && b.y === pos.y)
-				)
-			) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	updatePosition(): void {
+	public updatePosition(): void {
 		this.element.style.top = this.top * this.size + "px";
 		this.element.style.left = this.left * this.size + "px";
 	}
 
-	remove(): void {
-		this.element.remove();
-		if (this.board) this.board.tetrominos.delete(this);
-	}
 
-	blocksMovement(direction: string, movingTetromino: Tetromino): boolean {
-		if (this === movingTetromino) return false;
-		const dx = direction === "left" ? -1 : direction === "right" ? 1 : 0;
-		const dy = direction === "down" ? 1 : 0;
-		const movingBlocks = movingTetromino
-			.getBlockPositions()
-			.map(({ x, y }) => ({ x: x + dx, y: y + dy }));
-		const thisBlocks = this.getBlockPositions();
-		return movingBlocks.some(({ x, y }) =>
-			thisBlocks.some(({ x: bx, y: by }) => bx === x && by === y)
-		);
-	}
 
-	lock(): void {
+	public lock(): void {
 		if (this.locked) return;
 		this.locked = true;
-		const event = new Event("locked");
+		const event = new CustomEvent("locked", { detail: this.getBlockPositions() });
 		this.element.dispatchEvent(event);
 	}
 
-	startFalling(): void {
+	public startFalling(): void {
 		if (!this.board || this.locked) return;
 		this.fallListener = () => {
 			if (!this.locked && this.board) {
@@ -140,19 +95,7 @@ export class Tetromino {
 		document.addEventListener("tick", this.fallListener);
 	}
 
-	isWithinBounds(direction: string, boardWidth: number, boardHeight: number): boolean {
-		const dx = direction === "left" ? -1 : direction === "right" ? 1 : 0;
-		const dy = direction === "down" ? 1 : 0;
-		const nextBlocks = this.getBlockPositions().map(({ x, y }) => ({
-			x: x + dx,
-			y: y + dy,
-		}));
-		return nextBlocks.every(
-			({ x, y }) => x >= 0 && x < boardWidth && y >= 0 && y <= boardHeight
-		);
-	}
-
-	rotate(): void {
+	public rotate(): void {
 		const board = this.board as Board;
 		const prevRotation = this.rotation;
 		this.rotation++;
@@ -178,16 +121,16 @@ export class Tetromino {
 			this.rotation = prevRotation;
 			return;
 		}
-		this.updateBlocks();
+		this._updateBlocks();
 	}
 
-	updateBlocks(): void {
+	private _updateBlocks(): void {
 		while (this.element.firstChild)
 			this.element.removeChild(this.element.firstChild);
 		this._renderBlocks(this.element, document);
 	}
 
-	_renderBlocks(element: HTMLElement, document: Document): void {
+	private _renderBlocks(element: HTMLElement, document: Document): void {
 		const blocks = this.getBlockPositions();
 		blocks.forEach(({ x, y }) => {
 			const block = this._createDiv(
