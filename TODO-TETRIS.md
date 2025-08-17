@@ -21,7 +21,7 @@
 - [x] All 7 tetromino shapes (I, O, T, S, Z, J, L) implemented
 - [ ] Hold piece functionality
 - [x] Hard drop (instantly drop tetromino)
-- [ ] Soft drop (faster drop)
+- [x] Soft drop (faster drop)
 - [ ] Increasing speed/level progression
 - [ ] Scoring system (points for line clears, soft/hard drop)
 - [ ] Sound effects and music

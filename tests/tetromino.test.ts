@@ -69,4 +69,9 @@ describe("Tetromino", () => {
     // Should not move, still at right edge
     expect(Math.max(...after)).toBe(board.width - 1);
   });
+  test("should allow tetromino to soft drop down", () => {
+    const initialTop = tetromino.top;
+    tetromino.move("down");
+    expect(tetromino.top).toBe(initialTop + 1);
+  });
 });

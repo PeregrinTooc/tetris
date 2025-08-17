@@ -1,4 +1,4 @@
-import { set } from "cypress/types/lodash";
+import { Tetromino } from "./tetromino-base";
 import { TetrominoFactory } from "./tetromino";
 
 interface PreviewBoard {
@@ -17,9 +17,9 @@ export class Board {
 	element: HTMLElement;
 	previewBoard: PreviewBoard | null;
 	tetrominos: Set<any>;
-	nextTetromino: any;
+	nextTetromino: Tetromino | null = null;
 	tetrominoSeedQueue: TetrominoSeedQueue;
-	activeTetromino: any;
+	activeTetromino: Tetromino | null = null;
 
 	constructor(
 		height: number,
@@ -97,8 +97,7 @@ export class Board {
 	}
 
 	spawnTetromino(document: Document): any {
-		if (this.activeTetromino)
-			this.waitUntilLocked();
+		this.waitUntilLocked();
 		let tetromino: any;
 		const center = Math.floor(this.width / 2);
 		if (this.nextTetromino) {
@@ -141,8 +140,9 @@ export class Board {
 	}
 
 	private waitUntilLocked() {
-		while (!this.activeTetromino.locked) {
-			setTimeout(() => { }, 10);
-		}
+		if (this.activeTetromino)
+			while (!this.activeTetromino.locked) {
+				setTimeout(() => { }, 10);
+			}
 	}
 }

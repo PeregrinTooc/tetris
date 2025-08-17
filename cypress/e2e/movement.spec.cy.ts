@@ -58,6 +58,22 @@ describe("Tetris Game Movement", () => {
       });
     });
   });
+
+  it("should allow the player to soft drop the tetromino", () => {
+    cy.window().then((win) => {
+      win.setTetrominoDropTime(2147483647);
+    });
+    cy.get("#start-button").click();
+    cy.get(".tetromino").then(($el) => {
+      const initialTop = parseInt($el.css("top"), 10);
+      cy.get("body").type("{downarrow}");
+      cy.get(".tetromino").should(($el2) => {
+        const newTop = parseInt($el2.css("top"), 10);
+        expect(newTop).to.be.greaterThan(initialTop);
+        expect(newTop).to.be.lessThan(480);
+      });
+    });
+  });
 });
 
 function validateTetrominoDrop() {
