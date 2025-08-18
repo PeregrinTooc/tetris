@@ -1,4 +1,4 @@
-import { Tetromino } from "./tetromino-base";
+import { Tetromino, BlockPosition } from "./tetromino-base";
 import { TetrominoFactory } from "./tetromino";
 
 interface PreviewBoard {
@@ -21,7 +21,7 @@ export class Board {
 	tetrominoSeedQueue: TetrominoSeedQueue;
 	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 	activeTetromino: Tetromino;
-	occupiedPositions: Array<{ x: number, y: number }> = [];
+	occupiedPositions: BlockPosition[] = [];
 
 	constructor(
 		height: number,
