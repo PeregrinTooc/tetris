@@ -6,6 +6,7 @@ import { TetrominoJ } from "./tetromino-j";
 import { TetrominoL } from "./tetromino-l";
 import { TetrominoZ } from "./tetromino-z";
 import { TetrominoS } from "./tetromino-s";
+import { TetrominoSingle } from "./tetromino-single";
 import { Board } from "./board";
 
 export class TetrominoFactory {
@@ -32,7 +33,7 @@ export class TetrominoFactory {
 			return new TetrominoS(left, document, board);
 		}
 		if (seed === 1337) {
-			return new Tetromino(left, document, board);
+			return new TetrominoSingle(left, document, board);
 		}
 		throw new Error("Unsupported tetromino seed: " + seed);
 	}

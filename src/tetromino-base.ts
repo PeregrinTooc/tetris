@@ -5,7 +5,7 @@ export interface BlockPosition {
 	y: number;
 }
 
-export class Tetromino {
+export abstract class Tetromino {
 	static nextId = 1;
 	left: number;
 	top: number;
@@ -33,9 +33,7 @@ export class Tetromino {
 		return el;
 	}
 
-	public getClassName(): string {
-		return "tetromino";
-	}
+	public abstract getClassName(): string;
 
 	private _createDiv(document: Document, className: string, left: number = 0, top: number = 0, size: number = this.size): HTMLElement {
 		const div = document.createElement("div");
@@ -49,9 +47,7 @@ export class Tetromino {
 		return div;
 	}
 
-	public getBlockPositions(): BlockPosition[] {
-		return [{ x: this.left, y: this.top }];
-	}
+	public abstract getBlockPositions(): BlockPosition[];
 
 	public move(direction: string): void {
 		if (!this.board || this.locked) return;
