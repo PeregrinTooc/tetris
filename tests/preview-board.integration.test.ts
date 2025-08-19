@@ -1,6 +1,6 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
 import { PreviewBoard } from "../src/preview-board";
-import { TetrominoFactory } from "../src/tetromino";
+import { TetrominoFactory } from "../src/tetrominoFactory";
 import { Board } from "../src/board";
 
 describe("PreviewBoard integration", () => {

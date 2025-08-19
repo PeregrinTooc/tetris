@@ -3,7 +3,7 @@
 
 import { describe, beforeEach, test, expect } from "@jest/globals";
 import { Board } from "../src/board";
-import { TetrominoFactory } from "../src/tetromino";
+import { TetrominoFactory } from "../src/tetrominoFactory";
 
 describe("Tetromino rotation with boundaries and collisions", () => {
 	let board: Board;

@@ -1,6 +1,6 @@
 import { describe, beforeEach, test, expect, jest } from "@jest/globals";
 import { Board } from "../src/board";
-import { TetrominoFactory } from "../src/tetromino";
+import { TetrominoFactory } from "../src/tetrominoFactory";
 import { PreviewBoard } from "../src/preview-board";
 
 describe("Board", () => {

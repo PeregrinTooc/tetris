@@ -1,5 +1,5 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
-import { TetrominoFactory } from "../src/tetromino";
+import { TetrominoFactory } from "../src/tetrominoFactory";
 
 describe("TetrominoS", () => {
 	const left = 5;

@@ -1,5 +1,5 @@
 import { describe, beforeEach, test, expect, jest } from "@jest/globals";
-import { TetrominoFactory } from "../src/tetromino";
+import { TetrominoFactory } from "../src/tetrominoFactory";
 import { Board } from "../src/board";
 
 describe("O-shaped Tetromino", () => {

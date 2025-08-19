@@ -1,5 +1,5 @@
 import { Tetromino, BlockPosition } from "./tetromino-base";
-import { TetrominoFactory } from "./tetromino";
+import { TetrominoFactory } from "./tetrominoFactory";
 
 interface PreviewBoard {
 	element: HTMLElement;
