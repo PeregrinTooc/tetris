@@ -20,7 +20,7 @@ describe("TetrominoI", () => {
 		tetromino = TetrominoFactory.createNew(5, board, 1) as TetrominoI;
 	});
 	test("should create I tetromino with correct initial position and shape", () => {
-		const tetromino = new TetrominoI(5, board);
+		const tetromino = TetrominoFactory.createNew(5, board, 1);
 		expect(tetromino.left).toBe(5);
 		expect(tetromino.top).toBe(0);
 		const positions = tetromino.getBlockPositions();
@@ -33,7 +33,7 @@ describe("TetrominoI", () => {
 	});
 
 	test("should rotate I tetromino to vertical", () => {
-		const tetromino = new TetrominoI(5, board);
+		const tetromino = TetrominoFactory.createNew(5, board, 1);
 		tetromino.rotate();
 		const positions = tetromino.getBlockPositions();
 		expect(positions).toEqual([

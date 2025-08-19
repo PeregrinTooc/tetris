@@ -1,12 +1,12 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
-import { TetrominoZ } from "../src/tetromino-z";
+import { TetrominoFactory } from "../src/tetromino";
 
 describe("TetrominoZ", () => {
 	const left = 5;
-	let tetro: TetrominoZ;
+	let tetro: any;
 
 	beforeEach(() => {
-		tetro = new TetrominoZ(left, null);
+		tetro = TetrominoFactory.createNew(left, null, 5);
 	});
 
 
