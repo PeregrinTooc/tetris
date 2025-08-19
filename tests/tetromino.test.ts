@@ -20,7 +20,7 @@ describe("Tetromino", () => {
       new PreviewBoard(element),
       stubQueue
     );
-    tetromino = TetrominoFactory.createNew(5, document, board, 1337);
+    tetromino = TetrominoFactory.createNew(5, board, 1337);
   });
   test("should create with correct initial position", () => {
     expect(tetromino.left).toBe(5);
@@ -49,7 +49,7 @@ describe("Tetromino", () => {
   });
   test("I tetromino blocks should not go out of left border", () => {
     // Place I tetromino so all blocks are in-bounds
-    tetromino = TetrominoFactory.createNew(2, document, board, 1); // 1 = I
+    tetromino = TetrominoFactory.createNew(2, board, 1); // 1 = I
     tetromino.left = 1; // leftmost block at 0
     const before = tetromino.getBlockPositions().map((b: { x: number }) => b.x);
     expect(Math.min(...before)).toBe(0);
@@ -60,7 +60,7 @@ describe("Tetromino", () => {
   });
   test("I tetromino blocks should not go out of right border", () => {
     // Place I tetromino so all blocks are in-bounds
-    tetromino = TetrominoFactory.createNew(board.width - 3, document, board, 1); // 1 = I
+    tetromino = TetrominoFactory.createNew(board.width - 3, board, 1); // 1 = I
     tetromino.left = board.width - 3; // rightmost block at width-1
     const before = tetromino.getBlockPositions().map((b: { x: number }) => b.x);
     expect(Math.max(...before)).toBe(board.width - 1);

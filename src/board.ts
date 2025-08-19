@@ -130,7 +130,6 @@ export class Board {
 		} else {
 			tetromino = TetrominoFactory.createNew(
 				center,
-				document,
 				this,
 				this.tetrominoSeedQueue.dequeue()
 			);
@@ -139,7 +138,6 @@ export class Board {
 		tetromino.startFalling();
 		this.nextTetromino = TetrominoFactory.createNew(
 			center,
-			document,
 			null,
 			this.tetrominoSeedQueue.dequeue()
 		);

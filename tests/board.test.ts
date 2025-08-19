@@ -15,24 +15,24 @@ describe("Board", () => {
 	});
 
 	test("adds a tetromino element to the board DOM", () => {
-		const tetromino = TetrominoFactory.createNew(5, document, board, 1337);
+		const tetromino = TetrominoFactory.createNew(5, board, 1337);
 		expect(board.tetrominos.size).toEqual(1);
 	});
 
 	test("moves tetromino left within board boundaries", () => {
-		const tetromino = TetrominoFactory.createNew(5, document, board, 1337);
+		const tetromino = TetrominoFactory.createNew(5, board, 1337);
 		expect(board.moveTetromino(tetromino, "left")).toBe(true);
 		expect(tetromino.left).toBe(4);
 	});
 
 	test("prevents tetromino from moving left outside board boundaries", () => {
-		const tetromino = TetrominoFactory.createNew(0, document, board, 1337);
+		const tetromino = TetrominoFactory.createNew(0, board, 1337);
 		expect(board.moveTetromino(tetromino, "left")).toBe(false);
 		expect(tetromino.left).toBe(0);
 	});
 
 	test("prevents tetromino from moving left or right outside board boundaries (via moveTetromino)", () => {
-		const tetromino = TetrominoFactory.createNew(0, document, board, 1337);
+		const tetromino = TetrominoFactory.createNew(0, board, 1337);
 		const leftResult = board.moveTetromino(tetromino, "left");
 		expect(leftResult).toBe(false);
 		expect(tetromino.left).toBe(0);
@@ -43,10 +43,10 @@ describe("Board", () => {
 	});
 
 	test("detects collision when tetromino moves down onto a locked tetromino", () => {
-		const tetromino1 = TetrominoFactory.createNew(5, document, board, 1337);
+		const tetromino1 = TetrominoFactory.createNew(5, board, 1337);
 		tetromino1.top = 1;
 		tetromino1.lock();
-		const tetromino2 = TetrominoFactory.createNew(5, document, board, 1337);
+		const tetromino2 = TetrominoFactory.createNew(5, board, 1337);
 		tetromino2.top = 0;
 		expect(board._canMove("down")).toBe(false);
 	});
@@ -54,13 +54,13 @@ describe("Board", () => {
 	test("dispatches game over event when a tetromino is added at the top row", () => {
 		const mockDispatchEvent = jest.fn() as unknown as (event: Event) => boolean;
 		board.element.dispatchEvent = mockDispatchEvent;
-		const tetromino = TetrominoFactory.createNew(5, document, board, 1337);
+		const tetromino = TetrominoFactory.createNew(5, board, 1337);
 		board._raiseGameOverIfStackReachesTop();
 		expect(mockDispatchEvent).toHaveBeenCalled();
 	});
 
 	test("locks tetromino at the bottom and prevents further movement", () => {
-		const tetromino = TetrominoFactory.createNew(5, document, board, 1337);
+		const tetromino = TetrominoFactory.createNew(5, board, 1337);
 		tetromino.drop();
 		expect(tetromino.locked).toBe(true);
 		tetromino.move("left");
@@ -72,14 +72,12 @@ describe("Board", () => {
 	test("prevents movement when another tetromino blocks the path (left/right)", () => {
 		const blockingTetromino = TetrominoFactory.createNew(
 			5,
-			document,
 			board,
 			1337
 		);
 		blockingTetromino.lock();
 		const movingTetromino = TetrominoFactory.createNew(
 			4,
-			document,
 			board,
 			1337
 		);
@@ -89,7 +87,7 @@ describe("Board", () => {
 	});
 
 	test("reset clears all tetrominos and board DOM", () => {
-		const tetromino = TetrominoFactory.createNew(5, document, board, 1337);
+		const tetromino = TetrominoFactory.createNew(5, board, 1337);
 		board.tetrominos.add(tetromino);
 		board.reset();
 		expect(board.tetrominos.size).toBe(0);
@@ -97,7 +95,7 @@ describe("Board", () => {
 	});
 
 	test("T tetromino drop results in correct blocks on the floor", () => {
-		const tetromino = TetrominoFactory.createNew(5, document, board, 0);
+		const tetromino = TetrominoFactory.createNew(5, board, 0);
 		tetromino.drop();
 		const positions = tetromino.getBlockPositions();
 		const floorBlocks = positions.filter((p) => p.y === 20);
@@ -107,12 +105,11 @@ describe("Board", () => {
 	});
 
 	test("blocksMovement returns true if any block of a tetromino would collide moving right (T shape, left arm)", () => {
-		const tTetromino = TetrominoFactory.createNew(5, document, board, 0);
+		const tTetromino = TetrominoFactory.createNew(5, board, 0);
 		tTetromino.top = 10;
 		tTetromino.lock();
 		const singleTetromino = TetrominoFactory.createNew(
 			4,
-			document,
 			board,
 			1337
 		);
@@ -122,12 +119,11 @@ describe("Board", () => {
 	});
 
 	test("blocksMovement returns true if any block of a tetromino would collide moving left (T shape, right arm)", () => {
-		const tTetromino = TetrominoFactory.createNew(5, document, board, 0);
+		const tTetromino = TetrominoFactory.createNew(5, board, 0);
 		tTetromino.top = 10;
 		tTetromino.lock();
 		const singleTetromino = TetrominoFactory.createNew(
 			6,
-			document,
 			board,
 			1337
 		);
@@ -137,12 +133,11 @@ describe("Board", () => {
 	});
 
 	test("blocksMovement returns true if any block of a tetromino would collide moving down (T shape, left arm)", () => {
-		const tTetromino = TetrominoFactory.createNew(5, document, board, 0);
+		const tTetromino = TetrominoFactory.createNew(5, board, 0);
 		tTetromino.top = 10;
 		tTetromino.lock();
 		const singleTetromino = TetrominoFactory.createNew(
 			4,
-			document,
 			board,
 			1337
 		);

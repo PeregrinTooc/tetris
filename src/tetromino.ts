@@ -10,30 +10,30 @@ import { TetrominoSingle } from "./tetromino-single";
 import { Board } from "./board";
 
 export class TetrominoFactory {
-	static createNew(left: number, document: Document, board: Board | null, seed: number): Tetromino {
+	static createNew(left: number, board: Board | null, seed: number): Tetromino {
 		if (seed === 0) {
-			return new TetrominoT(left, document, board);
+			return new TetrominoT(left, board);
 		}
 		if (seed === 1) {
-			return new TetrominoI(left, document, board);
+			return new TetrominoI(left, board);
 		}
 		if (seed === 2) {
-			return new TetrominoO(left, document, board);
+			return new TetrominoO(left, board);
 		}
 		if (seed === 3) {
-			return new TetrominoJ(left, document, board);
+			return new TetrominoJ(left, board);
 		}
 		if (seed === 4) {
-			return new TetrominoL(left, document, board);
+			return new TetrominoL(left, board);
 		}
 		if (seed === 5) {
-			return new TetrominoZ(left, document, board);
+			return new TetrominoZ(left, board);
 		}
 		if (seed === 6) {
-			return new TetrominoS(left, document, board);
+			return new TetrominoS(left, board);
 		}
 		if (seed === 1337) {
-			return new TetrominoSingle(left, document, board);
+			return new TetrominoSingle(left, board);
 		}
 		throw new Error("Unsupported tetromino seed: " + seed);
 	}

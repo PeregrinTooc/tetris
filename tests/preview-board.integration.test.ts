@@ -28,7 +28,7 @@ describe("PreviewBoard integration", () => {
 		);
 	});
 	test("should show the next tetromino in the preview", () => {
-		const tetromino = TetrominoFactory.createNew(5, document, board, 1337);
+		const tetromino = TetrominoFactory.createNew(5, board, 1337);
 		previewBoard.showNextTetromino(tetromino);
 		const previewTetromino =
 			previewBoard.previewContainer.querySelector(".tetromino");

@@ -16,26 +16,25 @@ export abstract class Tetromino {
 	element: HTMLElement;
 	fallListener?: () => void;
 
-	constructor(left: number, document: Document, board: Board | null) {
+	constructor(left: number, board: Board | null) {
 		this.left = left;
 		this.top = 0;
 		this.size = 24;
 		this.board = board;
 		this.locked = false;
 		this.rotation = 0;
-		this.element = this._createElement(document);
+		this.element = this._createElement();
+		this._renderBlocks();
 		if (this.board) this.board.addTetromino(this);
 	}
 
-	private _createElement(document: Document): HTMLElement {
-		const el = this._createDiv(document, this.getClassName());
-		this._renderBlocks(el, document);
-		return el;
+	private _createElement(): HTMLElement {
+		return this._createDiv(this.getClassName());;
 	}
 
 	public abstract getClassName(): string;
 
-	private _createDiv(document: Document, className: string, left: number = 0, top: number = 0, size: number = this.size): HTMLElement {
+	private _createDiv(className: string, left: number = 0, top: number = 0, size: number = this.size): HTMLElement {
 		const div = document.createElement("div");
 		div.className = className;
 		div.style.width = size + "px";
@@ -108,7 +107,7 @@ export abstract class Tetromino {
 				(other) =>
 					previewBlocks.some((pos: BlockPosition) =>
 						other.x === pos.x && other.y === pos.y)
-					);
+			);
 		if (!inBounds || collision) {
 			this.rotation = prevRotation;
 			return;
@@ -119,19 +118,18 @@ export abstract class Tetromino {
 	private _updateBlocks(): void {
 		while (this.element.firstChild)
 			this.element.removeChild(this.element.firstChild);
-		this._renderBlocks(this.element, document);
+		this._renderBlocks();
 	}
 
-	private _renderBlocks(element: HTMLElement, document: Document): void {
+	private _renderBlocks(): void {
 		const blocks = this.getBlockPositions();
 		blocks.forEach(({ x, y }) => {
 			const block = this._createDiv(
-				document,
 				"block",
 				x - this.left,
 				y - this.top
 			);
-			element.appendChild(block);
+			this.element.appendChild(block);
 		});
 	}
 }

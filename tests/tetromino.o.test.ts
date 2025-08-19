@@ -10,7 +10,7 @@ describe("O-shaped Tetromino", () => {
 	});
 
 	test("should create a 2x2 square shape", () => {
-		const tetromino = TetrominoFactory.createNew(5, document, board, 2);
+		const tetromino = TetrominoFactory.createNew(5, board, 2);
 		expect(tetromino.getBlockPositions()).toEqual([
 			{ x: 5, y: 1 },
 			{ x: 6, y: 1 },
@@ -20,7 +20,7 @@ describe("O-shaped Tetromino", () => {
 	});
 
 	test("should not rotate (remain same shape)", () => {
-		const tetromino = TetrominoFactory.createNew(5, document, board, 2);
+		const tetromino = TetrominoFactory.createNew(5, board, 2);
 		const originalShape = tetromino.getBlockPositions();
 		tetromino.rotate();
 		expect(tetromino.getBlockPositions()).toEqual(originalShape);

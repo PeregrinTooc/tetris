@@ -6,7 +6,7 @@ describe("TetrominoS", () => {
 	let tetro: TetrominoS;
 
 	beforeEach(() => {
-		tetro = new TetrominoS(left, document, null);
+		tetro = new TetrominoS(left, null);
 	});
 
 

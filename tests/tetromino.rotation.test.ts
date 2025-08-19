@@ -14,10 +14,10 @@ describe("Tetromino rotation", () => {
   beforeEach(() => {
     stubQueue = { dequeue: () => 0 };
     board = new Board(20, 11, document.createElement("div"), null, stubQueue);
-    tetromino = TetrominoFactory.createNew(5, document, board, 0) as TetrominoT;
+    tetromino = TetrominoFactory.createNew(5, board, 0) as TetrominoT;
   });
   test("should rotate T tetromino counter-clockwise", () => {
-    const tetromino = new TetrominoT(5, document, board);
+    const tetromino = new TetrominoT(5, board);
     tetromino.rotate();
     const rotatedBlocks = tetromino.getBlockPositions();
     expect(rotatedBlocks).toEqual([

@@ -27,7 +27,7 @@ describe("PreviewBoard", () => {
 		);
 	});
 	test("should clear preview container and add tetromino element", () => {
-		const tetromino = TetrominoFactory.createNew(5, document, board, 1337);
+		const tetromino = TetrominoFactory.createNew(5, board, 1337);
 		previewBoard.showNextTetromino(tetromino);
 		expect(previewBoard.previewContainer.innerHTML).toContain("tetromino");
 	});

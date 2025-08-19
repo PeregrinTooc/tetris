@@ -17,10 +17,10 @@ describe("TetrominoI", () => {
 			new PreviewBoard(element),
 			{ dequeue: () => 1 } // Mocked TetrominoSeedQueue			
 		);
-		tetromino = TetrominoFactory.createNew(5, document, board, 1) as TetrominoI;
+		tetromino = TetrominoFactory.createNew(5, board, 1) as TetrominoI;
 	});
 	test("should create I tetromino with correct initial position and shape", () => {
-		const tetromino = new TetrominoI(5, document, board);
+		const tetromino = new TetrominoI(5, board);
 		expect(tetromino.left).toBe(5);
 		expect(tetromino.top).toBe(0);
 		const positions = tetromino.getBlockPositions();
@@ -33,7 +33,7 @@ describe("TetrominoI", () => {
 	});
 
 	test("should rotate I tetromino to vertical", () => {
-		const tetromino = new TetrominoI(5, document, board);
+		const tetromino = new TetrominoI(5, board);
 		tetromino.rotate();
 		const positions = tetromino.getBlockPositions();
 		expect(positions).toEqual([
