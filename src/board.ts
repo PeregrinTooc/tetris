@@ -16,7 +16,7 @@ export class Board {
 	width: number;
 	element: HTMLElement;
 	previewBoard: PreviewBoard | null;
-	tetrominos: Set<any>;
+	tetrominos: Set<Tetromino>;
 	nextTetromino: Tetromino | null = null;
 	tetrominoSeedQueue: TetrominoSeedQueue;
 	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino

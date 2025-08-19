@@ -2,9 +2,10 @@ import { describe, beforeEach, test, expect, jest } from "@jest/globals";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 import { Board } from "../src/board";
 import { PreviewBoard } from "../src/preview-board";
+import { Tetromino } from "../src/tetromino-base";
 
 describe("Tetromino", () => {
-  let tetromino: any;
+  let tetromino: Tetromino;
   let board: Board;
   const element = document.createElement("div");
   const nextPiece = document.createElement("div");
