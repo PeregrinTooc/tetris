@@ -1,4 +1,4 @@
-import { Tetromino, BlockPosition } from "./tetromino-base";
+import { Tetromino, Block } from "./tetromino-base";
 import { TetrominoFactory } from "./tetrominoFactory";
 
 interface PreviewBoard {
@@ -21,7 +21,7 @@ export class Board {
 	tetrominoSeedQueue: TetrominoSeedQueue;
 	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 	activeTetromino: Tetromino;
-	occupiedPositions: BlockPosition[] = [];
+	occupiedPositions: Block[] = [];
 
 	constructor(
 		height: number,
@@ -52,7 +52,7 @@ export class Board {
 	private hasCollision(direction: string): boolean {
 		const dx = direction === "left" ? -1 : direction === "right" ? 1 : 0;
 		const dy = direction === "down" ? 1 : 0;
-		const movingBlocks = this.activeTetromino!.getBlockPositions()
+		const movingBlocks = this.activeTetromino!.getBlocks()
 			.map(({ x, y }) => ({ x: x + dx, y: y + dy }));
 
 		return movingBlocks.some(({ x, y }) =>
@@ -83,7 +83,7 @@ export class Board {
 		if (direction === "right") dx = 1;
 		if (direction === "down") dy = 1;
 		const previewBlocks = tetromino
-			.getBlockPositions()
+			.getBlocks()
 			.map(({ x, y }: { x: number; y: number }) => ({ x: x + dx, y: y + dy }));
 		const inBounds = previewBlocks.every(
 			({ x, y }: { x: number; y: number }) => x >= 0 && x < this.width && y >= 0 && y <= this.height

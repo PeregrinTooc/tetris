@@ -1,5 +1,6 @@
 import { PreviewBoard } from "./preview-board";
 import { Board } from "./board";
+import { Tetromino } from "../src/tetromino-base";
 
 class TetrominoSeedQueue {
 	items: number[];
@@ -22,7 +23,7 @@ class TetrominoSeedQueue {
 }
 
 let tetrominoDropTime: number = 750;
-let tetromino: any;
+let tetromino: Tetromino | null = null;
 let gameRunning: boolean = false;
 let board: Board;
 let tickIntervalId: ReturnType<typeof setInterval> | null = null;

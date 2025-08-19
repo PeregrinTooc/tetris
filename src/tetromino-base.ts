@@ -1,6 +1,6 @@
 import { Board } from "./board";
 
-export interface BlockPosition {
+export interface Block {
 	x: number;
 	y: number;
 }
@@ -46,7 +46,7 @@ export abstract class Tetromino {
 		return div;
 	}
 
-	public abstract getBlockPositions(): BlockPosition[];
+	public abstract getBlocks(): Block[];
 
 	public move(direction: string): void {
 		if (!this.board || this.locked) return;
@@ -75,7 +75,7 @@ export abstract class Tetromino {
 	public lock(): void {
 		if (this.locked) return;
 		this.locked = true;
-		const event = new CustomEvent("locked", { detail: this.getBlockPositions() });
+		const event = new CustomEvent("locked", { detail: this.getBlocks() });
 		this.element.dispatchEvent(event);
 	}
 
@@ -94,7 +94,7 @@ export abstract class Tetromino {
 		const board = this.board as Board;
 		const prevRotation = this.rotation;
 		this.rotation++;
-		const previewBlocks = this.getBlockPositions();
+		const previewBlocks = this.getBlocks();
 		const width = board ? board.width : 10;
 		const height = board ? board.height : 20;
 		const inBounds = previewBlocks.every(
@@ -105,7 +105,7 @@ export abstract class Tetromino {
 			board.occupiedPositions &&
 			board.occupiedPositions.some(
 				(other) =>
-					previewBlocks.some((pos: BlockPosition) =>
+					previewBlocks.some((pos: Block) =>
 						other.x === pos.x && other.y === pos.y)
 			);
 		if (!inBounds || collision) {
@@ -122,7 +122,7 @@ export abstract class Tetromino {
 	}
 
 	private _renderBlocks(): void {
-		const blocks = this.getBlockPositions();
+		const blocks = this.getBlocks();
 		blocks.forEach(({ x, y }) => {
 			const block = this._createDiv(
 				"block",

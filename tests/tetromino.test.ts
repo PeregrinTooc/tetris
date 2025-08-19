@@ -52,10 +52,10 @@ describe("Tetromino", () => {
     // Place I tetromino so all blocks are in-bounds
     tetromino = TetrominoFactory.createNew(2, board, 1); // 1 = I
     tetromino.left = 1; // leftmost block at 0
-    const before = tetromino.getBlockPositions().map((b: { x: number }) => b.x);
+    const before = tetromino.getBlocks().map((b: { x: number }) => b.x);
     expect(Math.min(...before)).toBe(0);
     tetromino.move("left");
-    const after = tetromino.getBlockPositions().map((b: { x: number }) => b.x);
+    const after = tetromino.getBlocks().map((b: { x: number }) => b.x);
     // Should not move, still at left edge
     expect(Math.min(...after)).toBe(0);
   });
@@ -63,10 +63,10 @@ describe("Tetromino", () => {
     // Place I tetromino so all blocks are in-bounds
     tetromino = TetrominoFactory.createNew(board.width - 3, board, 1); // 1 = I
     tetromino.left = board.width - 3; // rightmost block at width-1
-    const before = tetromino.getBlockPositions().map((b: { x: number }) => b.x);
+    const before = tetromino.getBlocks().map((b: { x: number }) => b.x);
     expect(Math.max(...before)).toBe(board.width - 1);
     tetromino.move("right");
-    const after = tetromino.getBlockPositions().map((b: { x: number }) => b.x);
+    const after = tetromino.getBlocks().map((b: { x: number }) => b.x);
     // Should not move, still at right edge
     expect(Math.max(...after)).toBe(board.width - 1);
   });

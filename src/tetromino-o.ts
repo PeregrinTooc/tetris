@@ -1,4 +1,4 @@
-import { Tetromino, BlockPosition } from "./tetromino-base";
+import { Tetromino, Block } from "./tetromino-base";
 
 export class TetrominoO extends Tetromino {
 
@@ -7,7 +7,7 @@ export class TetrominoO extends Tetromino {
 		return "tetromino tetromino-o";
 	}
 
-	getBlockPositions(): BlockPosition[] {
+	getBlocks(): Block[] {
 		return [
 			{ x: this.left, y: this.top + 1 },
 			{ x: this.left + 1, y: this.top + 1 },

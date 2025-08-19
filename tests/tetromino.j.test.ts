@@ -26,7 +26,7 @@ describe("TetrominoJ", () => {
 	test("should create J tetromino with correct initial position and shape", () => {
 		expect(tetromino.left).toBe(5);
 		expect(tetromino.top).toBe(0);
-		const positions = tetromino.getBlockPositions();
+		const positions = tetromino.getBlocks();
 		expect(positions).toEqual([
 			{ x: 5, y: 0 },
 			{ x: 4, y: 0 },
@@ -37,7 +37,7 @@ describe("TetrominoJ", () => {
 	test("rotation 0: correct block positions", () => {
 		tetromino.rotation = 0;
 		tetromino.top = 2;
-		expect(tetromino.getBlockPositions()).toEqual([
+		expect(tetromino.getBlocks()).toEqual([
 			{ x: 5, y: 2 },
 			{ x: 4, y: 2 },
 			{ x: 6, y: 2 },
@@ -47,7 +47,7 @@ describe("TetrominoJ", () => {
 	test("rotation 1: correct block positions", () => {
 		tetromino.rotation = 1;
 		tetromino.top = 2;
-		expect(tetromino.getBlockPositions()).toEqual([
+		expect(tetromino.getBlocks()).toEqual([
 			{ x: 5, y: 2 },
 			{ x: 5, y: 3 },
 			{ x: 5, y: 1 },
@@ -57,7 +57,7 @@ describe("TetrominoJ", () => {
 	test("rotation 2: correct block positions", () => {
 		tetromino.rotation = 2;
 		tetromino.top = 2;
-		expect(tetromino.getBlockPositions()).toEqual([
+		expect(tetromino.getBlocks()).toEqual([
 			{ x: 5, y: 2 },
 			{ x: 6, y: 2 },
 			{ x: 4, y: 2 },
@@ -67,7 +67,7 @@ describe("TetrominoJ", () => {
 	test("rotation 3: correct block positions", () => {
 		tetromino.rotation = 3;
 		tetromino.top = 2;
-		expect(tetromino.getBlockPositions()).toEqual([
+		expect(tetromino.getBlocks()).toEqual([
 			{ x: 5, y: 2 },
 			{ x: 5, y: 1 },
 			{ x: 5, y: 3 },

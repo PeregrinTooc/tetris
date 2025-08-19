@@ -1,5 +1,5 @@
 import { Board } from "./board";
-import { Tetromino, BlockPosition } from "./tetromino-base";
+import { Tetromino, Block } from "./tetromino-base";
 
 export class TetrominoI extends Tetromino {
 
@@ -7,7 +7,7 @@ export class TetrominoI extends Tetromino {
 		return "tetromino tetromino-i";
 	}
 
-	getBlockPositions(): BlockPosition[] {
+	getBlocks(): Block[] {
 		if (this.rotation % 2 === 0) {
 			return [
 				{ x: this.left - 1, y: this.top },

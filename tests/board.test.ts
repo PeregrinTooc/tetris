@@ -97,7 +97,7 @@ describe("Board", () => {
 	test("T tetromino drop results in correct blocks on the floor", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 0);
 		tetromino.drop();
-		const positions = tetromino.getBlockPositions();
+		const positions = tetromino.getBlocks();
 		const floorBlocks = positions.filter((p) => p.y === 20);
 		const aboveFloorBlocks = positions.filter((p) => p.y === 19);
 		expect(floorBlocks.length).toBe(1); // Only the pivot block is at y === 20

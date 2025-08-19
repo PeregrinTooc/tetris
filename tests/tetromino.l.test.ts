@@ -13,7 +13,7 @@ describe("TetrominoL", () => {
 
 	test("rotation 0: correct block positions", () => {
 		tetro.rotation = 0;
-		expect(tetro.getBlockPositions()).toEqual([
+		expect(tetro.getBlocks()).toEqual([
 			{ x: 5, y: 0 },
 			{ x: 4, y: 0 },
 			{ x: 6, y: 0 },
@@ -23,7 +23,7 @@ describe("TetrominoL", () => {
 
 	test("rotation 1: correct block positions", () => {
 		tetro.rotation = 1;
-		expect(tetro.getBlockPositions()).toEqual([
+		expect(tetro.getBlocks()).toEqual([
 			{ x: 5, y: 0 },
 			{ x: 5, y: 1 },
 			{ x: 5, y: -1 },
@@ -33,7 +33,7 @@ describe("TetrominoL", () => {
 
 	test("rotation 2: correct block positions", () => {
 		tetro.rotation = 2;
-		expect(tetro.getBlockPositions()).toEqual([
+		expect(tetro.getBlocks()).toEqual([
 			{ x: 5, y: 0 },
 			{ x: 6, y: 0 },
 			{ x: 4, y: 0 },
@@ -43,7 +43,7 @@ describe("TetrominoL", () => {
 
 	test("rotation 3: correct block positions", () => {
 		tetro.rotation = 3;
-		expect(tetro.getBlockPositions()).toEqual([
+		expect(tetro.getBlocks()).toEqual([
 			{ x: 5, y: 0 },
 			{ x: 5, y: -1 },
 			{ x: 5, y: 1 },
