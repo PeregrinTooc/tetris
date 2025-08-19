@@ -28,50 +28,50 @@ describe("TetrominoJ", () => {
 		expect(tetromino.top).toBe(0);
 		const positions = tetromino.getBlocks();
 		expect(positions).toEqual([
-			{ x: 5, y: 0 },
-			{ x: 4, y: 0 },
-			{ x: 6, y: 0 },
-			{ x: 6, y: 1 },
+			{ x: 5, y: 0, parent: tetromino },
+			{ x: 4, y: 0, parent: tetromino },
+			{ x: 6, y: 0, parent: tetromino },
+			{ x: 6, y: 1, parent: tetromino },
 		]);
 	});
 	test("rotation 0: correct block positions", () => {
 		tetromino.rotation = 0;
 		tetromino.top = 2;
 		expect(tetromino.getBlocks()).toEqual([
-			{ x: 5, y: 2 },
-			{ x: 4, y: 2 },
-			{ x: 6, y: 2 },
-			{ x: 6, y: 3 },
+			{ x: 5, y: 2, parent: tetromino },
+			{ x: 4, y: 2, parent: tetromino },
+			{ x: 6, y: 2, parent: tetromino },
+			{ x: 6, y: 3, parent: tetromino },
 		]);
 	});
 	test("rotation 1: correct block positions", () => {
 		tetromino.rotation = 1;
 		tetromino.top = 2;
 		expect(tetromino.getBlocks()).toEqual([
-			{ x: 5, y: 2 },
-			{ x: 5, y: 3 },
-			{ x: 5, y: 1 },
-			{ x: 6, y: 1 },
+			{ x: 5, y: 2, parent: tetromino },
+			{ x: 5, y: 3, parent: tetromino },
+			{ x: 5, y: 1, parent: tetromino },
+			{ x: 6, y: 1, parent: tetromino },
 		]);
 	});
 	test("rotation 2: correct block positions", () => {
 		tetromino.rotation = 2;
 		tetromino.top = 2;
 		expect(tetromino.getBlocks()).toEqual([
-			{ x: 5, y: 2 },
-			{ x: 6, y: 2 },
-			{ x: 4, y: 2 },
-			{ x: 4, y: 1 },
+			{ x: 5, y: 2, parent: tetromino },
+			{ x: 6, y: 2, parent: tetromino },
+			{ x: 4, y: 2, parent: tetromino },
+			{ x: 4, y: 1, parent: tetromino },
 		]);
 	});
 	test("rotation 3: correct block positions", () => {
 		tetromino.rotation = 3;
 		tetromino.top = 2;
 		expect(tetromino.getBlocks()).toEqual([
-			{ x: 5, y: 2 },
-			{ x: 5, y: 1 },
-			{ x: 5, y: 3 },
-			{ x: 4, y: 3 },
+			{ x: 5, y: 2, parent: tetromino },
+			{ x: 5, y: 1, parent: tetromino },
+			{ x: 5, y: 3, parent: tetromino },
+			{ x: 4, y: 3, parent: tetromino },
 		]);
 	});
 });

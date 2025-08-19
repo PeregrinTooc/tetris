@@ -73,7 +73,7 @@ export class Board {
 		this.activeTetromino = tetromino;
 		tetromino.addEventListener("locked", (event: Event) => {
 			const customEvent = event as CustomEvent;
-			customEvent.detail.forEach((position: any) => { this.occupiedPositions.push(position) });
+			customEvent.detail.forEach((block: Block) => { this.occupiedPositions.push(block) });
 		})
 	}
 

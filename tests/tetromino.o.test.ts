@@ -12,10 +12,10 @@ describe("O-shaped Tetromino", () => {
 	test("should create a 2x2 square shape", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 2);
 		expect(tetromino.getBlocks()).toEqual([
-			{ x: 5, y: 1 },
-			{ x: 6, y: 1 },
-			{ x: 6, y: 0 },
-			{ x: 5, y: 0 },
+			{ x: 5, y: 1, parent: tetromino },
+			{ x: 6, y: 1, parent: tetromino },
+			{ x: 6, y: 0, parent: tetromino },
+			{ x: 5, y: 0, parent: tetromino },
 		]);
 	});
 

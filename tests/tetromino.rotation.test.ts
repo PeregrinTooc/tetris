@@ -21,10 +21,10 @@ describe("Tetromino rotation", () => {
     tetromino.rotate();
     const rotatedBlocks = tetromino.getBlocks();
     expect(rotatedBlocks).toEqual([
-      { x: 5, y: 0 },
-      { x: 4, y: 0 },
-      { x: 6, y: 0 },
-      { x: 5, y: 1 },
+      { x: 5, y: 0, parent: tetromino },
+      { x: 4, y: 0, parent: tetromino },
+      { x: 6, y: 0, parent: tetromino },
+      { x: 5, y: 1, parent: tetromino },
     ]);
   });
 });

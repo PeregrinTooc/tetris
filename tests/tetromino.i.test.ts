@@ -25,10 +25,10 @@ describe("TetrominoI", () => {
 		expect(tetromino.top).toBe(0);
 		const positions = tetromino.getBlocks();
 		expect(positions).toEqual([
-			{ x: 4, y: 0 },
-			{ x: 5, y: 0 },
-			{ x: 6, y: 0 },
-			{ x: 7, y: 0 },
+			{ x: 4, y: 0, parent: tetromino },
+			{ x: 5, y: 0, parent: tetromino },
+			{ x: 6, y: 0, parent: tetromino },
+			{ x: 7, y: 0, parent: tetromino },
 		]);
 	});
 
@@ -37,10 +37,10 @@ describe("TetrominoI", () => {
 		tetromino.rotate();
 		const positions = tetromino.getBlocks();
 		expect(positions).toEqual([
-			{ x: 4, y: 0 },
-			{ x: 5, y: 0 },
-			{ x: 6, y: 0 },
-			{ x: 7, y: 0 },
+			{ x: 4, y: 0, parent: tetromino },
+			{ x: 5, y: 0, parent: tetromino },
+			{ x: 6, y: 0, parent: tetromino },
+			{ x: 7, y: 0, parent: tetromino },
 		]);
 	});
 });

@@ -9,10 +9,10 @@ export class TetrominoO extends Tetromino {
 
 	getBlocks(): Block[] {
 		return [
-			{ x: this.left, y: this.top + 1 },
-			{ x: this.left + 1, y: this.top + 1 },
-			{ x: this.left + 1, y: this.top },
-			{ x: this.left, y: this.top },
+			{ x: this.left, y: this.top + 1, parent: this },
+			{ x: this.left + 1, y: this.top + 1, parent: this },
+			{ x: this.left + 1, y: this.top, parent: this },
+			{ x: this.left, y: this.top, parent: this },
 		];
 	}
 

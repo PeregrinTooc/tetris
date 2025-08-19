@@ -3,6 +3,7 @@ import { Board } from "./board";
 export interface Block {
 	x: number;
 	y: number;
+	parent: Tetromino
 }
 
 export abstract class Tetromino {
