@@ -30,7 +30,7 @@ describe("Tetris Game Setup", () => {
       cy.get("body").type(spaceBar);
       cy.wait(10);
       cy.get("#game-board .tetromino").should("have.length", 2);
-      cy.get('#game-board [data-tetromino-id="2"]').then(($newTetromino) => {});
+      cy.get('#game-board [data-tetromino-id="2"]').then(($newTetromino) => { });
     });
   });
 
@@ -44,22 +44,6 @@ describe("Tetris Game Setup", () => {
     cy.get("#game-board .tetromino").should("exist");
     cy.get("#start-button").click();
     cy.get("#game-board .tetromino").should("not.exist");
-  });
-
-  it.skip("should detect and clear complete lines", () => {
-    cy.get("#start-button").click();
-    cy.get(".tetromino").then(($tetromino) => {
-      const initialTop = parseInt($tetromino.css("top"), 10);
-      // Move the tetromino down to create a complete line
-      for (let i = 0; i < 20; i++) {
-        cy.get("body").type(spaceBar);
-      }
-      cy.get(".tetromino").should(($el) => {
-        const newTop = parseInt($el.css("top"), 10);
-        expect(newTop).to.be.greaterThan(initialTop);
-      });
-      cy.get("#game-board").find(".line-complete").should("exist");
-    });
   });
 
   it("should detect and display game over when the stack reaches the top", () => {
