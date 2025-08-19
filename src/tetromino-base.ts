@@ -96,23 +96,19 @@ export abstract class Tetromino {
 		const prevRotation = this.rotation;
 		this.rotation++;
 		const previewBlocks = this.getBlockPositions();
-		const width = board ? board.width : this.board ? this.board.width : 10;
-		const height = board ? board.height : this.board ? this.board.height : 20;
+		const width = board ? board.width : 10;
+		const height = board ? board.height : 20;
 		const inBounds = previewBlocks.every(
 			({ x, y }) => x >= 0 && x < width && y >= 0 && y <= height
 		);
 		const collision =
 			board &&
-			board.tetrominos &&
-			Array.from(board.tetrominos).some(
-				(other: any) =>
-					other !== this &&
+			board.occupiedPositions &&
+			board.occupiedPositions.some(
+				(other) =>
 					previewBlocks.some((pos: BlockPosition) =>
-						other
-							.getBlockPositions()
-							.some((b: BlockPosition) => b.x === pos.x && b.y === pos.y)
-					)
-			);
+						other.x === pos.x && other.y === pos.y)
+					);
 		if (!inBounds || collision) {
 			this.rotation = prevRotation;
 			return;
