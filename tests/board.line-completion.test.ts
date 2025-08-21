@@ -18,7 +18,7 @@ describe("Line completion", () => {
         );
     });
 
-    test.skip("should detect and remove completed line", () => {
+    test("should detect and remove completed line", () => {
         // Create and position O piece on right
         const tetroO1 = TetrominoFactory.createNew(1, board, 1337);
         tetroO1.top = 19;
@@ -27,18 +27,36 @@ describe("Line completion", () => {
         // Create and position I piece on left
         const tetro02 = TetrominoFactory.createNew(0, board, 1337);
         tetro02.top = 19;
-        tetro02.lock();
 
-        const tetro03 = TetrominoFactory.createNew(1, board, 1337);
-        tetro03.top = 18;
+        //locking triggers line removal
+        tetro02.lock();
 
         // Check if line was cleared
         console.log(board.occupiedPositions.filter((pos) => pos.y === 19).sort((pos) => pos.x).map(pos => `(${pos.x}, ${pos.y})`));
         expect(board.occupiedPositions.filter(pos => pos.y === 19).length).toBe(0);
 
+    });
+
+      test("should detect and remove completed line", () => {
+        // Create and position O piece on right
+        const tetroO1 = TetrominoFactory.createNew(1, board, 1337);
+        tetroO1.top = 19;
+        tetroO1.lock();
+;
+        // Create and position I piece on left
+        const tetro02 = TetrominoFactory.createNew(0, board, 1337);
+        tetro02.top = 19;
+
+        const tetro03 = TetrominoFactory.createNew(1, board, 1337);
+        tetro03.top = 18;
+
+        //locking triggers line removal
+        tetro02.lock();
+
         // Check if blocks above dropped down
         const blocks = tetro03.getBlocks();
         expect(blocks[0].y).toBe(19);
+
     });
 
     test.skip("should remove completed blocks from parent tetrominos", () => {

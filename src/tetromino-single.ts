@@ -7,6 +7,6 @@ export class TetrominoSingle extends Tetromino {
 	}
 
 	getBlocks(): Block[] {
-		return [{ x: this.left, y: this.top, parent: this }];
+		return [new Block({ x: this.left, y: this.top, parent: this })];
 	}
 }

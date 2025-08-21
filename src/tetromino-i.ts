@@ -10,17 +10,17 @@ export class TetrominoI extends Tetromino {
 	getBlocks(): Block[] {
 		if (this.rotation % 2 === 0) {
 			return [
-				{ x: this.left - 1, y: this.top, parent: this },
-				{ x: this.left, y: this.top, parent: this },
-				{ x: this.left + 1, y: this.top, parent: this },
-				{ x: this.left + 2, y: this.top, parent: this },
+				new Block({ x: this.left - 1, y: this.top, parent: this }),
+				new Block({ x: this.left, y: this.top, parent: this }),
+				new Block({ x: this.left + 1, y: this.top, parent: this }),
+				new Block({ x: this.left + 2, y: this.top, parent: this }),
 			];
 		} else {
 			return [
-				{ x: this.left, y: this.top - 1, parent: this },
-				{ x: this.left, y: this.top, parent: this },
-				{ x: this.left, y: this.top + 1, parent: this },
-				{ x: this.left, y: this.top + 2, parent: this },
+				new Block({ x: this.left, y: this.top - 1, parent: this }),
+				new Block({ x: this.left, y: this.top, parent: this }),
+				new Block({ x: this.left, y: this.top + 1, parent: this }),
+				new Block({ x: this.left, y: this.top + 2, parent: this }),
 			];
 		}
 	}

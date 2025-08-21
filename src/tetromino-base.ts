@@ -1,9 +1,26 @@
 import { Board } from "./board";
 
-export interface Block {
+export class Block {
 	x: number;
 	y: number;
-	parent: Tetromino
+	parent: Tetromino;
+
+	constructor({ x, y, parent }: { x: number; y: number; parent: Tetromino; }) {
+		this.x = x;
+		this.y = y;
+		this.parent = parent;
+	}
+
+	drop(): void {
+		this.y++;
+		this.updatePosition();
+	}
+
+	updatePosition(): void {
+		if (this.parent) {
+			this.parent.updatePosition();
+		}
+	}
 }
 
 export abstract class Tetromino {

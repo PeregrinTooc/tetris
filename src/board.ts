@@ -78,7 +78,32 @@ export class Board {
 		
 			const customEvent = event as CustomEvent;
 			customEvent.detail.forEach((block: Block) => { this.occupiedPositions.push(block) });
+			this.checkForCompletedLines();
 		}
+	private checkForCompletedLines() {
+		const completedLines = this.findCompletedLines();
+		if (completedLines.length > 0) {
+			this.removeCompletedLines(completedLines);
+			for (const block of this.occupiedPositions) {
+				if (block.y < Math.min(...completedLines)) {
+					block.drop();
+				}
+			}
+		}	
+	}
+	removeCompletedLines(completedLines: number[]) {
+		completedLines.forEach(line => {
+			this.occupiedPositions = this.occupiedPositions.filter(pos => pos.y !== line);
+		});
+	}
+	findCompletedLines(): number[] {
+		const completedLines: number[] = [];
+		for (let y = 0; y < this.height; y++) {
+			const isComplete = this.occupiedPositions.filter(pos => pos.y === y).length === this.width;
+			if (isComplete) completedLines.push(y);
+		}
+		return completedLines;
+	}
 
 	moveTetromino(tetromino: Tetromino, direction: string): boolean {
 		let dx = 0, dy = 0;
