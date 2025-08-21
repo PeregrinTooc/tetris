@@ -11,7 +11,7 @@ describe("Line completion", () => {
         element.innerHTML = "";
         board = new Board(
             20,
-            10,
+            2,
             element,
             null,
             { dequeue: jest.fn(() => 1337) }
@@ -20,37 +20,24 @@ describe("Line completion", () => {
 
     test.skip("should detect and remove completed line", () => {
         // Create and position O piece on right
-        const tetroO1 = TetrominoFactory.createNew(8, board, 2);
+        const tetroO1 = TetrominoFactory.createNew(1, board, 1337);
         tetroO1.top = 19;
         tetroO1.lock();
 
         // Create and position I piece on left
-        const tetroI = TetrominoFactory.createNew(1, board, 1);
-        tetroI.top = 19;
-        tetroI.lock();
+        const tetro02 = TetrominoFactory.createNew(0, board, 1337);
+        tetro02.top = 19;
+        tetro02.lock();
 
-        // Create and position T piece in center 
-        const tetroT = TetrominoFactory.createNew(5, board, 0);
-        tetroT.top = 19;
-        tetroT.lock();
-
-        // Create and position another O piece to fill gap and trigger line completion
-        const tetroO2 = TetrominoFactory.createNew(6, board, 2);
-        tetroO2.top = 19;
-
-        // Create a test piece above the line
-        const tetroTest = TetrominoFactory.createNew(5, board, 1337);
-        tetroTest.top = 18;
-        tetroTest.lock();
-
-        // Complete the line by locking last piece, should trigger line clear
-        tetroO2.lock();
+        const tetro03 = TetrominoFactory.createNew(1, board, 1337);
+        tetro03.top = 18;
 
         // Check if line was cleared
+        console.log(board.occupiedPositions.filter((pos) => pos.y === 19).sort((pos) => pos.x).map(pos => `(${pos.x}, ${pos.y})`));
         expect(board.occupiedPositions.filter(pos => pos.y === 19).length).toBe(0);
 
         // Check if blocks above dropped down
-        const blocks = tetroTest.getBlocks();
+        const blocks = tetro03.getBlocks();
         expect(blocks[0].y).toBe(19);
     });
 

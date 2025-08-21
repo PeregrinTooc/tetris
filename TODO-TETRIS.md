@@ -47,8 +47,6 @@
 ### Accessibility
 
 - [ ] Keyboard remapping
-- [ ] Colorblind mode
-- [ ] Screen reader support
 
 ## Test Coverage
 

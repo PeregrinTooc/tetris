@@ -21,7 +21,7 @@ export class Board {
 	tetrominoSeedQueue: TetrominoSeedQueue;
 	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 	activeTetromino: Tetromino;
-	occupiedPositions: Block[] = [];
+    occupiedPositions: Block[] = [];
 
 	constructor(
 		height: number,
@@ -71,11 +71,14 @@ export class Board {
 		this.tetrominos.add(tetromino);
 		this.element.appendChild(tetromino.element);
 		this.activeTetromino = tetromino;
-		tetromino.addEventListener("locked", (event: Event) => {
+		tetromino.addEventListener("locked", this.handleTetrominoLocked.bind(this));
+	}
+
+	private handleTetrominoLocked(event: Event): void {
+		
 			const customEvent = event as CustomEvent;
 			customEvent.detail.forEach((block: Block) => { this.occupiedPositions.push(block) });
-		})
-	}
+		}
 
 	moveTetromino(tetromino: Tetromino, direction: string): boolean {
 		let dx = 0, dy = 0;
