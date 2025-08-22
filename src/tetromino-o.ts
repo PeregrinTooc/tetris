@@ -7,14 +7,16 @@ export class TetrominoO extends Tetromino {
 		return "tetromino tetromino-o";
 	}
 
-	getBlocks(): Block[] {
-		return [
-			new Block({ x: this.left, y: this.top + 1, parent: this }),
-			new Block({ x: this.left + 1, y: this.top + 1, parent: this }),
-			new Block({ x: this.left + 1, y: this.top, parent: this }),
-			new Block({ x: this.left, y: this.top, parent: this }),
-		];
-	}
+	 getBlocks(): Block[] {
+	 const blocks = [
+	 new Block({ x: this.left, y: this.top + 1, parent: this }),
+	 new Block({ x: this.left + 1, y: this.top + 1, parent: this }),
+	 new Block({ x: this.left + 1, y: this.top, parent: this }),
+	 new Block({ x: this.left, y: this.top, parent: this }),
+	 ];
+	 this.blocks = blocks;
+	 return blocks;
+	 }
 
 	rotate(): void {
 		// O tetromino does not rotate

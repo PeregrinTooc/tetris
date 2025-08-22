@@ -40,8 +40,9 @@ describe("Line completion", () => {
 
         // Final piece should fall only 1 space to validate line was cleared
         cy.get("body").type(" "); // drop test piece
+        cy.wait(50); 
 
-        cy.get(".tetromino").last().should(($el) => {
+        cy.get('#game-board [data-tetromino-id="5"]').should(($el) => {
             const top = parseInt($el.css("top"), 10);
             expect(top).to.equal(24); // Should only fall one block
         });

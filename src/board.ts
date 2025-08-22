@@ -75,9 +75,9 @@ export class Board {
 	}
 
 	private handleTetrominoLocked(event: Event): void {
-		
 			const customEvent = event as CustomEvent;
 			customEvent.detail.forEach((block: Block) => { this.occupiedPositions.push(block) });
+			this.occupiedPositions.sort((a, b) => b.y - a.y);
 			this.checkForCompletedLines();
 		}
 	private checkForCompletedLines() {
@@ -93,16 +93,17 @@ export class Board {
 	}
 	removeCompletedLines(completedLines: number[]) {
 		completedLines.forEach(line => {
+			this.occupiedPositions.filter(block => block.y === line).forEach(block => block.delete());
 			this.occupiedPositions = this.occupiedPositions.filter(pos => pos.y !== line);
 		});
 	}
 	findCompletedLines(): number[] {
 		const completedLines: number[] = [];
-		for (let y = 0; y < this.height; y++) {
+		for (let y = 1; y < this.height + 1; y++) {
 			const isComplete = this.occupiedPositions.filter(pos => pos.y === y).length === this.width;
 			if (isComplete) completedLines.push(y);
 		}
-		return completedLines;
+		return completedLines.sort();
 	}
 
 	moveTetromino(tetromino: Tetromino, direction: string): boolean {
