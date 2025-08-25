@@ -85,8 +85,10 @@ export class Board {
 		if (completedLines.length > 0) {
 			this.removeCompletedLines(completedLines);
 			for (const block of this.occupiedPositions) {
-				if (block.y < Math.min(...completedLines)) {
-					block.drop();
+				if (block.y <= Math.min(...completedLines)) {
+					while (block.y <= Math.min(...completedLines)) {
+						block.drop();
+					}
 				}
 			}
 		}	
