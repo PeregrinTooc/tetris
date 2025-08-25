@@ -1,13 +1,14 @@
 /// <reference types="cypress" />
 
-const spaceBar = " ";
+
+import { setTetrominoDropTime, pushTetrominoSeed, pressHardDrop } from "../support/testUtils";
 
 describe("Tetris Game Setup", () => {
   beforeEach(() => {
     cy.visit("/index.html");
     cy.window().then((win) => {
-      win.setTetrominoDropTime(100);
-      for (let i = 0; i < 10; i++) win.pushTetrominoSeed(1337);
+      setTetrominoDropTime(win, 100);
+      for (let i = 0; i < 10; i++) pushTetrominoSeed(win, 1337);
     });
   });
 
@@ -27,7 +28,7 @@ describe("Tetris Game Setup", () => {
   it("should spawn the next tetromino when the current one stops moving", () => {
     cy.get("#start-button").click();
     cy.get('#game-board [data-tetromino-id="1"]').then(($tetromino) => {
-      cy.get("body").type(spaceBar);
+  pressHardDrop();
       cy.wait(10);
       cy.get("#game-board .tetromino").should("have.length", 2);
       cy.get('#game-board [data-tetromino-id="2"]').then(($newTetromino) => { });
@@ -51,7 +52,7 @@ describe("Tetris Game Setup", () => {
     function pollForGameOver(): any {
       return cy.get("body").then((): any => {
         if (Cypress.$("#game-over").length === 0) {
-          cy.get("body").type(spaceBar);
+          pressHardDrop();
           return cy.wait(20).then((): any => pollForGameOver());
         }
       });
@@ -67,7 +68,7 @@ describe("Tetris Game Setup", () => {
     function pollForGameOver(): any {
       return cy.get("body").then((): any => {
         if (Cypress.$("#game-over").length === 0) {
-          cy.get("body").type(spaceBar);
+          pressHardDrop();
           return cy.wait(20).then((): any => pollForGameOver());
         }
       });

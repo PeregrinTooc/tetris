@@ -1,13 +1,12 @@
-/// <reference types="cypress" />
+
+import { setTetrominoDropTime, pushTetrominoSeed, pressRotate } from "../support/testUtils";
 
 describe("T-shaped Tetromino", () => {
   beforeEach(() => {
     cy.visit("/index.html");
     cy.window().then((win) => {
-      win.setTetrominoDropTime(100000);
-      if (win.pushTetrominoSeed) {
-        win.pushTetrominoSeed(0); // 0 = T-shape
-      }
+      setTetrominoDropTime(win, 100000);
+      pushTetrominoSeed(win, 0); // 0 = T-shape
     });
     cy.get("#start-button").click();
   });
@@ -41,7 +40,7 @@ describe("T-shaped Tetromino", () => {
       ]);
     });
     // Rotate to 1
-    cy.get("body").type("{uparrow}");
+  pressRotate();
     cy.wait(50);
     cy.get("@tetromino").then(($tetromino) => {
       const blocks = getBlockOffsets($tetromino);
@@ -53,7 +52,7 @@ describe("T-shaped Tetromino", () => {
       ]);
     });
     // Rotate to 2
-    cy.get("body").type("{uparrow}");
+  pressRotate();
     cy.wait(50);
     cy.get("@tetromino").then(($tetromino) => {
       const blocks = getBlockOffsets($tetromino);
@@ -65,7 +64,7 @@ describe("T-shaped Tetromino", () => {
       ]);
     });
     // Rotate to 3
-    cy.get("body").type("{uparrow}");
+  pressRotate();
     cy.wait(50);
     cy.get("@tetromino").then(($tetromino) => {
       const blocks = getBlockOffsets($tetromino);
@@ -77,7 +76,7 @@ describe("T-shaped Tetromino", () => {
       ]);
     });
     // Rotate to 0 again
-    cy.get("body").type("{uparrow}");
+  pressRotate();
     cy.wait(50);
     cy.get("@tetromino").then(($tetromino) => {
       const blocks = getBlockOffsets($tetromino);

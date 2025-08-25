@@ -1,16 +1,17 @@
-/// <reference types="cypress" />
+
+import { setTetrominoDropTime, pushTetrominoSeed, pressLeft, pressRight, pressDown, pressRotate, pressHardDrop } from "../support/testUtils";
 
 describe("Line completion", () => {
     beforeEach(() => {
         cy.visit("/index.html");
         cy.window().then((win) => {
-            win.setTetrominoDropTime(1000);
+            setTetrominoDropTime(win, 1000);
             // Sequence: O I T O to fill bottom row
-            win.pushTetrominoSeed(2); // O-shape
-            win.pushTetrominoSeed(1); // I-shape
-            win.pushTetrominoSeed(0); // T-shape
-            win.pushTetrominoSeed(2); // O-shape
-            win.pushTetrominoSeed(1337); // Dummy piece to validate 
+            pushTetrominoSeed(win, 2); // O-shape
+            pushTetrominoSeed(win, 1); // I-shape
+            pushTetrominoSeed(win, 0); // T-shape
+            pushTetrominoSeed(win, 2); // O-shape
+            pushTetrominoSeed(win, 1337); // Dummy piece to validate 
         });
     });
 
@@ -18,30 +19,30 @@ describe("Line completion", () => {
         cy.get("#start-button").click();
 
         // Position O piece on bottom right
-        for (let i = 0; i < 5; i++) cy.get("body").type("{rightarrow}");
-        cy.get("body").type(" "); // drop
+    for (let i = 0; i < 5; i++) pressRight();
+    pressHardDrop(); // drop
 
         // Position I piece on bottom left
-        for (let i = 0; i < 4; i++) cy.get("body").type("{leftarrow}");
-        cy.get("body").type(" "); // drop
+    for (let i = 0; i < 4; i++) pressLeft();
+    pressHardDrop(); // drop
 
         // Position T piece in center
-        cy.wait(50); // ensure piece spawned
-        for (let i = 0; i < 2; i++) cy.get("body").type("{downarrow}");
-        for (let i = 0; i < 2; i++) cy.get("body").type("{uparrow}");
-        cy.get("body").type(" "); // drop in center
+    cy.wait(50); // ensure piece spawned
+    for (let i = 0; i < 2; i++) pressDown();
+    for (let i = 0; i < 2; i++) pressRotate();
+    pressHardDrop(); // drop in center
 
         // Position final O piece on bottom right edge of gap
-        cy.wait(50);
-        for (let i = 0; i < 2; i++) cy.get("body").type("{rightarrow}");
-        cy.get("body").type(" "); // drop
+    cy.wait(50);
+    for (let i = 0; i < 2; i++) pressRight();
+    pressHardDrop(); // drop
 
         // By now bottom line should be complete and cleared
-        cy.wait(200); // wait for line clear animation/logic
+    cy.wait(200); // wait for line clear animation/logic
 
         // Final piece should fall only 1 space to validate line was cleared
-        for (let i = 0; i < 4; i++) cy.get("body").type("{leftarrow}");
-        cy.get("body").type(" "); // drop test piece
+    for (let i = 0; i < 4; i++) pressLeft();
+    pressHardDrop(); // drop test piece
         cy.wait(50); 
 
         cy.get('#game-board [data-tetromino-id="5"]').should(($el) => {

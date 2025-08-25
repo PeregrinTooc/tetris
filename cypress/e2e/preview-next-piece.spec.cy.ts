@@ -1,10 +1,12 @@
+import { setTetrominoDropTime, pushTetrominoSeed, pressHardDrop } from "../support/testUtils";
+
 describe("Preview of Next Piece", () => {
   beforeEach(() => {
     cy.visit("/index.html");
     cy.window().then((win) => {
-      win.setTetrominoDropTime(100000);
-      win.pushTetrominoSeed(1); // I shape
-      win.pushTetrominoSeed(2); // O shape
+      setTetrominoDropTime(win, 100000);
+      pushTetrominoSeed(win, 1); // I shape
+      pushTetrominoSeed(win, 2); // O shape
     });
     cy.get("#start-button").click();
   });
@@ -13,7 +15,7 @@ describe("Preview of Next Piece", () => {
     // Preview should show O shape before it spawns
     cy.get("#preview-container .tetromino-o").should("exist");
     // Drop the I shape
-    cy.get("body").type(" ");
+  pressHardDrop();
     // Wait for the O tetromino to appear on the game board
     cy.get("#game-board .tetromino-o", { timeout: 3000 }).should("exist");
     // Now the preview should the next piece
