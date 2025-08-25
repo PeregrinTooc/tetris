@@ -84,19 +84,38 @@ export class Board {
 		const completedLines = this.findCompletedLines();
 		if (completedLines.length > 0) {
 			this.removeCompletedLines(completedLines);
-			for (const block of this.occupiedPositions) {
-				if (block.y <= Math.min(...completedLines)) {
-					while (block.y <= Math.min(...completedLines)) {
-						block.drop();
-					}
+			// Drop all remaining blocks to their lowest possible positions
+			this.dropAllBlocks();
+			// Recursively check for new completed lines
+			this.checkForCompletedLines();
+		}
+	}
+
+	private dropAllBlocks() {
+		// Sort blocks by y position (bottom to top) to process them correctly
+		const sortedBlocks = [...this.occupiedPositions].sort((a, b) => b.y - a.y);
+		
+		for (const block of sortedBlocks) {
+			// Find the lowest position this block can fall to
+			let targetY = this.height;
+			
+			// Check for collisions with other blocks below
+			for (const otherBlock of this.occupiedPositions) {
+				if (otherBlock !== block && otherBlock.x === block.x && otherBlock.y > block.y) {
+					targetY = Math.min(targetY, otherBlock.y - 1);
 				}
 			}
-		}	
+			
+			// Drop the block to the target position
+			while (block.y < targetY) {
+				block.drop();
+			}
+		}
 	}
 	removeCompletedLines(completedLines: number[]) {
 		completedLines.forEach(line => {
 			this.occupiedPositions.filter(block => block.y === line).forEach(block => block.delete());
-			this.occupiedPositions = this.occupiedPositions.filter(pos => pos.y !== line);
+			this.occupiedPositions = this.occupiedPositions.filter(block => block.y !== line);
 		});
 	}
 	findCompletedLines(): number[] {
