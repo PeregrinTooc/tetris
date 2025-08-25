@@ -6,6 +6,7 @@ export default defineConfig({
 		baseUrl: "http://localhost:5173",
 		supportFile: false,
 		video: false,
-		screenshotOnRunFailure: true
+		screenshotOnRunFailure: true,
+		experimentalStudio: true,
 	},
 });

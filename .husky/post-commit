@@ -1,0 +1,4 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx cypress run --record --key fddc7d69-cb6d-40c0-ae33-d332d294cc19
