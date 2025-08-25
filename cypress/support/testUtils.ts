@@ -1,4 +1,10 @@
 /**
+ * Calls a function n times. Useful for repeated key presses in tests.
+ */
+export function doTimes(n: number, fn: () => void) {
+	for (let i = 0; i < n; i++) fn();
+}
+/**
  * Adds a T-shaped tetromino to the game window.
  */
 export function addTetrominoT(win: Window) {
@@ -107,5 +113,6 @@ export function pressRotate() {
  */
 export function pressHardDrop() {
 	cy.get('body').trigger('keydown', { key: ' ' });
+	cy.wait(50);
 }
 

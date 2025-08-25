@@ -1,5 +1,5 @@
 
-import { setTetrominoDropTimeInMiliseconds, addTetrominoT, addTetrominoI, addTetrominoO, addTetrominoJ, addTetrominoL, addTetrominoZ, addTetrominoS, pressHardDrop } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoT, addTetrominoI, addTetrominoO, addTetrominoJ, addTetrominoL, addTetrominoZ, addTetrominoS, pressHardDrop, doTimes } from "../support/testUtils";
 
 const tetrominoSeeds = [0, 1, 2, 3, 4, 5, 6]; // T, I, O, J, L, Z, S
 const tetrominoClasses = [

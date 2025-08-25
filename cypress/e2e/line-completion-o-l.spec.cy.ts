@@ -1,5 +1,5 @@
 
-import { setTetrominoDropTimeInMiliseconds, addTetrominoO, addTetrominoL, pressLeft, pressRight, pressDown, pressRotate, pressHardDrop } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoO, addTetrominoL, pressLeft, pressRight, pressDown, pressRotate, pressHardDrop, doTimes } from "../support/testUtils";
 
 describe("Line completion with O and L pieces", () => {
     beforeEach(() => {
@@ -19,28 +19,22 @@ describe("Line completion with O and L pieces", () => {
         cy.get("#start-button").click();
 
         // Drop O-pieces from left to right
-    for (let i = 0; i < 5; i++) pressLeft();
+    doTimes(5, pressLeft);
     pressHardDrop(); // drop O
-        cy.wait(50);
-    for (let i = 0; i < 3; i++) pressLeft();
+    doTimes(3, pressLeft);
     pressHardDrop(); // drop O
-        cy.wait(50);
     pressLeft();
     pressHardDrop(); // drop O
-        cy.wait(50);
     pressRight();
     pressHardDrop(); // drop O
-        cy.wait(50);
-    for (let i = 0; i < 3; i++) pressRight();
+    doTimes(3, pressRight);
     pressHardDrop(); // drop O
-        cy.wait(50);
 
         // Move L-piece to far right
     pressDown();
-    for (let i = 0; i < 3; i++) pressRotate();
+    doTimes(3, pressRotate);
     for (let i = 0; i < 9; i++) pressRight();
     pressHardDrop(); // drop L-piece
-        cy.wait(200);
 
         
         // Assert that the bottom two rows are cleared and the horizontal bar of the L is dropped

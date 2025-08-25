@@ -1,4 +1,4 @@
-import { setTetrominoDropTimeInMiliseconds, addTetrominoI, addTetrominoO, pressHardDrop } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoI, addTetrominoO, pressHardDrop, doTimes } from "../support/testUtils";
 
 describe("Preview of Next Piece", () => {
   beforeEach(() => {

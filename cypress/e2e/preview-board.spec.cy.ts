@@ -1,4 +1,4 @@
-import { setTetrominoDropTimeInMiliseconds, addTetrominoBase } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoBase, doTimes } from "../support/testUtils";
 
 describe("Preview Board", () => {
   beforeEach(() => {

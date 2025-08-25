@@ -1,4 +1,4 @@
-import { setTetrominoDropTimeInMiliseconds, addTetrominoBase, pressLeft, pressRight, pressHardDrop } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoBase, pressLeft, pressRight, pressHardDrop, doTimes } from "../support/testUtils";
 
 describe("Tetris Game Movement", () => {
   beforeEach(() => {
