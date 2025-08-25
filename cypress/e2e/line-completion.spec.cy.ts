@@ -1,17 +1,17 @@
 
-import { setTetrominoDropTime, pushTetrominoSeed, pressLeft, pressRight, pressDown, pressRotate, pressHardDrop } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoO, addTetrominoI, addTetrominoT, addTetrominoBase, pressLeft, pressRight, pressDown, pressRotate, pressHardDrop } from "../support/testUtils";
 
 describe("Line completion", () => {
     beforeEach(() => {
         cy.visit("/index.html");
         cy.window().then((win) => {
-            setTetrominoDropTime(win, 1000);
+            setTetrominoDropTimeInMiliseconds(win, 1000);
             // Sequence: O I T O to fill bottom row
-            pushTetrominoSeed(win, 2); // O-shape
-            pushTetrominoSeed(win, 1); // I-shape
-            pushTetrominoSeed(win, 0); // T-shape
-            pushTetrominoSeed(win, 2); // O-shape
-            pushTetrominoSeed(win, 1337); // Dummy piece to validate 
+            addTetrominoO(win);
+            addTetrominoI(win);
+            addTetrominoT(win);
+            addTetrominoO(win);
+            addTetrominoBase(win);
         });
     });
 

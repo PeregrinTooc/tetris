@@ -1,11 +1,11 @@
-import { setTetrominoDropTime, pushTetrominoSeed, pressLeft, pressRight, pressHardDrop } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoBase, pressLeft, pressRight, pressHardDrop } from "../support/testUtils";
 
 describe("Tetris Game Movement", () => {
   beforeEach(() => {
     cy.visit("/index.html");
     cy.window().then((win) => {
-      setTetrominoDropTime(win, 100);
-      for (let i = 0; i < 10; i++) pushTetrominoSeed(win, 1337);
+      setTetrominoDropTimeInMiliseconds(win, 100);
+  for (let i = 0; i < 10; i++) addTetrominoBase(win);
     });
   });
 
@@ -48,7 +48,7 @@ describe("Tetris Game Movement", () => {
 
   it("should allow the player to drop the tetromino immediately", () => {
     cy.window().then((win) => {
-      setTetrominoDropTime(win, 2147483647);
+      setTetrominoDropTimeInMiliseconds(win, 2147483647);
     });
     cy.get("#start-button").click();
     cy.get(".tetromino").then(($el) => {

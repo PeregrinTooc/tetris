@@ -1,17 +1,17 @@
 
-import { setTetrominoDropTime, pushTetrominoSeed, pressLeft, pressRight, pressDown, pressRotate, pressHardDrop } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoO, addTetrominoL, pressLeft, pressRight, pressDown, pressRotate, pressHardDrop } from "../support/testUtils";
 
 describe("Line completion with O and L pieces", () => {
     beforeEach(() => {
         cy.visit("/index.html");
         cy.window().then((win) => {
-            setTetrominoDropTime(win, 10000);
+            setTetrominoDropTimeInMiliseconds(win, 10000);
             // Fill left to right, 2 blocks high (1 O-pieces per column)
             for (let i = 0; i < 5; i++) {
-                pushTetrominoSeed(win, 2); // O-shape
+                addTetrominoO(win);
             }
             // L-piece for the far right
-            pushTetrominoSeed(win, 4); // L-shape
+            addTetrominoL(win);
         });
     });
 

@@ -1,12 +1,12 @@
 
-import { setTetrominoDropTime, pushTetrominoSeed, pressRotate } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoT, pressRotate } from "../support/testUtils";
 
 describe("T-shaped Tetromino", () => {
   beforeEach(() => {
     cy.visit("/index.html");
     cy.window().then((win) => {
-      setTetrominoDropTime(win, 100000);
-      pushTetrominoSeed(win, 0); // 0 = T-shape
+      setTetrominoDropTimeInMiliseconds(win, 100000);
+  addTetrominoT(win);
     });
     cy.get("#start-button").click();
   });

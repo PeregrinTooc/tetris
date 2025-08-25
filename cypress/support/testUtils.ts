@@ -1,3 +1,58 @@
+/**
+ * Adds a T-shaped tetromino to the game window.
+ */
+export function addTetrominoT(win: Window) {
+	pushTetrominoSeed(win, 0);
+}
+
+/**
+ * Adds an I-shaped tetromino to the game window.
+ */
+export function addTetrominoI(win: Window) {
+	pushTetrominoSeed(win, 1);
+}
+
+/**
+ * Adds an O-shaped tetromino to the game window.
+ */
+export function addTetrominoO(win: Window) {
+	pushTetrominoSeed(win, 2);
+}
+
+/**
+ * Adds a J-shaped tetromino to the game window.
+ */
+export function addTetrominoJ(win: Window) {
+	pushTetrominoSeed(win, 3);
+}
+
+/**
+ * Adds an L-shaped tetromino to the game window.
+ */
+export function addTetrominoL(win: Window) {
+	pushTetrominoSeed(win, 4);
+}
+
+/**
+ * Adds a Z-shaped tetromino to the game window.
+ */
+export function addTetrominoZ(win: Window) {
+	pushTetrominoSeed(win, 5);
+}
+
+/**
+ * Adds an S-shaped tetromino to the game window.
+ */
+export function addTetrominoS(win: Window) {
+	pushTetrominoSeed(win, 6);
+}
+
+/**
+ * Adds a base (single block) tetromino to the game window (for testing).
+ */
+export function addTetrominoBase(win: Window) {
+	pushTetrominoSeed(win, 1337);
+}
 // cypress/support/testUtils.ts
 // Utility functions for seed manipulation and user input in e2e tests
 
@@ -15,7 +70,7 @@ export function pushTetrominoSeed(win: Window, seed: number) {
  * @param win Cypress window object
  * @param ms Drop time in milliseconds
  */
-export function setTetrominoDropTime(win: Window, ms: number) {
+export function setTetrominoDropTimeInMiliseconds(win: Window, ms: number) {
 	win.setTetrominoDropTime(ms);
 }
 

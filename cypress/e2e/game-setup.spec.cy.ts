@@ -1,14 +1,14 @@
 /// <reference types="cypress" />
 
 
-import { setTetrominoDropTime, pushTetrominoSeed, pressHardDrop } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoBase, pressHardDrop } from "../support/testUtils";
 
 describe("Tetris Game Setup", () => {
   beforeEach(() => {
     cy.visit("/index.html");
     cy.window().then((win) => {
-      setTetrominoDropTime(win, 100);
-      for (let i = 0; i < 10; i++) pushTetrominoSeed(win, 1337);
+      setTetrominoDropTimeInMiliseconds(win, 100);
+  for (let i = 0; i < 10; i++) addTetrominoBase(win);
     });
   });
 

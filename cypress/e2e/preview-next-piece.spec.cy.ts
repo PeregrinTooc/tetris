@@ -1,12 +1,12 @@
-import { setTetrominoDropTime, pushTetrominoSeed, pressHardDrop } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoI, addTetrominoO, pressHardDrop } from "../support/testUtils";
 
 describe("Preview of Next Piece", () => {
   beforeEach(() => {
     cy.visit("/index.html");
     cy.window().then((win) => {
-      setTetrominoDropTime(win, 100000);
-      pushTetrominoSeed(win, 1); // I shape
-      pushTetrominoSeed(win, 2); // O shape
+      setTetrominoDropTimeInMiliseconds(win, 100000);
+  addTetrominoI(win);
+  addTetrominoO(win);
     });
     cy.get("#start-button").click();
   });
