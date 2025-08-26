@@ -1,6 +1,7 @@
 import { PreviewBoard } from "./preview-board";
 import { Board } from "./board";
 import { Tetromino } from "../src/tetromino-base";
+import { ScoreBoard } from "./score-board";
 
 class TetrominoSeedQueue {
 	items: number[];
@@ -71,12 +72,14 @@ if (startButton) {
 function startGame(): void {
 	gameRunning = true;
 	const previewBoard = new PreviewBoard(document.getElementById("next-board") as HTMLElement);
+	const scoreBoard = new ScoreBoard(document.getElementById("score-board") as HTMLElement);
 	board = new Board(
 		20,
 		11,
 		document.getElementById("game-board") as HTMLElement,
 		previewBoard,
-		tetrominoSeedQueue
+		tetrominoSeedQueue,
+		scoreBoard
 	);
 	const startBtn = document.getElementById("start-button");
 	if (startBtn) {
@@ -143,7 +146,7 @@ function stopTicking(): void {
 }
 
 function spawnNewTetromino(): void {
-	tetromino = board.spawnTetromino(document);
+	tetromino = board.spawnTetromino();
 	tetromino.addEventListener("locked", () => {
 		spawnNewTetromino();
 	});

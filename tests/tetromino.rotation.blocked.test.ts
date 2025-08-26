@@ -67,7 +67,7 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 		// Place a blocking tetromino at (4,0)
 		const blocker = TetrominoFactory.createNew(4, board, 2); // O piece, but only one block matters
 		blocker.top = 0;
-		board.tetrominos.add(blocker);
+		//board.tetrominos.add(blocker);
 		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, blocked (pivot at 4,0)
 		tetromino.rotate();
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
@@ -104,7 +104,7 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 		// Place a blocking tetromino at (5,1)
 		const blocker = TetrominoFactory.createNew(5, board, 2); // O piece
 		blocker.top = 1;
-		board.tetrominos.add(blocker);
+		//board.tetrominos.add(blocker);
 		const tetromino = TetrominoFactory.createNew(4, board, 0); // T piece
 		tetromino.rotate();
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([

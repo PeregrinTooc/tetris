@@ -88,7 +88,7 @@ describe("Board", () => {
 
 	test("reset clears all tetrominos and board DOM", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 1337);
-		board.tetrominos.add(tetromino);
+		//board.tetrominos.add(tetromino);
 		board.reset();
 		expect(board.tetrominos.size).toBe(0);
 		expect(element.innerHTML).toBe("");

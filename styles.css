@@ -1,3 +1,23 @@
+/* Dedicated score box styling */
+.score-box {
+    min-width: 120px;
+    min-height: 48px;
+    background: #222;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    margin-right: 0;
+    margin-bottom: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+/* Make the score visible on dark background */
+#score-board {
+    color: #fff;
+}
 body {
     margin: 0;
     display: flex;

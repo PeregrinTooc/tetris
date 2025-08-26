@@ -1,10 +1,15 @@
 import { Tetromino, Block } from "./tetromino-base";
 import { TetrominoFactory } from "./tetrominoFactory";
 
+
 interface PreviewBoard {
 	element: HTMLElement;
 	previewContainer: HTMLElement;
 	showNextTetromino?: (tetromino: Tetromino) => void;
+}
+
+export interface ScoreBoard {
+	setScore: (score: number) => void;
 }
 
 interface TetrominoSeedQueue {
@@ -15,25 +20,29 @@ export class Board {
 	height: number;
 	width: number;
 	element: HTMLElement;
-	previewBoard: PreviewBoard | null;
+	private previewBoard: PreviewBoard | null;
+	private scoreBoard: ScoreBoard | null;
 	tetrominos: Set<Tetromino>;
-	nextTetromino: Tetromino | null = null;
-	tetrominoSeedQueue: TetrominoSeedQueue;
+	private nextTetromino: Tetromino | null = null;
+	private tetrominoSeedQueue: TetrominoSeedQueue;
 	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
-	activeTetromino: Tetromino;
-    occupiedPositions: Block[] = [];
+	private activeTetromino: Tetromino;
+	occupiedPositions: Block[] = [];
+	score: number = 0;
 
 	constructor(
 		height: number,
 		width: number,
 		element: HTMLElement,
 		previewBoard: PreviewBoard | null,
-		tetrominoSeedQueue: TetrominoSeedQueue
+		tetrominoSeedQueue: TetrominoSeedQueue,
+		scoreBoard: ScoreBoard | null = null
 	) {
 		this.height = height;
 		this.width = width;
 		this.element = element;
 		this.previewBoard = previewBoard;
+		this.scoreBoard = scoreBoard;
 		this.tetrominos = new Set();
 		this.nextTetromino = null;
 		this.tetrominoSeedQueue = tetrominoSeedQueue;
@@ -75,11 +84,11 @@ export class Board {
 	}
 
 	private handleTetrominoLocked(event: Event): void {
-			const customEvent = event as CustomEvent;
-			customEvent.detail.forEach((block: Block) => { this.occupiedPositions.push(block) });
-			this.occupiedPositions.sort((a, b) => b.y - a.y);
-			this.checkForCompletedLines();
-		}
+		const customEvent = event as CustomEvent;
+		customEvent.detail.forEach((block: Block) => { this.occupiedPositions.push(block) });
+		this.occupiedPositions.sort((a, b) => b.y - a.y);
+		this.checkForCompletedLines();
+	}
 	private checkForCompletedLines() {
 		const completedLines = this.findCompletedLines();
 		if (completedLines.length > 0) {
@@ -94,18 +103,18 @@ export class Board {
 	private dropAllBlocks() {
 		// Sort blocks by y position (bottom to top) to process them correctly
 		const sortedBlocks = [...this.occupiedPositions].sort((a, b) => b.y - a.y);
-		
+
 		for (const block of sortedBlocks) {
 			// Find the lowest position this block can fall to
 			let targetY = this.height;
-			
+
 			// Check for collisions with other blocks below
 			for (const otherBlock of this.occupiedPositions) {
 				if (otherBlock !== block && otherBlock.x === block.x && otherBlock.y > block.y) {
 					targetY = Math.min(targetY, otherBlock.y - 1);
 				}
 			}
-			
+
 			// Drop the block to the target position
 			while (block.y < targetY) {
 				block.drop();
@@ -117,6 +126,13 @@ export class Board {
 			this.occupiedPositions.filter(block => block.y === line).forEach(block => block.delete());
 			this.occupiedPositions = this.occupiedPositions.filter(block => block.y !== line);
 		});
+		// Minimal scoring: 100 points per line
+		if (completedLines.length > 0) {
+			this.score += completedLines.length * 100;
+			if (this.scoreBoard) {
+				this.scoreBoard.setScore(this.score);
+			}
+		}
 	}
 	findCompletedLines(): number[] {
 		const completedLines: number[] = [];
@@ -160,7 +176,7 @@ export class Board {
 		this.element.innerHTML = "";
 	}
 
-	spawnTetromino(document: Document): any {
+	spawnTetromino(): Tetromino {
 		this.waitUntilLocked();
 		let tetromino: Tetromino;
 		const center = Math.floor(this.width / 2);
