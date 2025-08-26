@@ -17,18 +17,18 @@ interface TetrominoSeedQueue {
 }
 
 export class Board {
-	height: number;
-	width: number;
-	element: HTMLElement;
+	private height: number;
+	private width: number;
+	private element: HTMLElement;
 	private previewBoard: PreviewBoard | null;
 	private scoreBoard: ScoreBoard | null;
-	tetrominos: Set<Tetromino>;
+	private tetrominos: Set<Tetromino>;
 	private nextTetromino: Tetromino | null = null;
 	private tetrominoSeedQueue: TetrominoSeedQueue;
 	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 	private activeTetromino: Tetromino;
 	occupiedPositions: Block[] = [];
-	score: number = 0;
+	private score: number = 0;
 
 	constructor(
 		height: number,
@@ -48,6 +48,20 @@ export class Board {
 		this.tetrominoSeedQueue = tetrominoSeedQueue;
 	}
 
+	collision(previewBlocks: Block[]): boolean {
+		const collision =
+			this.occupiedPositions.some((other) =>
+				previewBlocks.some(
+					(pos: Block) => other.x === pos.x && other.y === pos.y
+				)
+			);
+		return collision;
+	}
+	inBounds(previewBlocks: Block[]) {
+		return previewBlocks.every(
+			({ x, y }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
+		);
+	}
 	_canMove(direction: string): boolean {
 		if (this.hasCollision(direction)) {
 			if (direction === "down") {
@@ -61,12 +75,7 @@ export class Board {
 	private hasCollision(direction: string): boolean {
 		const dx = direction === "left" ? -1 : direction === "right" ? 1 : 0;
 		const dy = direction === "down" ? 1 : 0;
-		const movingBlocks = this.activeTetromino!.getBlocks()
-			.map(({ x, y }) => ({ x: x + dx, y: y + dy }));
-
-		return movingBlocks.some(({ x, y }) =>
-			this.occupiedPositions.some(({ x: bx, y: by }) => bx === x && by === y)
-		);
+		return this.activeTetromino.collides(dx, dy, this.occupiedPositions)
 	}
 
 	_raiseGameOverIfStackReachesTop(): void {
@@ -121,7 +130,7 @@ export class Board {
 			}
 		}
 	}
-	removeCompletedLines(completedLines: number[]) {
+	private removeCompletedLines(completedLines: number[]) {
 		completedLines.forEach(line => {
 			this.occupiedPositions.filter(block => block.y === line).forEach(block => block.delete());
 			this.occupiedPositions = this.occupiedPositions.filter(block => block.y !== line);
@@ -134,7 +143,7 @@ export class Board {
 			}
 		}
 	}
-	findCompletedLines(): number[] {
+	private findCompletedLines(): number[] {
 		const completedLines: number[] = [];
 		for (let y = 1; y < this.height + 1; y++) {
 			const isComplete = this.occupiedPositions.filter(pos => pos.y === y).length === this.width;
