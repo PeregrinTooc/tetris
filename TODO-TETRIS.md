@@ -28,8 +28,8 @@
 
 ### Board & Line Mechanics
 
-- [ ] Line clear detection and removal
-- [ ] Multiple line clears (double, triple, Tetris)
+- [X] Line clear detection and removal
+- [X] Multiple line clears (double, triple, Tetris)
 - [ ] Ghost piece (shows where tetromino will land)
 - [ ] Wall kicks (rotation near walls)
 - [x] Lock delay (brief pause before locking)
@@ -60,7 +60,7 @@
 - [x] Game over is detected and displayed
 - [x] Tetromino rotation via keyboard (T-shape, ArrowUp)
 - [x] All tetromino shapes appear
-- [ ] Line clear is detected and board updates
+- [X] Line clear is detected and board updates
 - [ ] Score/level/lines UI updates
 - [X] Hard drop action
 - [ ] Hold action
@@ -80,7 +80,7 @@
 - [x] Board resets and clears tetrominos
 - [x] PreviewBoard shows next tetromino
 - [x] Tetromino rotation logic (T-shape)
-- [ ] Line clear logic
+- [X] Line clear logic
 - [ ] Scoring and level logic
 - [ ] Hold/next piece logic
 - [ ] Preview of next piece logic
