@@ -27,7 +27,7 @@ export class Board {
 	private tetrominoSeedQueue: TetrominoSeedQueue;
 	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 	private activeTetromino: Tetromino;
-	occupiedPositions: Block[] = [];
+	private occupiedPositions: Block[] = [];
 	private score: number = 0;
 
 	constructor(
@@ -62,7 +62,7 @@ export class Board {
 			({ x, y }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
 		);
 	}
-	_canMove(direction: string): boolean {
+	private _canMove(direction: string): boolean {
 		if (this.hasCollision(direction)) {
 			if (direction === "down") {
 				this._raiseGameOverIfStackReachesTop();
@@ -78,38 +78,38 @@ export class Board {
 		return this.activeTetromino.collides(dx, dy, this.occupiedPositions)
 	}
 
-	_raiseGameOverIfStackReachesTop(): void {
+	private _raiseGameOverIfStackReachesTop(): void {
 		if (this.activeTetromino.top === 0) {
 			const gameOverEvent = new Event("gameover");
 			this.element.dispatchEvent(gameOverEvent);
 		}
 	}
 
-	addTetromino(tetromino: Tetromino): void {
+	public addTetromino(tetromino: Tetromino): void {
 		this.tetrominos.add(tetromino);
 		this.element.appendChild(tetromino.element);
 		this.activeTetromino = tetromino;
-		tetromino.addEventListener("locked", this.handleTetrominoLocked.bind(this));
+		tetromino.addEventListener("locked", this._handleTetrominoLocked.bind(this));
 	}
 
-	private handleTetrominoLocked(event: Event): void {
+	private _handleTetrominoLocked(event: Event): void {
 		const customEvent = event as CustomEvent;
 		customEvent.detail.forEach((block: Block) => { this.occupiedPositions.push(block) });
 		this.occupiedPositions.sort((a, b) => b.y - a.y);
-		this.checkForCompletedLines();
+		this._checkForCompletedLines();
 	}
-	private checkForCompletedLines() {
-		const completedLines = this.findCompletedLines();
+	private _checkForCompletedLines() {
+		const completedLines = this._findCompletedLines();
 		if (completedLines.length > 0) {
-			this.removeCompletedLines(completedLines);
+			this._removeCompletedLines(completedLines);
 			// Drop all remaining blocks to their lowest possible positions
-			this.dropAllBlocks();
+			this._dropAllBlocks();
 			// Recursively check for new completed lines
-			this.checkForCompletedLines();
+			this._checkForCompletedLines();
 		}
 	}
 
-	private dropAllBlocks() {
+	private _dropAllBlocks() {
 		// Sort blocks by y position (bottom to top) to process them correctly
 		const sortedBlocks = [...this.occupiedPositions].sort((a, b) => b.y - a.y);
 
@@ -130,7 +130,7 @@ export class Board {
 			}
 		}
 	}
-	private removeCompletedLines(completedLines: number[]) {
+	private _removeCompletedLines(completedLines: number[]) {
 		completedLines.forEach(line => {
 			this.occupiedPositions.filter(block => block.y === line).forEach(block => block.delete());
 			this.occupiedPositions = this.occupiedPositions.filter(block => block.y !== line);
@@ -143,7 +143,7 @@ export class Board {
 			}
 		}
 	}
-	private findCompletedLines(): number[] {
+	private _findCompletedLines(): number[] {
 		const completedLines: number[] = [];
 		for (let y = 1; y < this.height + 1; y++) {
 			const isComplete = this.occupiedPositions.filter(pos => pos.y === y).length === this.width;
@@ -152,7 +152,7 @@ export class Board {
 		return completedLines.sort();
 	}
 
-	moveTetromino(tetromino: Tetromino, direction: string): boolean {
+	public moveTetromino(tetromino: Tetromino, direction: string): boolean {
 		let dx = 0, dy = 0;
 		if (direction === "left") dx = -1;
 		if (direction === "right") dx = 1;
@@ -180,12 +180,12 @@ export class Board {
 		return true;
 	}
 
-	reset(): void {
+	public reset(): void {
 		this.tetrominos.clear();
 		this.element.innerHTML = "";
 	}
 
-	spawnTetromino(): Tetromino {
+	public spawnTetromino(): Tetromino {
 		this.waitUntilLocked();
 		let tetromino: Tetromino;
 		const center = Math.floor(this.width / 2);

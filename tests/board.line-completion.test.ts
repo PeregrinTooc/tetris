@@ -21,27 +21,35 @@ describe("Line completion", () => {
     test("should detect and remove completed line", () => {
         // Create and position O piece on right
         const tetroO1 = TetrominoFactory.createNew(1, board, 1337);
-        tetroO1.top = 19;
+        tetroO1.drop();
         tetroO1.lock();
 
         // Create and position I piece on left
         const tetro02 = TetrominoFactory.createNew(0, board, 1337);
-        tetro02.top = 19;
+        tetro02.drop();
 
         //locking triggers line removal
         tetro02.lock();
 
-        // Check if line was cleared
-        expect(board.occupiedPositions.filter(pos => pos.y === 19).length).toBe(0);
+        const tetroTester = TetrominoFactory.createNew(0, board, 1337);
+        tetroTester.drop();
+        tetroTester.addEventListener("locked", (event: Event) => {
+            const customEvent = event as CustomEvent;
+            customEvent.detail.forEach((block: { x: number; y: number }) => {
+                expect(block.y).toBe(19);
+                expect(block.x).toBe(0);
+            });
+        });
+        tetroTester.lock();
 
     });
 
-      test("should detect and remove completed line", () => {
+    test("should detect and remove completed line", () => {
         // Create and position O piece on right
         const tetroO1 = TetrominoFactory.createNew(1, board, 1337);
         tetroO1.top = 19;
         tetroO1.lock();
-;
+        ;
         // Create and position I piece on left
         const tetro02 = TetrominoFactory.createNew(0, board, 1337);
         tetro02.top = 19;

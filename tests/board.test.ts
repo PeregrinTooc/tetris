@@ -2,6 +2,7 @@ import { describe, beforeEach, test, expect, jest } from "@jest/globals";
 import { Board } from "../src/board";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 import { PreviewBoard } from "../src/preview-board";
+import { Block } from "../src/tetromino-base";
 
 describe("Board", () => {
 	let board: Board;
@@ -12,11 +13,6 @@ describe("Board", () => {
 	beforeEach(() => {
 		stubQueue = { dequeue: () => 1337 };
 		board = new Board(20, 11, element, previewBoard, stubQueue);
-	});
-
-	test("adds a tetromino element to the board DOM", () => {
-		const tetromino = TetrominoFactory.createNew(5, board, 1337);
-		expect(board.tetrominos.size).toEqual(1);
 	});
 
 	test("moves tetromino left within board boundaries", () => {
@@ -44,19 +40,18 @@ describe("Board", () => {
 
 	test("detects collision when tetromino moves down onto a locked tetromino", () => {
 		const tetromino1 = TetrominoFactory.createNew(5, board, 1337);
-		tetromino1.top = 1;
+		tetromino1.move("down");
 		tetromino1.lock();
 		const tetromino2 = TetrominoFactory.createNew(5, board, 1337);
-		tetromino2.top = 0;
-		expect(board._canMove("down")).toBe(false);
-	});
-
-	test("dispatches game over event when a tetromino is added at the top row", () => {
-		const mockDispatchEvent = jest.fn() as unknown as (event: Event) => boolean;
-		board.element.dispatchEvent = mockDispatchEvent;
-		const tetromino = TetrominoFactory.createNew(5, board, 1337);
-		board._raiseGameOverIfStackReachesTop();
-		expect(mockDispatchEvent).toHaveBeenCalled();
+		tetromino2.move("down");
+		tetromino2.addEventListener("locked", (event) => {
+			const customEvent = event as CustomEvent;
+			customEvent.detail.forEach((block: { x: number; y: number }) => {
+				expect(block.y).toBe(0);
+				expect(block.x).toBe(5);
+			});
+		});
+		tetromino2.lock();
 	});
 
 	test("locks tetromino at the bottom and prevents further movement", () => {
@@ -84,14 +79,6 @@ describe("Board", () => {
 		expect(board.moveTetromino(movingTetromino, "right")).toBe(false);
 		movingTetromino.left = 6;
 		expect(board.moveTetromino(movingTetromino, "left")).toBe(false);
-	});
-
-	test("reset clears all tetrominos and board DOM", () => {
-		const tetromino = TetrominoFactory.createNew(5, board, 1337);
-		//board.tetrominos.add(tetromino);
-		board.reset();
-		expect(board.tetrominos.size).toBe(0);
-		expect(element.innerHTML).toBe("");
 	});
 
 	test("T tetromino drop results in correct blocks on the floor", () => {

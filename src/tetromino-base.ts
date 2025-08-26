@@ -88,8 +88,9 @@ export abstract class Tetromino {
 	public abstract getBlocks(): Block[];
 
 	public move(direction: string): void {
-		if (!this.board || this.locked) return;
-		this.board.moveTetromino(this, direction);
+		const board = this.board as Board;
+		if (!board || this.locked) return;
+		board.moveTetromino(this, direction);
 	}
 
 	public drop(): void {
