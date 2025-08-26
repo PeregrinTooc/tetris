@@ -135,17 +135,15 @@ export class Board {
 			this.occupiedPositions.filter(block => block.y === line).forEach(block => block.delete());
 			this.occupiedPositions = this.occupiedPositions.filter(block => block.y !== line);
 		});
-		// Minimal scoring: 100 points per line
-		if (completedLines.length > 0) {
-			this.score += completedLines.length * 100;
-			if (this.scoreBoard) {
-				this.scoreBoard.setScore(this.score);
-			}
+		let numberOfCompletedLines = completedLines.length;
+		this.score += (numberOfCompletedLines * (numberOfCompletedLines + 1) * 50);
+		if (this.scoreBoard) {
+			this.scoreBoard.setScore(this.score);
 		}
 	}
 	private _findCompletedLines(): number[] {
 		const completedLines: number[] = [];
-		for (let y = 1; y < this.height + 1; y++) {
+		for (let y = 0; y < this.height + 1; y++) {
 			const isComplete = this.occupiedPositions.filter(pos => pos.y === y).length === this.width;
 			if (isComplete) completedLines.push(y);
 		}
