@@ -42,14 +42,29 @@ tetris-game/
 
 3. **Run tests:**
    ```bash
-   # Run all tests
+   # Run all tests with parallel e2e (fastest complete suite ~17s)
+   npm run test:parallel
+
+   # Run all tests sequentially (standard ~27s)
    npm test
 
-   # Run only unit tests
+   # Run only unit tests (super fast ~0.9s)
    npm run test:unit
 
-   # Run only acceptance tests
+   # Run in watch mode for development
+   npm run test:watch
+
+   # Run only end-to-end tests (optimized ~13s)
    npm run test:e2e
+
+   # Run e2e tests with maximum optimizations
+   npm run test:e2e:fast
+
+   # Run e2e tests in parallel groups (local ~14s)
+   npm run test:e2e:groups
+
+   # Run e2e tests with CI parallel execution  
+   npm run test:e2e:ci
    ```
 
 ## Deployment
