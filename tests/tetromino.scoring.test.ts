@@ -48,7 +48,7 @@ describe("Tetromino Scoring", () => {
 
         expect(scoreListener).toHaveBeenCalledWith(
             expect.objectContaining({
-                detail: { action: "softDrop", points: 10 }
+                detail: { points: 10 }
             })
         );
     });
@@ -69,14 +69,19 @@ describe("Tetromino Scoring", () => {
         const calls = scoreListener.mock.calls as any[];
         console.log("All score events:", calls.map(call => call[0].detail));
 
-        const hardDropCalls = calls.filter(
-            (call: any) => call[0].detail.action === "hardDrop"
-        );
-        expect(hardDropCalls.length).toBe(1);
-        const points = hardDropCalls[0][0].detail.points;
-        expect(points).toBeGreaterThan(0);
-        // Should be 15 points per line dropped
-        expect(points % 15).toBe(0);
+        // After hard drop, we should get 2 events: hard drop points + lock points (5)
+        expect(calls.length).toBe(2);
+
+        // Find the hard drop points (should be divisible by 15 and > 5)
+        const hardDropCall = calls.find((call: any) => {
+            const points = call[0].detail.points;
+            return points > 5 && points % 15 === 0;
+        });
+        expect(hardDropCall).toBeDefined();
+
+        // Find the lock points (should be exactly 5)
+        const lockCall = calls.find((call: any) => call[0].detail.points === 5);
+        expect(lockCall).toBeDefined();
     });
 
     test("should award 5 points when tetromino locks", () => {
@@ -87,7 +92,7 @@ describe("Tetromino Scoring", () => {
 
         expect(scoreListener).toHaveBeenCalledWith(
             expect.objectContaining({
-                detail: { action: "pieceLocked", points: 5 }
+                detail: { points: 5 }
             })
         );
     });
@@ -106,11 +111,8 @@ describe("Tetromino Scoring", () => {
         // Try to move down when already at bottom
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 
-        const calls = scoreListener.mock.calls as any[];
-        const softDropCalls = calls.filter(
-            (call: any) => call[0].detail.action === "softDrop"
-        );
-        expect(softDropCalls.length).toBe(0);
+        // Should not fire any score events since tetromino didn't move
+        expect(scoreListener).not.toHaveBeenCalled();
     });
 
     test("should award correct points for multiple actions", () => {
@@ -122,25 +124,24 @@ describe("Tetromino Scoring", () => {
         // Soft drop once (10 points)
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 
-        // Hard drop (15 points per line)
+        // Hard drop (15 points per line + 5 for lock)
         document.dispatchEvent(new KeyboardEvent("keydown", { key: " " }));
 
         // Check all score events were fired
         const calls = scoreListener.mock.calls as any[];
-        expect(calls.length).toBeGreaterThanOrEqual(2); // At least soft drop and piece locked
+        expect(calls.length).toBeGreaterThanOrEqual(3); // At least soft drop, hard drop, and piece locked
 
-        // Find specific action calls
-        const softDropCall = calls.find((call: any) => call[0].detail.action === "softDrop");
-        const pieceLockCall = calls.find((call: any) => call[0].detail.action === "pieceLocked");
+        // Check that we have the expected point values
+        const pointValues = calls.map((call: any) => call[0].detail.points);
 
-        expect(softDropCall).toBeDefined();
-        if (softDropCall) {
-            expect(softDropCall[0].detail.points).toBe(10);
-        }
+        // Should have 10 points for soft drop
+        expect(pointValues).toContain(10);
 
-        expect(pieceLockCall).toBeDefined();
-        if (pieceLockCall) {
-            expect(pieceLockCall[0].detail.points).toBe(5);
-        }
+        // Should have 5 points for piece lock
+        expect(pointValues).toContain(5);
+
+        // Should have some hard drop points (multiple of 15, > 5)
+        const hardDropPoints = pointValues.find((points: number) => points > 5 && points % 15 === 0);
+        expect(hardDropPoints).toBeDefined();
     });
 });

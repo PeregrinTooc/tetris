@@ -38,7 +38,15 @@ This TypeScript/JavaScript Tetris implementation follows strict TDD practices wi
 - `npm run dev` - Start Vite dev server
 - `npm test` - Run all tests (blocked by Husky pre-push)
 - `npm run test:unit` - Jest only
+- `npm run test:unit:output` - Jest with verbose output to `test-output.txt` file (AI should use this)
 - `npm run test:e2e` - Cypress only
+
+**AI Testing Guidelines:**
+
+- Always use `npm run test:unit:output` when running tests for debugging
+- Read test results from `test-output.txt` file instead of terminal output
+- Clean up old test output files when done debugging
+- Use this pattern for specific test files: `npx jest path/to/test.file.ts --verbose > specific-test-output.txt 2>&1`
 
 ## Code Conventions
 

@@ -95,7 +95,7 @@ export abstract class Tetromino {
 
 		// Award 10 points for soft drop if tetromino actually moved down
 		if (moved && direction === "down") {
-			this._dispatchScoreEvent("softDrop", 10);
+			this._dispatchScoreEvent(10);
 		}
 	}
 
@@ -108,15 +108,15 @@ export abstract class Tetromino {
 
 		// Award 15 points per line for hard drop
 		if (dropDistance > 0) {
-			this._dispatchScoreEvent("hardDrop", dropDistance * 15);
+			this._dispatchScoreEvent(dropDistance * 15);
 		}
 
 		this.lock();
 	}
 
-	private _dispatchScoreEvent(action: string, points: number): void {
+	private _dispatchScoreEvent(points: number): void {
 		const event = new CustomEvent("scoreEvent", {
-			detail: { action, points },
+			detail: { points },
 			bubbles: true
 		});
 		this.element.dispatchEvent(event);
@@ -137,7 +137,7 @@ export abstract class Tetromino {
 		this._removeKeyboardListener();
 
 		// Award 5 points for locking a tetromino
-		this._dispatchScoreEvent("pieceLocked", 5);
+		this._dispatchScoreEvent(5);
 
 		const event = new CustomEvent("locked", { detail: this.getBlocks() });
 		this.element.dispatchEvent(event);

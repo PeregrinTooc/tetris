@@ -3,3 +3,4 @@ cypress/screenshots
 cypress/post-commit.log
 dist
 coverage
+test-output.txt
