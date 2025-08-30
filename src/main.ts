@@ -94,6 +94,14 @@ function startGame(): void {
 			currentScore += (linesCompleted * (linesCompleted + 1) * 50);
 			scoreBoard.setScore(currentScore);
 		});
+
+		// Listen for score events from tetrominos
+		gameBoardElement.addEventListener("scoreEvent", (event: Event) => {
+			const customEvent = event as CustomEvent;
+			const { points } = customEvent.detail;
+			currentScore += points;
+			scoreBoard.setScore(currentScore);
+		});
 	}
 
 	const startBtn = document.getElementById("start-button");

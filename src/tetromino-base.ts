@@ -91,15 +91,35 @@ export abstract class Tetromino {
 	public move(direction: string): void {
 		const board = this.board as Board;
 		if (!board || this.locked) return;
-		board.moveTetromino(this, direction);
+		const moved = board.moveTetromino(this, direction);
+
+		// Award 10 points for soft drop if tetromino actually moved down
+		if (moved && direction === "down") {
+			this._dispatchScoreEvent("softDrop", 10);
+		}
 	}
 
 	public drop(): void {
 		if (!this.board || this.locked) return;
+		let dropDistance = 0;
 		while (this.board.moveTetromino(this, "down")) {
-			// Keep moving down until we can't anymore
+			dropDistance++;
 		}
+
+		// Award 15 points per line for hard drop
+		if (dropDistance > 0) {
+			this._dispatchScoreEvent("hardDrop", dropDistance * 15);
+		}
+
 		this.lock();
+	}
+
+	private _dispatchScoreEvent(action: string, points: number): void {
+		const event = new CustomEvent("scoreEvent", {
+			detail: { action, points },
+			bubbles: true
+		});
+		this.element.dispatchEvent(event);
 	}
 
 	public addEventListener(event: string, listener: EventListener): void {
@@ -115,6 +135,10 @@ export abstract class Tetromino {
 		if (this.locked) return;
 		this.locked = true;
 		this._removeKeyboardListener();
+
+		// Award 5 points for locking a tetromino
+		this._dispatchScoreEvent("pieceLocked", 5);
+
 		const event = new CustomEvent("locked", { detail: this.getBlocks() });
 		this.element.dispatchEvent(event);
 	}
@@ -158,6 +182,7 @@ export abstract class Tetromino {
 	}
 
 	public activateKeyboardControl(): void {
+		this._removeKeyboardListener(); // Remove any existing listener first
 		this._setupKeyboardListener();
 	}
 
