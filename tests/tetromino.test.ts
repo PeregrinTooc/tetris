@@ -9,6 +9,7 @@ describe("Tetromino", () => {
   let board: Board;
   const element = document.createElement("div");
   const nextPiece = document.createElement("div");
+  const boardWidth = 11;
   nextPiece.id = "next-piece";
   element.appendChild(nextPiece);
   let stubQueue: any;
@@ -16,7 +17,7 @@ describe("Tetromino", () => {
     stubQueue = { dequeue: () => 1337 };
     board = new Board(
       20,
-      11,
+      boardWidth,
       document.createElement("div"),
       new PreviewBoard(element),
       stubQueue
@@ -44,9 +45,9 @@ describe("Tetromino", () => {
     expect(tetromino.left).toBe(0);
   });
   test("should not move right past the right border", () => {
-    tetromino.left = board.width - 1;
+    tetromino.left = boardWidth - 1;
     tetromino.move("right");
-    expect(tetromino.left).toBe(board.width - 1);
+    expect(tetromino.left).toBe(boardWidth - 1);
   });
   test("I tetromino blocks should not go out of left border", () => {
     // Place I tetromino so all blocks are in-bounds
@@ -61,14 +62,14 @@ describe("Tetromino", () => {
   });
   test("I tetromino blocks should not go out of right border", () => {
     // Place I tetromino so all blocks are in-bounds
-    tetromino = TetrominoFactory.createNew(board.width - 3, board, 1); // 1 = I
-    tetromino.left = board.width - 3; // rightmost block at width-1
+    tetromino = TetrominoFactory.createNew(boardWidth - 3, board, 1); // 1 = I
+    tetromino.left = boardWidth - 3; // rightmost block at width-1
     const before = tetromino.getBlocks().map((b: { x: number }) => b.x);
-    expect(Math.max(...before)).toBe(board.width - 1);
+    expect(Math.max(...before)).toBe(boardWidth - 1);
     tetromino.move("right");
     const after = tetromino.getBlocks().map((b: { x: number }) => b.x);
     // Should not move, still at right edge
-    expect(Math.max(...after)).toBe(board.width - 1);
+    expect(Math.max(...after)).toBe(boardWidth - 1);
   });
   test("should allow tetromino to soft drop down", () => {
     const initialTop = tetromino.top;
