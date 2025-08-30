@@ -8,10 +8,6 @@ interface PreviewBoard {
 	showNextTetromino?: (tetromino: Tetromino) => void;
 }
 
-export interface ScoreBoard {
-	setScore: (score: number) => void;
-}
-
 interface TetrominoSeedQueue {
 	dequeue: () => number;
 }
@@ -21,28 +17,24 @@ export class Board {
 	private width: number;
 	private element: HTMLElement;
 	private previewBoard: PreviewBoard | null;
-	private scoreBoard: ScoreBoard | null;
 	private tetrominos: Set<Tetromino>;
 	private nextTetromino: Tetromino | null = null;
 	private tetrominoSeedQueue: TetrominoSeedQueue;
 	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 	private activeTetromino: Tetromino;
 	private occupiedPositions: Block[] = [];
-	private score: number = 0;
 
 	constructor(
 		height: number,
 		width: number,
 		element: HTMLElement,
 		previewBoard: PreviewBoard | null,
-		tetrominoSeedQueue: TetrominoSeedQueue,
-		scoreBoard: ScoreBoard | null = null
+		tetrominoSeedQueue: TetrominoSeedQueue
 	) {
 		this.height = height;
 		this.width = width;
 		this.element = element;
 		this.previewBoard = previewBoard;
-		this.scoreBoard = scoreBoard;
 		this.tetrominos = new Set();
 		this.nextTetromino = null;
 		this.tetrominoSeedQueue = tetrominoSeedQueue;
@@ -136,10 +128,11 @@ export class Board {
 			this.occupiedPositions = this.occupiedPositions.filter(block => block.y !== line);
 		});
 		let numberOfCompletedLines = completedLines.length;
-		this.score += (numberOfCompletedLines * (numberOfCompletedLines + 1) * 50);
-		if (this.scoreBoard) {
-			this.scoreBoard.setScore(this.score);
-		}
+		// Dispatch event with line completion data for scoring
+		const scoreEvent = new CustomEvent("linesCompleted", {
+			detail: { linesCompleted: numberOfCompletedLines }
+		});
+		this.element.dispatchEvent(scoreEvent);
 	}
 	private _findCompletedLines(): number[] {
 		const completedLines: number[] = [];

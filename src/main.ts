@@ -30,6 +30,8 @@ let board: Board;
 let tickIntervalId: ReturnType<typeof setInterval> | null = null;
 const TICK_EVENT_NAME = "tick";
 let tetrominoSeedQueue = new TetrominoSeedQueue();
+let currentScore: number = 0;
+let scoreBoard: ScoreBoard;
 
 declare global {
 	interface Window {
@@ -71,16 +73,29 @@ if (startButton) {
 
 function startGame(): void {
 	gameRunning = true;
+	currentScore = 0;
 	const previewBoard = new PreviewBoard(document.getElementById("next-board") as HTMLElement);
-	const scoreBoard = new ScoreBoard(document.getElementById("score-board") as HTMLElement);
+	scoreBoard = new ScoreBoard(document.getElementById("score-board") as HTMLElement);
+	scoreBoard.setScore(currentScore);
 	board = new Board(
 		20,
 		11,
 		document.getElementById("game-board") as HTMLElement,
 		previewBoard,
-		tetrominoSeedQueue,
-		scoreBoard
+		tetrominoSeedQueue
 	);
+
+	// Listen for line completion events to update score
+	const gameBoardElement = document.getElementById("game-board");
+	if (gameBoardElement) {
+		gameBoardElement.addEventListener("linesCompleted", (event: Event) => {
+			const customEvent = event as CustomEvent;
+			const linesCompleted = customEvent.detail.linesCompleted;
+			currentScore += (linesCompleted * (linesCompleted + 1) * 50);
+			scoreBoard.setScore(currentScore);
+		});
+	}
+
 	const startBtn = document.getElementById("start-button");
 	if (startBtn) {
 		startBtn.textContent = "Reset Game";
@@ -128,6 +143,10 @@ function resetGame(): void {
 	document.onkeydown = null;
 	gameRunning = false;
 	tetromino = null;
+	currentScore = 0;
+	if (scoreBoard) {
+		scoreBoard.setScore(currentScore);
+	}
 	stopTicking();
 }
 
