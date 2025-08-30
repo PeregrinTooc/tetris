@@ -1,1 +1,6 @@
-npx cypress run --record --key fddc7d69-cb6d-40c0-ae33-d332d294cc19
+echo "Starting e2e tests with cloud recording in background..."
+
+# Run the e2e test script in background using nohup for complete detachment
+nohup .husky/run-e2e-tests.sh > /dev/null 2>&1 &
+
+echo "E2E tests started in background. Log will open in VS Code if there are failures."
