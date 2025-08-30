@@ -102,27 +102,6 @@ function startGame(): void {
 		startBtn.blur();
 	}
 	spawnNewTetromino();
-	document.onkeydown = function (e: KeyboardEvent): void {
-		if (!gameRunning || !tetromino) return;
-		if (e.key === "ArrowLeft") {
-			tetromino.move("left");
-		}
-		if (e.key === "ArrowRight") {
-			tetromino.move("right");
-		}
-		if (e.key === "ArrowDown") {
-			tetromino.move("down");
-		}
-		if (e.key === " " || e.key === "Space" || e.key === "Spacebar") {
-			if (e.preventDefault) e.preventDefault();
-			tetromino.drop();
-		}
-		if (e.key === "ArrowUp") {
-			if (tetromino.rotate) {
-				tetromino.rotate();
-			}
-		}
-	};
 	startTicking();
 }
 
@@ -140,7 +119,6 @@ function resetGame(): void {
 	}
 	const startBtn = document.getElementById("start-button");
 	if (startBtn) startBtn.textContent = "Start Game";
-	document.onkeydown = null;
 	gameRunning = false;
 	tetromino = null;
 	currentScore = 0;
@@ -165,8 +143,15 @@ function stopTicking(): void {
 }
 
 function spawnNewTetromino(): void {
+	if (tetromino) {
+		tetromino.deactivateKeyboardControl();
+	}
 	tetromino = board.spawnTetromino();
-	tetromino.addEventListener("locked", () => {
-		spawnNewTetromino();
-	});
+	if (tetromino) {
+		tetromino.addEventListener("locked", () => {
+			spawnNewTetromino();
+		});
+		// Activate keyboard control when tetromino starts falling
+		tetromino.activateKeyboardControl();
+	}
 }

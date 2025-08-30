@@ -30,32 +30,37 @@ describe("Tetromino", () => {
   });
   test("should delegate movement to board", () => {
     const moveTetrominoSpy = jest.spyOn(board, "moveTetromino");
-    tetromino.move("left");
+    tetromino.activateKeyboardControl();
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
     expect(moveTetrominoSpy).toHaveBeenCalledWith(tetromino, "left");
   });
   test("should lock tetromino", () => {
+    tetromino.activateKeyboardControl();
     tetromino.lock();
     const moveTetrominoSpy = jest.spyOn(board, "moveTetromino");
-    tetromino.move("left");
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
     expect(moveTetrominoSpy).not.toHaveBeenCalled();
   });
   test("should not move left past the left border", () => {
+    tetromino.activateKeyboardControl();
     tetromino.left = 0;
-    tetromino.move("left");
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
     expect(tetromino.left).toBe(0);
   });
   test("should not move right past the right border", () => {
+    tetromino.activateKeyboardControl();
     tetromino.left = boardWidth - 1;
-    tetromino.move("right");
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
     expect(tetromino.left).toBe(boardWidth - 1);
   });
   test("I tetromino blocks should not go out of left border", () => {
     // Place I tetromino so all blocks are in-bounds
     tetromino = TetrominoFactory.createNew(2, board, 1); // 1 = I
+    tetromino.activateKeyboardControl();
     tetromino.left = 1; // leftmost block at 0
     const before = tetromino.getBlocks().map((b: { x: number }) => b.x);
     expect(Math.min(...before)).toBe(0);
-    tetromino.move("left");
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
     const after = tetromino.getBlocks().map((b: { x: number }) => b.x);
     // Should not move, still at left edge
     expect(Math.min(...after)).toBe(0);
@@ -63,17 +68,19 @@ describe("Tetromino", () => {
   test("I tetromino blocks should not go out of right border", () => {
     // Place I tetromino so all blocks are in-bounds
     tetromino = TetrominoFactory.createNew(boardWidth - 3, board, 1); // 1 = I
+    tetromino.activateKeyboardControl();
     tetromino.left = boardWidth - 3; // rightmost block at width-1
     const before = tetromino.getBlocks().map((b: { x: number }) => b.x);
     expect(Math.max(...before)).toBe(boardWidth - 1);
-    tetromino.move("right");
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
     const after = tetromino.getBlocks().map((b: { x: number }) => b.x);
     // Should not move, still at right edge
     expect(Math.max(...after)).toBe(boardWidth - 1);
   });
   test("should allow tetromino to soft drop down", () => {
+    tetromino.activateKeyboardControl();
     const initialTop = tetromino.top;
-    tetromino.move("down");
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
     expect(tetromino.top).toBe(initialTop + 1);
   });
 });

@@ -34,7 +34,8 @@ describe("TetrominoI", () => {
 
 	test("should rotate I tetromino to vertical", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 1);
-		tetromino.rotate();
+		tetromino.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		const positions = tetromino.getBlocks();
 		expect(positions).toEqual([
 			{ x: 4, y: 0, parent: tetromino },

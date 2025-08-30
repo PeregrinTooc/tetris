@@ -21,18 +21,21 @@ describe("Line completion", () => {
     test("should detect and remove completed line", () => {
         // Create and position O piece on right
         const tetroO1 = TetrominoFactory.createNew(1, board, 1337);
-        tetroO1.drop();
+        tetroO1.activateKeyboardControl();
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop
         tetroO1.lock();
 
         // Create and position I piece on left
         const tetro02 = TetrominoFactory.createNew(0, board, 1337);
-        tetro02.drop();
+        tetro02.activateKeyboardControl();
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop
 
         //locking triggers line removal
         tetro02.lock();
 
         const tetroTester = TetrominoFactory.createNew(0, board, 1337);
-        tetroTester.drop();
+        tetroTester.activateKeyboardControl();
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop
         tetroTester.addEventListener("locked", (event: Event) => {
             const customEvent = event as CustomEvent;
             customEvent.detail.forEach((block: { x: number; y: number }) => {

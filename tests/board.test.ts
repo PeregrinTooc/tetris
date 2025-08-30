@@ -40,10 +40,12 @@ describe("Board", () => {
 
 	test("detects collision when tetromino moves down onto a locked tetromino", () => {
 		const tetromino1 = TetrominoFactory.createNew(5, board, 1337);
-		tetromino1.move("down");
+		tetromino1.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 		tetromino1.lock();
 		const tetromino2 = TetrominoFactory.createNew(5, board, 1337);
-		tetromino2.move("down");
+		tetromino2.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 		tetromino2.addEventListener("locked", (event) => {
 			const customEvent = event as CustomEvent;
 			customEvent.detail.forEach((block: { x: number; y: number }) => {
@@ -56,11 +58,12 @@ describe("Board", () => {
 
 	test("locks tetromino at the bottom and prevents further movement", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 1337);
-		tetromino.drop();
+		tetromino.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop
 		expect(tetromino.locked).toBe(true);
-		tetromino.move("left");
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
 		expect(tetromino.left).toBe(5);
-		tetromino.move("right");
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
 		expect(tetromino.left).toBe(5);
 	});
 
@@ -83,7 +86,8 @@ describe("Board", () => {
 
 	test("T tetromino drop results in correct blocks on the floor", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 0);
-		tetromino.drop();
+		tetromino.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop
 		const positions = tetromino.getBlocks();
 		const floorBlocks = positions.filter((p) => p.y === 20);
 		const aboveFloorBlocks = positions.filter((p) => p.y === 19);

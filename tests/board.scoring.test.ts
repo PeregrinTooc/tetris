@@ -35,7 +35,8 @@ describe("Board scoring", () => {
 
         for (let i = 0; i < 4; i++) {
             const t = TetrominoFactory.createNew(i, board, 1337);
-            t.move("down");
+            t.activateKeyboardControl();
+            document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
             t.lock();
         }
         expect(linesCompletedCount).toBe(1);

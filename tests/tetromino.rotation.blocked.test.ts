@@ -20,7 +20,8 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("Tetromino does not rotate if it would go out of left boundary", () => {
 		const tetromino = TetrominoFactory.createNew(1, board, 1); // I piece, left edge (pivot at 1)
-		tetromino.rotate();
+		tetromino.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[0, 0],
 			[1, 0],
@@ -31,7 +32,8 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("Tetromino does not rotate if it would go out of right boundary", () => {
 		const tetromino = TetrominoFactory.createNew(7, board, 1); // I piece, right edge (pivot at 7)
-		tetromino.rotate();
+		tetromino.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[6, 0],
 			[7, 0],
@@ -42,7 +44,8 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("Tetromino does not rotate if it would go out of top boundary", () => {
 		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, top (pivot at 4,0)
-		tetromino.rotate();
+		tetromino.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[3, 0],
 			[4, 0],
@@ -53,8 +56,9 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("Tetromino does not rotate if it would go out of bottom boundary", () => {
 		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, bottom (pivot at 4,18)
+		tetromino.activateKeyboardControl();
 		tetromino.top = 18;
-		tetromino.rotate();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[4, 17],
 			[4, 18],
@@ -69,7 +73,8 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 		blocker.top = 0;
 		//board.tetrominos.add(blocker);
 		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, blocked (pivot at 4,0)
-		tetromino.rotate();
+		tetromino.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[3, 0],
 			[4, 0],
@@ -80,7 +85,8 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("Tetromino rotates if there is space", () => {
 		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, free (pivot at 4,0)
-		tetromino.rotate();
+		tetromino.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[3, 0],
 			[4, 0],
@@ -91,7 +97,8 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("O tetromino does not rotate (should be unchanged)", () => {
 		const tetromino = TetrominoFactory.createNew(4, board, 2); // O piece
-		tetromino.rotate();
+		tetromino.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[4, 1],
 			[5, 1],

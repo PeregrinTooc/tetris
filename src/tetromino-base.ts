@@ -37,6 +37,7 @@ export abstract class Tetromino {
 	rotation: number;
 	element: HTMLElement;
 	fallListener?: () => void;
+	keyboardListener?: (event: KeyboardEvent) => void;
 
 	constructor(left: number, board: Board | null) {
 		this.left = left;
@@ -113,8 +114,36 @@ export abstract class Tetromino {
 	public lock(): void {
 		if (this.locked) return;
 		this.locked = true;
+		this._removeKeyboardListener();
 		const event = new CustomEvent("locked", { detail: this.getBlocks() });
 		this.element.dispatchEvent(event);
+	}
+
+	private _setupKeyboardListener(): void {
+		this.keyboardListener = (event: KeyboardEvent) => {
+			if (this.locked || !this.board) return;
+
+			if (event.key === "ArrowLeft") {
+				this.move("left");
+			} else if (event.key === "ArrowRight") {
+				this.move("right");
+			} else if (event.key === "ArrowDown") {
+				this.move("down");
+			} else if (event.key === " " || event.key === "Space" || event.key === "Spacebar") {
+				if (event.preventDefault) event.preventDefault();
+				this.drop();
+			} else if (event.key === "ArrowUp") {
+				this.rotate();
+			}
+		};
+		document.addEventListener("keydown", this.keyboardListener);
+	}
+
+	private _removeKeyboardListener(): void {
+		if (this.keyboardListener) {
+			document.removeEventListener("keydown", this.keyboardListener);
+			this.keyboardListener = undefined;
+		}
 	}
 
 	public startFalling(): void {
@@ -126,6 +155,14 @@ export abstract class Tetromino {
 			}
 		};
 		document.addEventListener("tick", this.fallListener);
+	}
+
+	public activateKeyboardControl(): void {
+		this._setupKeyboardListener();
+	}
+
+	public deactivateKeyboardControl(): void {
+		this._removeKeyboardListener();
 	}
 
 	public rotate(): void {

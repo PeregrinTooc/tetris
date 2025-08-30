@@ -22,7 +22,8 @@ describe("O-shaped Tetromino", () => {
 	test("should not rotate (remain same shape)", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 2);
 		const originalShape = tetromino.getBlocks();
-		tetromino.rotate();
+		tetromino.activateKeyboardControl();
+		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks()).toEqual(originalShape);
 	});
 });
