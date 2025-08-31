@@ -23,7 +23,7 @@
 - [x] Hard drop (instantly drop tetromino)
 - [x] Soft drop (faster drop)
 - [ ] Increasing speed/level progression
-- [ ] Scoring system (points for line clears, soft/hard drop)
+- [x] Scoring system (points for line clears, soft/hard drop, piece locking)
 - [ ] Sound effects and music
 
 ### Board & Line Mechanics
@@ -81,7 +81,8 @@
 - [x] PreviewBoard shows next tetromino
 - [x] Tetromino rotation logic (T-shape)
 - [X] Line clear logic
-- [ ] Scoring and level logic
+- [x] Scoring system logic (soft drop, hard drop, piece locking)
+- [ ] Level Logic
 - [ ] Hold/next piece logic
 - [ ] Preview of next piece logic
 - [ ] Ghost piece logic
@@ -91,6 +92,7 @@
 ---
 
 **Legend:**
+
 - [x] Implemented
 - [ ] Missing/To Do
 
