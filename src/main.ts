@@ -32,6 +32,7 @@ const TICK_EVENT_NAME = "tick";
 let tetrominoSeedQueue = new TetrominoSeedQueue();
 let currentScore: number = 0;
 let scoreBoard: ScoreBoard;
+const BASE_DROP_TIME = 750;
 
 declare global {
 	interface Window {
@@ -74,9 +75,23 @@ if (startButton) {
 function startGame(): void {
 	gameRunning = true;
 	currentScore = 0;
+
+	// Initialize score and level system
 	const previewBoard = new PreviewBoard(document.getElementById("next-board") as HTMLElement);
-	scoreBoard = new ScoreBoard(document.getElementById("score-board") as HTMLElement);
+	scoreBoard = new ScoreBoard(
+		document.getElementById("score-board") as HTMLElement,
+		document.getElementById("level-board") as HTMLElement
+	);
 	scoreBoard.setScore(currentScore);
+
+	// Connect score board level changes to drop time updates
+	scoreBoard.addEventListener("levelChange", (event: Event) => {
+		const customEvent = event as CustomEvent;
+		const { newLevel } = customEvent.detail;
+		// Update drop time based on new level
+		tetrominoDropTime = scoreBoard.getDropTimeForLevel(newLevel, BASE_DROP_TIME);
+	});
+
 	board = new Board(
 		20,
 		11,
