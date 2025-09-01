@@ -135,4 +135,72 @@ describe("Board", () => {
 		singleTetromino.top = 9;
 		expect(board.moveTetromino(singleTetromino, "down")).toBe(false);
 	});
+
+	describe("spawnTetromino", () => {
+		test("spawns first tetromino when no nextTetromino exists", () => {
+			// Use board without preview board to avoid null container issues
+			const simpleBoard = new Board(20, 11, element, null, stubQueue);
+			const spawnedTetromino = simpleBoard.spawnTetromino();
+			expect(spawnedTetromino).toBeDefined();
+			expect(spawnedTetromino.left).toBe(Math.floor(11 / 2)); // center of board
+		});
+
+		test("uses nextTetromino when it exists", () => {
+			// Use board without preview board to avoid null container issues
+			const simpleBoard = new Board(20, 11, element, null, stubQueue);
+
+			// Spawn first tetromino to create nextTetromino
+			const firstTetromino = simpleBoard.spawnTetromino();
+
+			// Store reference to the nextTetromino
+			const nextTetromino = (simpleBoard as any).nextTetromino;
+			expect(nextTetromino).toBeDefined();
+
+			// Lock the first tetromino
+			firstTetromino.lock();
+
+			// Spawn second tetromino, which should use the stored nextTetromino
+			const secondTetromino = simpleBoard.spawnTetromino();
+			expect(secondTetromino).toBe(nextTetromino);
+		});
+
+		test("removes nextTetromino from preview board when spawning", () => {
+			// Mock the preview board to test element removal
+			const mockPreviewBoard = {
+				previewContainer: {
+					contains: jest.fn().mockReturnValue(true),
+					removeChild: jest.fn()
+				},
+				showNextTetromino: jest.fn()
+			};
+
+			const boardWithPreview = new Board(20, 11, element, mockPreviewBoard as any, stubQueue);
+
+			// Spawn first tetromino to create nextTetromino
+			const firstTetromino = boardWithPreview.spawnTetromino();
+			firstTetromino.lock();
+
+			// Spawn second tetromino
+			boardWithPreview.spawnTetromino();
+
+			// Verify removeChild was called
+			expect(mockPreviewBoard.previewContainer.removeChild).toHaveBeenCalled();
+		});
+
+		test("shows next tetromino in preview board when spawning", () => {
+			const mockPreviewBoard = {
+				previewContainer: {
+					contains: jest.fn().mockReturnValue(false),
+					removeChild: jest.fn()
+				},
+				showNextTetromino: jest.fn()
+			};
+
+			const boardWithPreview = new Board(20, 11, element, mockPreviewBoard as any, stubQueue);
+			boardWithPreview.spawnTetromino();
+
+			// Verify showNextTetromino was called
+			expect(mockPreviewBoard.showNextTetromino).toHaveBeenCalled();
+		});
+	});
 });

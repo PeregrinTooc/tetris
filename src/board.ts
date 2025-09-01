@@ -177,7 +177,6 @@ export class Board {
 	}
 
 	public spawnTetromino(): Tetromino {
-		this.waitUntilLocked();
 		let tetromino: Tetromino;
 		const center = Math.floor(this.width / 2);
 		if (this.nextTetromino) {
@@ -212,12 +211,5 @@ export class Board {
 			this.previewBoard.showNextTetromino(this.nextTetromino);
 		}
 		return tetromino;
-	}
-
-	private waitUntilLocked() {
-		if (this.activeTetromino)
-			while (!this.activeTetromino.locked) {
-				setTimeout(() => { }, 10);
-			}
 	}
 }

@@ -144,4 +144,28 @@ describe("Tetromino Scoring", () => {
         const hardDropPoints = pointValues.find((points: number) => points > 5 && points % 15 === 0);
         expect(hardDropPoints).toBeDefined();
     });
+
+    test("should not award hard drop points when tetromino doesn't move", () => {
+        const scoreListener = jest.fn();
+        boardElement.addEventListener("scoreEvent", scoreListener);
+
+        // Position tetromino at bottom so it can't drop
+        while (board.moveTetromino(tetromino, "down")) {
+            // Move to bottom
+        }
+
+        // Clear any movement score events
+        scoreListener.mockClear();
+
+        // Try to hard drop when already at bottom
+        tetromino.drop();
+
+        // Should only get lock points (5), no hard drop points
+        const calls = scoreListener.mock.calls as any[];
+        const pointValues = calls.map((call: any) => call[0].detail.points);
+
+        // Should not have any hard drop points (multiples of 15 > 5)
+        const hardDropPoints = pointValues.filter((points: number) => points > 5 && points % 15 === 0);
+        expect(hardDropPoints).toHaveLength(0);
+    });
 });

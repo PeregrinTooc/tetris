@@ -83,4 +83,74 @@ describe("Tetromino", () => {
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
     expect(tetromino.top).toBe(initialTop + 1);
   });
+
+  describe("startFalling", () => {
+    test("should add tick event listener when tetromino starts falling", () => {
+      const addEventListenerSpy = jest.spyOn(document, "addEventListener");
+      tetromino.startFalling();
+      expect(addEventListenerSpy).toHaveBeenCalledWith("tick", expect.any(Function));
+      addEventListenerSpy.mockRestore();
+    });
+
+    test("should move tetromino down on tick event", () => {
+      const moveTetrominoSpy = jest.spyOn(board, "moveTetromino").mockReturnValue(true);
+      tetromino.startFalling();
+      document.dispatchEvent(new CustomEvent("tick"));
+      expect(moveTetrominoSpy).toHaveBeenCalledWith(tetromino, "down");
+      moveTetrominoSpy.mockRestore();
+    });
+
+    test("should lock tetromino when it cannot move down on tick", () => {
+      const moveTetrominoSpy = jest.spyOn(board, "moveTetromino").mockReturnValue(false);
+      const lockSpy = jest.spyOn(tetromino, "lock");
+      tetromino.startFalling();
+      document.dispatchEvent(new CustomEvent("tick"));
+      expect(lockSpy).toHaveBeenCalled();
+      moveTetrominoSpy.mockRestore();
+      lockSpy.mockRestore();
+    });
+
+    test("should not add tick listener if tetromino is already locked", () => {
+      tetromino.lock();
+      const addEventListenerSpy = jest.spyOn(document, "addEventListener");
+      tetromino.startFalling();
+      expect(addEventListenerSpy).not.toHaveBeenCalledWith("tick", expect.any(Function));
+      addEventListenerSpy.mockRestore();
+    });
+
+    test("should not add tick listener if tetromino has no board", () => {
+      tetromino.board = null;
+      const addEventListenerSpy = jest.spyOn(document, "addEventListener");
+      tetromino.startFalling();
+      expect(addEventListenerSpy).not.toHaveBeenCalledWith("tick", expect.any(Function));
+      addEventListenerSpy.mockRestore();
+    });
+
+    test("should not respond to tick events when locked", () => {
+      const moveTetrominoSpy = jest.spyOn(board, "moveTetromino");
+      tetromino.startFalling();
+      tetromino.lock();
+      document.dispatchEvent(new CustomEvent("tick"));
+      expect(moveTetrominoSpy).not.toHaveBeenCalled();
+      moveTetrominoSpy.mockRestore();
+    });
+
+    test("should not respond to tick events when board is null", () => {
+      const moveTetrominoSpy = jest.spyOn(board, "moveTetromino");
+      tetromino.startFalling();
+      tetromino.board = null;
+      document.dispatchEvent(new CustomEvent("tick"));
+      expect(moveTetrominoSpy).not.toHaveBeenCalled();
+      moveTetrominoSpy.mockRestore();
+    });
+
+    test("should not respond to keyboard events when board is null", () => {
+      const moveTetrominoSpy = jest.spyOn(board, "moveTetromino");
+      tetromino.activateKeyboardControl();
+      tetromino.board = null;
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+      expect(moveTetrominoSpy).not.toHaveBeenCalled();
+      moveTetrominoSpy.mockRestore();
+    });
+  });
 });

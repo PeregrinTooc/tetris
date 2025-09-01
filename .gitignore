@@ -4,3 +4,4 @@ cypress/post-commit.log
 dist
 coverage
 test-output.txt
+test.coverage
