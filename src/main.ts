@@ -9,10 +9,11 @@ class TetrominoSeedQueue {
 
 	constructor() {
 		this.items = [];
-		this.availableSeeds = [0, 1, 2, 3, 4];
+		this.availableSeeds = [0, 1, 2, 3, 4, 5, 6];
 	}
-	enqueue(item: number): void {
-		this.items.push(item);
+
+	enqueue(...items: number[]): void {
+		this.items.push(...items);
 	}
 	dequeue(): number {
 		if (this.items.length > 0) {
@@ -45,8 +46,8 @@ window.setTetrominoDropTime = function (ms: number): void {
 	tetrominoDropTime = ms;
 };
 
-window.pushTetrominoSeed = function (seed: number): void {
-	tetrominoSeedQueue.enqueue(Number(seed));
+window.pushTetrominoSeed = function (...items: number[]): void {
+	tetrominoSeedQueue.enqueue(...items);
 };
 
 const gameBoardElement = document.getElementById("game-board");

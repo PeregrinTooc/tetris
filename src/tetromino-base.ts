@@ -25,6 +25,9 @@ export class Block {
 }
 
 export abstract class Tetromino {
+	dropByOne() {
+		this.blocks.forEach((block) => block.drop());
+	}
 
 	blocks: Block[] = [];
 
@@ -133,6 +136,7 @@ export abstract class Tetromino {
 
 	public lock(): void {
 		if (this.locked) return;
+		this.blocks = this.getBlocks(); //make sure the blocks are up to date: from now on, their position will not be calculated again.
 		this.locked = true;
 		this._removeKeyboardListener();
 

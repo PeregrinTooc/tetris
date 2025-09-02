@@ -6,9 +6,10 @@ export class TetrominoSingle extends Tetromino {
 		return "tetromino";
 	}
 
-	 getBlocks(): Block[] {
-	 const blocks = [new Block({ x: this.left, y: this.top, parent: this })];
-	 this.blocks = blocks;
-	 return blocks;
-	 }
+	getBlocks(): Block[] {
+		if (this.locked) return this.blocks;
+		const blocks = [new Block({ x: this.left, y: this.top, parent: this })];
+		this.blocks = blocks;
+		return blocks;
+	}
 }
