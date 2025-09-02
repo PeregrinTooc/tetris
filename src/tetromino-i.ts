@@ -2,6 +2,10 @@ import { Board } from "./board";
 import { Tetromino, Block } from "./tetromino-base";
 
 export class TetrominoI extends Tetromino {
+	constructor(left: number, board: Board | null) {
+		super(left, board);
+		this.pivot = new Block({ x: left, y: 0, parent: this });
+	}
 
 	getClassName(): string {
 		return "tetromino tetromino-i";
