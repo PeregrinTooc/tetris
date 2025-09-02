@@ -32,20 +32,17 @@ export abstract class Tetromino {
 	blocks: Block[] = [];
 
 	static nextId = 1;
-	private _left: number;
+
 	public get left(): number {
-		return this._left;
+		return this.pivot.x;
 	}
 	public set left(value: number) {
-		this._left = value;
 		this.pivot.x = value;
 	}
-	private _top: number;
 	public get top(): number {
-		return this._top;
+		return this.pivot.y;
 	}
 	public set top(value: number) {
-		this._top = value;
 		this.pivot.y = value;
 	}
 	size: number;
@@ -58,8 +55,6 @@ export abstract class Tetromino {
 	protected pivot: Block;
 
 	constructor(left: number, board: Board | null) {
-		this._left = left;
-		this._top = 0;
 		this.pivot = new Block({ x: left, y: 0, parent: this });
 		this.size = 24;
 		this.board = board;

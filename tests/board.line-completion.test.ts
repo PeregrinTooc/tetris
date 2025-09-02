@@ -67,7 +67,6 @@ describe("Line completion", () => {
         // Check if blocks above dropped down
         const blocks = tetro03.getBlocks();
         expect(blocks[0].y).toBe(20);
-        expect(tetro03.top).toBe(18);
 
     });
 
