@@ -67,7 +67,6 @@ describe("Tetromino Scoring", () => {
         document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // space for hard drop
 
         const calls = scoreListener.mock.calls as any[];
-        console.log("All score events:", calls.map(call => call[0].detail));
 
         // After hard drop, we should get 2 events: hard drop points + lock points (5)
         expect(calls.length).toBe(2);
