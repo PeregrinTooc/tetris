@@ -1,12 +1,6 @@
-import { Board } from "./board";
 import { Tetromino, Block } from "./tetromino-base";
 
 export class TetrominoI extends Tetromino {
-	constructor(left: number, board: Board | null) {
-		super(left, board);
-		this.pivot = new Block({ x: left, y: 0, parent: this });
-	}
-
 	getClassName(): string {
 		return "tetromino tetromino-i";
 	}
@@ -16,17 +10,17 @@ export class TetrominoI extends Tetromino {
 		let blocks: Block[];
 		if (this.rotation % 2 === 0) {
 			blocks = [
-				new Block({ x: this.left - 1, y: this.top, parent: this }),
-				new Block({ x: this.left, y: this.top, parent: this }),
-				new Block({ x: this.left + 1, y: this.top, parent: this }),
-				new Block({ x: this.left + 2, y: this.top, parent: this }),
+				new Block({ x: this.pivot.x - 1, y: this.pivot.y, parent: this }),
+				this.pivot,
+				new Block({ x: this.pivot.x + 1, y: this.pivot.y, parent: this }),
+				new Block({ x: this.pivot.x + 2, y: this.pivot.y, parent: this }),
 			];
 		} else {
 			blocks = [
-				new Block({ x: this.left, y: this.top - 1, parent: this }),
-				new Block({ x: this.left, y: this.top, parent: this }),
-				new Block({ x: this.left, y: this.top + 1, parent: this }),
-				new Block({ x: this.left, y: this.top + 2, parent: this }),
+				new Block({ x: this.pivot.x, y: this.pivot.y - 1, parent: this }),
+				this.pivot,
+				new Block({ x: this.pivot.x, y: this.pivot.y + 1, parent: this }),
+				new Block({ x: this.pivot.x, y: this.pivot.y + 2, parent: this }),
 			];
 		}
 		this.blocks = blocks;

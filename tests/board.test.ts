@@ -40,12 +40,10 @@ describe("Board", () => {
 
 	test("detects collision when tetromino moves down onto a locked tetromino", () => {
 		const tetromino1 = TetrominoFactory.createNew(5, board, 1337);
-		tetromino1.activateKeyboardControl();
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
+		tetromino1.move("down");
 		tetromino1.lock();
 		const tetromino2 = TetrominoFactory.createNew(5, board, 1337);
-		tetromino2.activateKeyboardControl();
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
+		tetromino2.move("down");
 		tetromino2.addEventListener("locked", (event) => {
 			const customEvent = event as CustomEvent;
 			customEvent.detail.forEach((block: { x: number; y: number }) => {

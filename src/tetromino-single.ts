@@ -8,7 +8,7 @@ export class TetrominoSingle extends Tetromino {
 
 	getBlocks(): Block[] {
 		if (this.locked) return this.blocks;
-		const blocks = [new Block({ x: this.left, y: this.top, parent: this })];
+		const blocks = [this.pivot];
 		this.blocks = blocks;
 		return blocks;
 	}

@@ -10,10 +10,10 @@ export class TetrominoO extends Tetromino {
 	getBlocks(): Block[] {
 		if (this.locked) return this.blocks;
 		const blocks = [
-			new Block({ x: this.left, y: this.top + 1, parent: this }),
-			new Block({ x: this.left + 1, y: this.top + 1, parent: this }),
-			new Block({ x: this.left + 1, y: this.top, parent: this }),
-			new Block({ x: this.left, y: this.top, parent: this }),
+			new Block({ x: this.pivot.x, y: this.pivot.y + 1, parent: this }),
+			new Block({ x: this.pivot.x + 1, y: this.pivot.y + 1, parent: this }),
+			new Block({ x: this.pivot.x + 1, y: this.pivot.y, parent: this }),
+			this.pivot,
 		];
 		this.blocks = blocks;
 		return blocks;

@@ -32,8 +32,22 @@ export abstract class Tetromino {
 	blocks: Block[] = [];
 
 	static nextId = 1;
-	left: number;
-	top: number;
+	private _left: number;
+	public get left(): number {
+		return this._left;
+	}
+	public set left(value: number) {
+		this._left = value;
+		this.pivot.x = value;
+	}
+	private _top: number;
+	public get top(): number {
+		return this._top;
+	}
+	public set top(value: number) {
+		this._top = value;
+		this.pivot.y = value;
+	}
 	size: number;
 	board: any;
 	locked: boolean;
@@ -41,12 +55,12 @@ export abstract class Tetromino {
 	element: HTMLElement;
 	fallListener?: () => void;
 	keyboardListener?: (event: KeyboardEvent) => void;
-	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 	protected pivot: Block;
 
 	constructor(left: number, board: Board | null) {
-		this.left = left;
-		this.top = 0;
+		this._left = left;
+		this._top = 0;
+		this.pivot = new Block({ x: left, y: 0, parent: this });
 		this.size = 24;
 		this.board = board;
 		this.locked = false;
@@ -97,16 +111,6 @@ export abstract class Tetromino {
 		const board = this.board as Board;
 		if (!board || this.locked) return;
 		const moved = board.moveTetromino(this, direction);
-		if (moved && this.pivot) {
-			let dx = 0, dy = 0;
-			if (direction === "left") dx = -1;
-			if (direction === "right") dx = 1;
-			if (direction === "down") dy = 1;
-
-			this.pivot.x += dx;
-			this.pivot.y += dy;
-
-		}
 		// Award 10 points for soft drop if tetromino actually moved down
 		if (moved && direction === "down") {
 			this._dispatchScoreEvent(10);
