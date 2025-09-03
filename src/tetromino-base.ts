@@ -17,9 +17,7 @@ export class Block {
 	}
 
 	delete(): void {
-		if (this.parent) {
-			this.parent.removeBlock(this);
-		}
+		this.parent.removeBlock(this);
 	}
 
 }
@@ -65,6 +63,10 @@ export abstract class Tetromino {
 		this._renderBlocks();
 		if (this.board) this.board.addTetromino(this);
 	}
+	protected createBlocks(): void {
+		this.blocks = this.getBlocks();
+	}
+
 	public removeBlock(block: Block): void {
 		this.blocks = this.blocks.filter((b) => b !== block);
 		this.updateBlocks();
@@ -219,6 +221,7 @@ export abstract class Tetromino {
 	}
 
 	public updateBlocks(): void {
+		this.blocks = this.getBlocks();
 		while (this.element.firstChild)
 			this.element.removeChild(this.element.firstChild);
 		this._renderBlocks();

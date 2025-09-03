@@ -7,6 +7,16 @@ export class TetrominoO extends Tetromino {
 		return "tetromino tetromino-o";
 	}
 
+	protected createBlocks(): void {
+		const blocks = [
+			new Block({ x: this.pivot.x, y: this.pivot.y + 1, parent: this }),
+			new Block({ x: this.pivot.x + 1, y: this.pivot.y + 1, parent: this }),
+			new Block({ x: this.pivot.x + 1, y: this.pivot.y, parent: this }),
+			this.pivot,
+		];
+		this.blocks = blocks;
+	}
+
 	getBlocks(): Block[] {
 		if (this.locked) return this.blocks;
 		const blocks = [
