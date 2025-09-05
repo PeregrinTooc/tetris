@@ -23,6 +23,7 @@ export class Board {
 	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 	private activeTetromino: Tetromino;
 	private occupiedPositions: Block[] = [];
+	private coordinateBlocks: Map<string, HTMLElement> = new Map();
 
 	constructor(
 		height: number,
@@ -82,6 +83,12 @@ export class Board {
 		this.element.appendChild(tetromino.element);
 		this.activeTetromino = tetromino;
 		tetromino.addEventListener("locked", this._handleTetrominoLocked.bind(this));
+
+		// Handle coordinate rendering
+		if (this.isCoordinateRenderingEnabled()) {
+			tetromino.element.style.display = "none"; // Hide the container
+			this.renderTetrominoCoordinates(tetromino);
+		}
 	}
 
 	private _handleTetrominoLocked(event: Event): void {
@@ -107,7 +114,7 @@ export class Board {
 
 		for (const block of sortedBlocks) {
 			// Find the lowest position this block can fall to
-			let targetY = this.height;
+			let targetY = this.height; // Bottom row is height (20 for a 20-row board)
 
 			// Check for collisions with other blocks below
 			for (const otherBlock of this.occupiedPositions) {
@@ -120,6 +127,52 @@ export class Board {
 			while (block.y < targetY) {
 				block.drop();
 			}
+		}
+
+		// After all blocks have moved, update the visual representation for all affected tetrominoes
+		const affectedTetrominoes = new Set();
+		for (const block of this.occupiedPositions) {
+			if (block.parent && block.parent.locked) {
+				affectedTetrominoes.add(block.parent);
+			}
+		}
+
+		// Update visual representation for each affected tetromino
+		for (const tetromino of affectedTetrominoes) {
+			this._updateLockedTetrominoVisuals(tetromino as any);
+		}
+	}
+
+	private _updateLockedTetrominoVisuals(tetromino: any): void {
+		// For locked tetrominoes, update visual representation to match current block positions
+		// Find the top-left-most block position for container positioning
+		const minX = Math.min(...tetromino.blocks.map((block: any) => block.x));
+		const minY = Math.min(...tetromino.blocks.map((block: any) => block.y));
+
+		// Update the container position to match the new block layout
+		tetromino.element.style.left = minX * tetromino.size + "px";
+		tetromino.element.style.top = minY * tetromino.size + "px";
+
+		// Clear and re-render blocks with positions relative to container
+		while (tetromino.element.firstChild) {
+			tetromino.element.removeChild(tetromino.element.firstChild);
+		}
+
+		tetromino.blocks.forEach((block: any) => {
+			const blockElement = document.createElement("div");
+			blockElement.className = "block";
+			blockElement.style.width = tetromino.size + "px";
+			blockElement.style.height = tetromino.size + "px";
+			blockElement.style.position = "absolute";
+			blockElement.style.left = (block.x - minX) * tetromino.size + "px";
+			blockElement.style.top = (block.y - minY) * tetromino.size + "px";
+			blockElement.setAttribute("data-tetromino-id", tetromino.id);
+			tetromino.element.appendChild(blockElement);
+		});
+
+		// Update coordinate rendering if enabled
+		if (this.isCoordinateRenderingEnabled()) {
+			this.renderTetrominoCoordinates(tetromino);
 		}
 	}
 	private _removeCompletedLines(completedLines: number[]) {
@@ -211,5 +264,50 @@ export class Board {
 			this.previewBoard.showNextTetromino(this.nextTetromino);
 		}
 		return tetromino;
+	}
+
+	private isCoordinateRenderingEnabled(): boolean {
+		return (window as any).USE_COORDINATE_RENDERING === true;
+	}
+
+	public renderTetrominoCoordinates(tetromino: Tetromino): void {
+		if (!this.isCoordinateRenderingEnabled()) return;
+
+		this.clearTetrominoCoordinates(tetromino);
+
+		tetromino.getBlocks().forEach(block => {
+			const blockElement = this.createCoordinateBlock(block, tetromino);
+			const key = `${tetromino.id}-${block.x}-${block.y}`;
+			this.coordinateBlocks.set(key, blockElement);
+			this.element.appendChild(blockElement);
+		});
+	}
+
+	public clearTetrominoCoordinates(tetromino: Tetromino): void {
+		if (!this.isCoordinateRenderingEnabled()) return;
+
+		const tetrominoId = tetromino.id;
+		const keysToRemove: string[] = [];
+
+		this.coordinateBlocks.forEach((element, key) => {
+			if (key.startsWith(`${tetrominoId}-`)) {
+				element.remove();
+				keysToRemove.push(key);
+			}
+		});
+
+		keysToRemove.forEach(key => this.coordinateBlocks.delete(key));
+	}
+
+	private createCoordinateBlock(block: Block, tetromino: Tetromino): HTMLElement {
+		const blockElement = document.createElement("div");
+		blockElement.className = `coordinate-block ${tetromino.getClassName()}-coordinate-block`;
+		blockElement.style.position = "absolute";
+		blockElement.style.width = "24px";
+		blockElement.style.height = "24px";
+		blockElement.style.left = `${block.x * 24}px`;
+		blockElement.style.top = `${block.y * 24}px`;
+		blockElement.setAttribute("data-tetromino-id", tetromino.id);
+		return blockElement;
 	}
 }

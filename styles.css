@@ -155,3 +155,41 @@ h3 {
 .game-over::after {
     content: "Game Over";
 }
+
+/* Coordinate-based rendering styles */
+.coordinate-block {
+    border: 1px solid #333;
+    box-sizing: border-box;
+}
+
+.tetromino-t-coordinate-block {
+    background-color: #800080;
+}
+
+.tetromino-i-coordinate-block {
+    background-color: #00ffff;
+}
+
+.tetromino-o-coordinate-block {
+    background-color: #ffff00;
+}
+
+.tetromino-j-coordinate-block {
+    background-color: #0000ff;
+}
+
+.tetromino-l-coordinate-block {
+    background-color: #ff8000;
+}
+
+.tetromino-s-coordinate-block {
+    background-color: #00ff00;
+}
+
+.tetromino-z-coordinate-block {
+    background-color: #ff0000;
+}
+
+.tetromino-base-coordinate-block {
+    background-color: #888;
+}

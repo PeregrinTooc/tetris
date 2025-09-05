@@ -13,7 +13,11 @@ export class Block {
 
 	drop(): void {
 		this.y++;
-		this.parent.updateBlocks();
+		// Only update blocks if the tetromino is not locked
+		// Locked tetrominoes will have their visuals updated by the board after all blocks move
+		if (!this.parent.locked) {
+			this.parent.updateBlocks();
+		}
 	}
 
 	delete(): void {
@@ -30,6 +34,7 @@ export abstract class Tetromino {
 	blocks: Block[] = [];
 
 	static nextId = 1;
+	public readonly id: string;
 
 	public get left(): number {
 		return this.pivot.x;
@@ -53,6 +58,7 @@ export abstract class Tetromino {
 	protected pivot: Block;
 
 	constructor(left: number, board: Board | null) {
+		this.id = (Tetromino.nextId++).toString();
 		this.pivot = new Block({ x: left, y: 0, parent: this });
 		this.size = 24;
 		this.board = board;
@@ -96,9 +102,10 @@ export abstract class Tetromino {
 		div.style.position = "absolute";
 		div.style.left = left * size + "px";
 		div.style.top = top * size + "px";
-		if (className !== 'block') {
-			div.setAttribute("data-tetromino-id", (Tetromino.nextId++).toString());
-		}
+
+		// Add tetromino ID to both containers and blocks
+		div.setAttribute("data-tetromino-id", this.id);
+
 		return div;
 	}
 
@@ -144,6 +151,11 @@ export abstract class Tetromino {
 	public updatePosition(): void {
 		this.element.style.top = this.top * this.size + "px";
 		this.element.style.left = this.left * this.size + "px";
+
+		// Update coordinate rendering if enabled
+		if (this.board && (window as any).USE_COORDINATE_RENDERING === true) {
+			(this.board as any).renderTetrominoCoordinates(this);
+		}
 	}
 
 	public lock(): void {
@@ -225,6 +237,11 @@ export abstract class Tetromino {
 		while (this.element.firstChild)
 			this.element.removeChild(this.element.firstChild);
 		this._renderBlocks();
+
+		// Update coordinate rendering if enabled
+		if (this.board && (window as any).USE_COORDINATE_RENDERING === true) {
+			(this.board as any).renderTetrominoCoordinates(this);
+		}
 	}
 
 	private _renderBlocks(): void {
