@@ -4,7 +4,7 @@ export default defineConfig({
 	projectId: 'ye442y',
 	e2e: {
 		baseUrl: "http://localhost:5173",
-		supportFile: false,
+		supportFile: "cypress/support/e2e.ts",
 		setupNodeEvents(on, config) {
 			// Browser launch optimizations
 			on('before:browser:launch', (browser, launchOptions) => {
@@ -17,9 +17,13 @@ export default defineConfig({
 						'--disable-background-timer-throttling',
 						'--disable-backgrounding-occluded-windows',
 						'--disable-renderer-backgrounding',
-						'--memory-pressure-off'
+						'--memory-pressure-off',
+						'--autoplay-policy=no-user-gesture-required',
+						'--mute-audio'
 					);
 				}
+
+
 				return launchOptions;
 			});
 			return config;
