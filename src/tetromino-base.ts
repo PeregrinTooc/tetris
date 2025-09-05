@@ -179,7 +179,7 @@ export abstract class Tetromino {
 
 	private _setupKeyboardListener(): void {
 		this.keyboardListener = (event: KeyboardEvent) => {
-			if (this.locked || !this.board) return;
+			if (this.locked || !this.board || window.isPaused) return;
 
 			if (event.key === "ArrowLeft") {
 				this.move("left");

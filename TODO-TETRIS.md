@@ -41,7 +41,7 @@
 - [x] Preview of next piece
 - [X] Display for score, level, and lines cleared
 - [ ] Responsive/mobile-friendly UI
-- [ ] Pause/resume functionality
+- [x] Pause/resume functionality
 - [ ] Settings (volume, controls, etc.)
 
 ### Accessibility

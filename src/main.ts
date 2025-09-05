@@ -27,6 +27,7 @@ class TetrominoSeedQueue {
 let tetrominoDropTime: number = 750;
 let tetromino: Tetromino | null = null;
 let gameRunning: boolean = false;
+let isPaused: boolean = false;
 let board: Board;
 let tickIntervalId: ReturnType<typeof setInterval> | null = null;
 const TICK_EVENT_NAME = "tick";
@@ -35,10 +36,27 @@ let currentScore: number = 0;
 let scoreBoard: ScoreBoard;
 const BASE_DROP_TIME = 750;
 
+function togglePause() {
+	if (!gameRunning) return;
+
+	isPaused = !isPaused;
+	const pauseOverlay = document.getElementById("pause-overlay");
+	if (pauseOverlay) {
+		pauseOverlay.style.display = isPaused ? "block" : "none";
+	}
+}
+
+document.addEventListener("keydown", (event) => {
+	if (event.key.toLowerCase() === "p" || event.key === "Escape") {
+		togglePause();
+	}
+});
+
 declare global {
 	interface Window {
 		setTetrominoDropTime: (ms: number) => void;
 		pushTetrominoSeed: (seed: number) => void;
+		isPaused: boolean;
 	}
 }
 
@@ -49,6 +67,10 @@ window.setTetrominoDropTime = function (ms: number): void {
 window.pushTetrominoSeed = function (...items: number[]): void {
 	tetrominoSeedQueue.enqueue(...items);
 };
+
+Object.defineProperty(window, 'isPaused', {
+	get: () => isPaused
+});
 
 const gameBoardElement = document.getElementById("game-board");
 if (gameBoardElement) {
@@ -155,7 +177,9 @@ function resetGame(): void {
 function startTicking(): void {
 	stopTicking();
 	tickIntervalId = setInterval(() => {
-		document.dispatchEvent(new Event(TICK_EVENT_NAME));
+		if (!isPaused) {
+			document.dispatchEvent(new Event(TICK_EVENT_NAME));
+		}
 	}, tetrominoDropTime);
 }
 

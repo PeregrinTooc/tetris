@@ -8,27 +8,30 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-    <body>
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <h1>Tetris</h1>
-            <div style="display: flex; flex-direction: row; gap: 32px; align-items: flex-start;">
-                <div style="display: flex; flex-direction: column; gap: 16px;">
-                    <div id="score-board" class="score-box">Score: 0</div>
-                    <div id="level-board" class="score-box">Level: 1</div>
-                </div>
-                <div id="game-board">
-                    <canvas id="tetris"></canvas>
-                </div>
-                <div id="next-board">
-                    <h3>Next</h3>
-                    <div id="preview-container" style="position: relative; height: 96px;">
-                        <canvas id="next-piece" width="96" height="96"></canvas>
-                    </div>
+<body>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <h1>Tetris</h1>
+        <div style="display: flex; flex-direction: row; gap: 32px; align-items: flex-start;">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div id="score-board" class="score-box">Score: 0</div>
+                <div id="level-board" class="score-box">Level: 1</div>
+            </div>
+            <div id="game-board" style="position: relative;">
+                <div id="pause-overlay"
+                    style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.8); color: white; padding: 20px; z-index: 100; font-size: 24px;">
+                    Paused</div>
+                <canvas id="tetris"></canvas>
+            </div>
+            <div id="next-board">
+                <h3>Next</h3>
+                <div id="preview-container" style="position: relative; height: 96px;">
+                    <canvas id="next-piece" width="96" height="96"></canvas>
                 </div>
             </div>
-            <button id="start-button" style="margin-top: 24px;">Start Game</button>
         </div>
-        <script type="module" src="/src/main.js"></script>
-    </body>
+        <button id="start-button" style="margin-top: 24px;">Start Game</button>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
 
 </html>
