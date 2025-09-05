@@ -8,7 +8,7 @@ describe("Tetris Game Setup", () => {
     cy.visit("/index.html");
     cy.window().then((win) => {
       setTetrominoDropTimeInMiliseconds(win, 100);
-  for (let i = 0; i < 10; i++) addTetrominoBase(win);
+      for (let i = 0; i < 10; i++) addTetrominoBase(win);
     });
   });
 
@@ -21,15 +21,16 @@ describe("Tetris Game Setup", () => {
 
   it('should start the game and spawn a tetromino when "Start Game" is clicked', () => {
     cy.get("#start-button").click();
-    cy.get("#game-board .tetromino").should("exist");
+    cy.get("#game-board [data-tetromino-id]").should("exist");
     cy.get("#game-over").should("not.exist");
   });
 
   it("should spawn the next tetromino when the current one stops moving", () => {
     cy.get("#start-button").click();
     cy.get('#game-board [data-tetromino-id="1"]').then(($tetromino) => {
-  pressHardDrop();
-      cy.get("#game-board .tetromino").should("have.length", 2);
+      pressHardDrop();
+      // Count only tetromino containers, not individual blocks
+      cy.get("#game-board [data-tetromino-id]").not(".block").should("have.length", 2);
       cy.get('#game-board [data-tetromino-id="2"]').then(($newTetromino) => { });
     });
   });
@@ -41,9 +42,9 @@ describe("Tetris Game Setup", () => {
 
   it("should clear the game board when the game is restarted and reset the text to Start Game", () => {
     cy.get("#start-button").click();
-    cy.get("#game-board .tetromino").should("exist");
+    cy.get("#game-board [data-tetromino-id]").should("exist");
     cy.get("#start-button").click();
-    cy.get("#game-board .tetromino").should("not.exist");
+    cy.get("#game-board [data-tetromino-id]").should("not.exist");
   });
 
   it("should detect and display game over when the stack reaches the top", () => {
@@ -74,9 +75,9 @@ describe("Tetris Game Setup", () => {
     }
     pollForGameOver();
     cy.get("#game-over", { timeout: 12000 }).should("be.visible");
-    cy.get(".tetromino").then(($tetrominoesBefore) => {
+    cy.get("[data-tetromino-id]").not(".block").then(($tetrominoesBefore) => {
       cy.wait(500);
-      cy.get(".tetromino").should("have.length", $tetrominoesBefore.length);
+      cy.get("[data-tetromino-id]").not(".block").should("have.length", $tetrominoesBefore.length);
     });
   });
 });

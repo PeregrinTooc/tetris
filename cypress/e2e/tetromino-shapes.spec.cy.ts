@@ -18,17 +18,24 @@ describe("All Tetromino Shapes", () => {
       cy.visit("/index.html");
       cy.window().then((win) => {
         setTetrominoDropTimeInMiliseconds(win, 100000);
-  const addFns = [addTetrominoT, addTetrominoI, addTetrominoO, addTetrominoJ, addTetrominoL, addTetrominoZ, addTetrominoS];
-  addFns[idx](win);
+        const addFns = [addTetrominoT, addTetrominoI, addTetrominoO, addTetrominoJ, addTetrominoL, addTetrominoZ, addTetrominoS];
+        addFns[idx](win);
       });
       cy.get("#start-button").click();
+
+      // Verify tetromino spawned using class selector
       cy.get("#game-board " + tetrominoClasses[idx]).should("exist");
-      cy.get("#game-board " + tetrominoClasses[idx] + " .block").should(
-        "have.length",
-        4
-      );
+
+      // Get the tetromino ID and verify using ID-based selectors
+      cy.get("#game-board " + tetrominoClasses[idx]).then($tetromino => {
+        const tetrominoId = $tetromino.attr("data-tetromino-id") as string;
+
+        // Verify all blocks have the same tetromino ID and correct count
+        cy.get(`[data-tetromino-id="${tetrominoId}"].block`).should("have.length", 4);
+      });
+
       // Drop and check next tetromino does not match previous
-  pressHardDrop();
+      pressHardDrop();
     });
   });
 });
@@ -37,14 +44,19 @@ describe("Hard Drop Action", () => {
   it("should instantly drop the tetromino to the bottom when space is pressed", () => {
     cy.visit("/index.html");
     cy.window().then((win) => {
-  setTetrominoDropTimeInMiliseconds(win, 2147483647);
-  addTetrominoI(win);
+      setTetrominoDropTimeInMiliseconds(win, 2147483647);
+      addTetrominoI(win);
     });
     cy.get("#start-button").click();
-    cy.get(".tetromino-i").then(($el) => {
-      const initialTop = parseInt($el.css("top"), 10);
-  pressHardDrop();
-      cy.get(".tetromino-i").should(($el2) => {
+
+    // Get the I-tetromino using ID selector
+    cy.get(".tetromino-i").then($tetromino => {
+      const tetrominoId = $tetromino.attr("data-tetromino-id") as string;
+      const initialTop = parseInt($tetromino.css("top"), 10);
+
+      pressHardDrop();
+
+      cy.get(`[data-tetromino-id="${tetrominoId}"]`).not(".block").should($el2 => {
         const newTop = parseInt($el2.css("top"), 10);
         expect(newTop).to.be.greaterThan(initialTop);
       });
