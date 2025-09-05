@@ -16,7 +16,7 @@ describe("Line completion", () => {
         });
     });
 
-    it.skip("should not let blocks belonging to a tetromino that's being blocked fall", () => {
+    it("should not let blocks belonging to a tetromino that's being blocked fall", () => {
         cy.get("#start-button").click();
 
         // Position O piece on bottom right

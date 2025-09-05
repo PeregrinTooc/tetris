@@ -109,27 +109,33 @@ export class Board {
 	}
 
 	private _dropAllBlocks() {
-		// Sort blocks by y position (bottom to top) to process them correctly
-		const sortedBlocks = [...this.occupiedPositions].sort((a, b) => b.y - a.y);
+		// Group blocks by their parent tetromino
+		const tetrominoGroups = new Map<Tetromino, Block[]>();
+		const orphanBlocks: Block[] = [];
 
-		for (const block of sortedBlocks) {
-			// Find the lowest position this block can fall to
-			let targetY = this.height; // Bottom row is height (20 for a 20-row board)
-
-			// Check for collisions with other blocks below
-			for (const otherBlock of this.occupiedPositions) {
-				if (otherBlock !== block && otherBlock.x === block.x && otherBlock.y > block.y) {
-					targetY = Math.min(targetY, otherBlock.y - 1);
+		for (const block of this.occupiedPositions) {
+			if (block.parent && block.parent.locked) {
+				if (!tetrominoGroups.has(block.parent)) {
+					tetrominoGroups.set(block.parent, []);
 				}
-			}
-
-			// Drop the block to the target position
-			while (block.y < targetY) {
-				block.drop();
+				tetrominoGroups.get(block.parent)!.push(block);
+			} else {
+				orphanBlocks.push(block);
 			}
 		}
 
-		// After all blocks have moved, update the visual representation for all affected tetrominoes
+		// Drop locked tetrominoes as complete units
+		for (const [tetromino, blocks] of tetrominoGroups) {
+			this._dropTetrominoAsUnit(tetromino, blocks);
+		}
+
+		// Drop orphan blocks individually (fallback for any blocks without parents)
+		const sortedOrphanBlocks = orphanBlocks.sort((a, b) => b.y - a.y);
+		for (const block of sortedOrphanBlocks) {
+			this._dropSingleBlock(block);
+		}
+
+		// Update visual representation for all affected tetrominoes
 		const affectedTetrominoes = new Set();
 		for (const block of this.occupiedPositions) {
 			if (block.parent && block.parent.locked) {
@@ -137,9 +143,52 @@ export class Board {
 			}
 		}
 
-		// Update visual representation for each affected tetromino
 		for (const tetromino of affectedTetrominoes) {
 			this._updateLockedTetrominoVisuals(tetromino as any);
+		}
+	}
+
+	private _dropTetrominoAsUnit(tetromino: Tetromino, blocks: Block[]) {
+		// Find how far the entire tetromino can drop as a unit
+		let maxDrop = this.height;
+
+		for (const block of blocks) {
+			let blockMaxDrop = this.height - block.y;
+
+			// Check for collisions with other blocks below this block
+			for (const otherBlock of this.occupiedPositions) {
+				if (otherBlock.parent !== tetromino && 
+					otherBlock.x === block.x && 
+					otherBlock.y > block.y) {
+					blockMaxDrop = Math.min(blockMaxDrop, otherBlock.y - block.y - 1);
+				}
+			}
+
+			maxDrop = Math.min(maxDrop, blockMaxDrop);
+		}
+
+		// Drop all blocks of this tetromino by the same amount
+		for (const block of blocks) {
+			for (let i = 0; i < maxDrop; i++) {
+				block.drop();
+			}
+		}
+	}
+
+	private _dropSingleBlock(block: Block) {
+		// Find the lowest position this block can fall to
+		let targetY = this.height; // Bottom row is height (20 for a 20-row board)
+
+		// Check for collisions with other blocks below
+		for (const otherBlock of this.occupiedPositions) {
+			if (otherBlock !== block && otherBlock.x === block.x && otherBlock.y > block.y) {
+				targetY = Math.min(targetY, otherBlock.y - 1);
+			}
+		}
+
+		// Drop the block to the target position
+		while (block.y < targetY) {
+			block.drop();
 		}
 	}
 
