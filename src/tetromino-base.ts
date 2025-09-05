@@ -1,3 +1,4 @@
+import { any } from "cypress/types/bluebird";
 import { Board } from "./board";
 
 export class Block {
@@ -13,11 +14,6 @@ export class Block {
 
 	drop(): void {
 		this.y++;
-		// Only update blocks if the tetromino is not locked
-		// Locked tetrominoes will have their visuals updated by the board after all blocks move
-		if (!this.parent.locked) {
-			this.parent.updateBlocks();
-		}
 	}
 
 	delete(): void {
@@ -27,6 +23,16 @@ export class Block {
 }
 
 export abstract class Tetromino {
+	collapseBlocks() {
+		for (const block of this.blocks) {
+			let blocksBelow = this.blocks.filter(b => b.x === block.x && b.y > block.y)
+			let highestBelowBlockY = Math.min(...blocksBelow.map(b => b.y))
+			if (blocksBelow.length > 0 && highestBelowBlockY - 1 > block.y) {
+				block.drop();
+				this.collapseBlocks(); // Recursively collapse until no more blocks can drop			
+			}
+		}
+	}
 	dropByOne() {
 		this.blocks.forEach((block) => block.drop());
 	}

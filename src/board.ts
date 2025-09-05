@@ -111,29 +111,22 @@ export class Board {
 	private _dropAllBlocks() {
 		// Group blocks by their parent tetromino
 		const tetrominoGroups = new Map<Tetromino, Block[]>();
-		const orphanBlocks: Block[] = [];
 
 		for (const block of this.occupiedPositions) {
-			if (block.parent && block.parent.locked) {
-				if (!tetrominoGroups.has(block.parent)) {
-					tetrominoGroups.set(block.parent, []);
-				}
-				tetrominoGroups.get(block.parent)!.push(block);
-			} else {
-				orphanBlocks.push(block);
+			if (!tetrominoGroups.has(block.parent)) {
+				tetrominoGroups.set(block.parent, []);
 			}
+			tetrominoGroups.get(block.parent)!.push(block);
 		}
+
 
 		// Drop locked tetrominoes as complete units
 		for (const [tetromino, blocks] of tetrominoGroups) {
 			this._dropTetrominoAsUnit(tetromino, blocks);
+			tetromino.collapseBlocks();
 		}
 
-		// Drop orphan blocks individually (fallback for any blocks without parents)
-		const sortedOrphanBlocks = orphanBlocks.sort((a, b) => b.y - a.y);
-		for (const block of sortedOrphanBlocks) {
-			this._dropSingleBlock(block);
-		}
+
 
 		// Update visual representation for all affected tetrominoes
 		const affectedTetrominoes = new Set();
@@ -157,8 +150,8 @@ export class Board {
 
 			// Check for collisions with other blocks below this block
 			for (const otherBlock of this.occupiedPositions) {
-				if (otherBlock.parent !== tetromino && 
-					otherBlock.x === block.x && 
+				if (otherBlock.parent !== tetromino &&
+					otherBlock.x === block.x &&
 					otherBlock.y > block.y) {
 					blockMaxDrop = Math.min(blockMaxDrop, otherBlock.y - block.y - 1);
 				}
@@ -175,22 +168,6 @@ export class Board {
 		}
 	}
 
-	private _dropSingleBlock(block: Block) {
-		// Find the lowest position this block can fall to
-		let targetY = this.height; // Bottom row is height (20 for a 20-row board)
-
-		// Check for collisions with other blocks below
-		for (const otherBlock of this.occupiedPositions) {
-			if (otherBlock !== block && otherBlock.x === block.x && otherBlock.y > block.y) {
-				targetY = Math.min(targetY, otherBlock.y - 1);
-			}
-		}
-
-		// Drop the block to the target position
-		while (block.y < targetY) {
-			block.drop();
-		}
-	}
 
 	private _updateLockedTetrominoVisuals(tetromino: any): void {
 		// For locked tetrominoes, update visual representation to match current block positions
