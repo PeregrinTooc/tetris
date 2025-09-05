@@ -3,6 +3,26 @@ import { Board } from "./board";
 import { Tetromino } from "../src/tetromino-base";
 import { ScoreBoard } from "./score-board";
 
+// Audio management
+const bgMusicLevel1 = new Audio("resources/music/fromLevel1.mp3");
+const bgMusicLevel8 = new Audio("resources/music/fromLevel8.mp3");
+const bgMusicLevel15 = new Audio("resources/music/fromLevel15.mp3");
+bgMusicLevel1.loop = true;
+bgMusicLevel1.preload = "auto";
+
+const soundEffects = {
+	hardDrop: new Audio("resources/effects/hardDrop.mp3"),
+	levelUp: new Audio("resources/effects/levelUp.mp3"),
+	lineComplete: new Audio("resources/effects/lineCompletion.mp3"),
+	tetrisClear: new Audio("resources/effects/tetrisClear.mp3"),
+	gameOver: new Audio("resources/effects/gameOver.mp3")
+};
+
+// Preload all sound effects
+Object.values(soundEffects).forEach(sound => {
+	sound.preload = "auto";
+});
+
 class TetrominoSeedQueue {
 	items: number[];
 	availableSeeds: number[];
@@ -36,6 +56,30 @@ let currentScore: number = 0;
 let scoreBoard: ScoreBoard;
 const BASE_DROP_TIME = 750;
 
+let isMusicEnabled = true;
+let isSfxEnabled = true;
+
+function playSound(sound: HTMLAudioElement) {
+	if (isSfxEnabled && sound !== bgMusicLevel1) {
+		sound.currentTime = 0;
+		resumeAudio();
+		sound.play().catch(error => {
+			console.log('Error playing sound:', error);
+		});
+	}
+}
+
+function updateMusic() {
+	if (isMusicEnabled && gameRunning && !isPaused) {
+		resumeAudio();
+		bgMusicLevel1.play().catch(error => {
+			console.log('Error playing music:', error);
+		});
+	} else {
+		bgMusicLevel1.pause();
+	}
+}
+
 function togglePause() {
 	if (!gameRunning) return;
 
@@ -44,6 +88,7 @@ function togglePause() {
 	if (pauseOverlay) {
 		pauseOverlay.style.display = isPaused ? "block" : "none";
 	}
+	updateMusic(); // Pause/resume music based on game state
 }
 
 document.addEventListener("keydown", (event) => {
@@ -76,6 +121,8 @@ const gameBoardElement = document.getElementById("game-board");
 if (gameBoardElement) {
 	gameBoardElement.addEventListener("gameover", () => {
 		stopTicking();
+		playSound(soundEffects.gameOver);
+		bgMusicLevel1.pause();
 		const gameOverElement = document.createElement("div");
 		gameOverElement.id = "game-over";
 		gameOverElement.className = "game-over";
@@ -89,15 +136,44 @@ if (startButton) {
 	startButton.addEventListener("click", () => {
 		if (gameRunning) {
 			resetGame();
-		} else {
-			startGame();
+			// After reset, we want to wait for another click to start
+			return;
 		}
+		startGame();
 	});
+}
+
+// Setup audio controls
+const musicToggle = document.getElementById("music-toggle") as HTMLInputElement;
+const sfxToggle = document.getElementById("sfx-toggle") as HTMLInputElement;
+
+if (musicToggle && sfxToggle) {
+	musicToggle.addEventListener("change", () => {
+		isMusicEnabled = musicToggle.checked;
+		updateMusic();
+	});
+
+	sfxToggle.addEventListener("change", () => {
+		isSfxEnabled = sfxToggle.checked;
+	});
+}
+
+// Audio context setup for handling browser autoplay restrictions
+const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+const audioContext = new AudioContext();
+
+// Function to resume audio context after user interaction
+function resumeAudio() {
+	if (audioContext.state === "suspended") {
+		audioContext.resume();
+	}
 }
 
 function startGame(): void {
 	gameRunning = true;
 	currentScore = 0;
+	resumeAudio();
+	updateMusic(); // Start background music if enabled
 
 	// Initialize score and level system
 	const previewBoard = new PreviewBoard(document.getElementById("next-board") as HTMLElement);
@@ -113,6 +189,7 @@ function startGame(): void {
 		const { newLevel } = customEvent.detail;
 		// Update drop time based on new level
 		tetrominoDropTime = scoreBoard.getDropTimeForLevel(newLevel, BASE_DROP_TIME);
+		playSound(soundEffects.levelUp);
 	});
 
 	board = new Board(
@@ -130,6 +207,13 @@ function startGame(): void {
 			const customEvent = event as CustomEvent;
 			const linesCompleted = customEvent.detail.linesCompleted;
 			currentScore += (linesCompleted * (linesCompleted + 1) * 50);
+
+			// Play appropriate sound effect based on number of lines completed
+			if (linesCompleted >= 4) {
+				playSound(soundEffects.tetrisClear);
+			} else {
+				playSound(soundEffects.lineComplete);
+			}
 			scoreBoard.setScore(currentScore);
 		});
 
@@ -152,26 +236,49 @@ function startGame(): void {
 }
 
 function resetGame(): void {
+	// Stop game systems
+	stopTicking();
+	gameRunning = false;
+	isPaused = false;
+	tetromino = null;
+	currentScore = 0;
+
+	// Reset UI elements
 	const gameOverElement = document.getElementById("game-over");
 	if (gameOverElement) {
 		gameOverElement.remove();
 	}
+
+	const pauseOverlay = document.getElementById("pause-overlay");
+	if (pauseOverlay) {
+		pauseOverlay.style.display = "none";
+	}
+
+	// Reset button text
+	const startBtn = document.getElementById("start-button");
+	if (startBtn) {
+		startBtn.textContent = "Start Game";
+	}
+
+	// Reset score display
+	if (scoreBoard) {
+		scoreBoard.setScore(0);
+	}
+
+	// Reset game board
 	if (board) {
 		board.reset();
 	}
+
+	// Clear preview
 	const previewContainer = document.querySelector("#preview-container");
 	if (previewContainer) {
 		previewContainer.innerHTML = "";
 	}
-	const startBtn = document.getElementById("start-button");
-	if (startBtn) startBtn.textContent = "Start Game";
-	gameRunning = false;
-	tetromino = null;
-	currentScore = 0;
-	if (scoreBoard) {
-		scoreBoard.setScore(currentScore);
-	}
-	stopTicking();
+
+	// Reset music
+	bgMusicLevel1.currentTime = 0;
+	bgMusicLevel1.pause();
 }
 
 function startTicking(): void {
@@ -198,6 +305,10 @@ function spawnNewTetromino(): void {
 	if (tetromino) {
 		tetromino.addEventListener("locked", () => {
 			spawnNewTetromino();
+		});
+
+		tetromino.addEventListener("hardDrop", () => {
+			playSound(soundEffects.hardDrop);
 		});
 		// Activate keyboard control when tetromino starts falling
 		tetromino.activateKeyboardControl();

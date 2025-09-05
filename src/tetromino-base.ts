@@ -137,6 +137,9 @@ export abstract class Tetromino {
 		// Award 15 points per line for hard drop
 		if (dropDistance > 0) {
 			this._dispatchScoreEvent(dropDistance * 15);
+			// Dispatch hard drop event
+			const hardDropEvent = new Event("hardDrop");
+			this.element.dispatchEvent(hardDropEvent);
 		}
 
 		this.lock();

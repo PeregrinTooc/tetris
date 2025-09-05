@@ -30,6 +30,35 @@
             </div>
         </div>
         <button id="start-button" style="margin-top: 24px;">Start Game</button>
+        <div class="controls-panel">
+            <div class="audio-controls">
+                <div class="control-group">
+                    <label for="music-toggle">Music</label>
+                    <label class="switch">
+                        <input type="checkbox" id="music-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="control-group">
+                    <label for="sfx-toggle">Sound Effects</label>
+                    <label class="switch">
+                        <input type="checkbox" id="sfx-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="key-bindings">
+                <h3>Controls</h3>
+                <div class="key-grid">
+                    <div class="key-item"><span class="key">←</span> Move Left</div>
+                    <div class="key-item"><span class="key">→</span> Move Right</div>
+                    <div class="key-item"><span class="key">↓</span> Soft Drop</div>
+                    <div class="key-item"><span class="key">↑</span> Rotate</div>
+                    <div class="key-item"><span class="key">Space</span> Hard Drop</div>
+                    <div class="key-item"><span class="key">P</span> or <span class="key">Esc</span> Pause</div>
+                </div>
+            </div>
+        </div>
     </div>
     <script type="module" src="/src/main.js"></script>
 </body>

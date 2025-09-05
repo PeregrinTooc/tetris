@@ -251,8 +251,18 @@ export class Board {
 	}
 
 	public reset(): void {
+		// Clear all game state
 		this.tetrominos.clear();
+		this.occupiedPositions = [];
+		this.coordinateBlocks.clear();
+		this.nextTetromino = null;
+		this.activeTetromino = null as any;
+
+		// Clear the DOM
 		this.element.innerHTML = "";
+		if (this.previewBoard && this.previewBoard.previewContainer) {
+			this.previewBoard.previewContainer.innerHTML = "";
+		}
 	}
 
 	public spawnTetromino(): Tetromino {

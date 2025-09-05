@@ -24,7 +24,7 @@
 - [x] Soft drop (faster drop)
 - [X] Increasing speed/level progression
 - [x] Scoring system (points for line clears, soft/hard drop, piece locking)
-- [ ] Sound effects and music
+- [x] Sound effects and music
 
 ### Board & Line Mechanics
 
@@ -65,7 +65,9 @@
 - [X] Hard drop action
 - [ ] Hold action
 - [x] Preview of next piece is shown
-- [ ] Pause/resume works
+- [X] Pause/resume works
+- [ ] Music and Sound Effects
+- [ ] Ghost Piece
 - [ ] Mobile/responsive controls
 
 ### Unit (Jest)
