@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# Add timestamp to log file
+
+# Add timestamp and current commit id to log file
 echo "=== E2E Test Run - $(date) ===" > cypress/post-commit.log
+echo "Commit: $(git rev-parse HEAD)" >> cypress/post-commit.log
 echo "" >> cypress/post-commit.log
 
 # Run cypress and explicitly capture exit code
