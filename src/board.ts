@@ -145,13 +145,17 @@ export class Board {
 		// Find how far the entire tetromino can drop as a unit
 		let maxDrop = this.height;
 
+		// Create a set of blocks being dropped for efficient lookup
+		const droppingBlocks = new Set(blocks);
+
 		for (const block of blocks) {
 			let blockMaxDrop = this.height - block.y;
 
 			// Check for collisions with other blocks below this block
 			for (const otherBlock of this.occupiedPositions) {
-				if (otherBlock.parent !== tetromino &&
-					otherBlock.x === block.x &&
+				// Exclude blocks from the same tetromino being dropped
+				if (!droppingBlocks.has(otherBlock) && 
+					otherBlock.x === block.x && 
 					otherBlock.y > block.y) {
 					blockMaxDrop = Math.min(blockMaxDrop, otherBlock.y - block.y - 1);
 				}
