@@ -1,3 +1,11 @@
+# Minimal, clean version
+# Check if post-commit.log contains current commit and successful test run
+CURRENT_COMMIT=$(git rev-parse HEAD)
+if grep -q "Commit: $CURRENT_COMMIT" cypress/post-commit.log && grep -q "E2E tests passed successfully." cypress/post-commit.log; then
+	echo "E2E tests already passed for current commit. Skipping tests."
+	exit 0
+fi
+
 SERVER_STARTED=0
 SERVER_PID=""
 if nc -z localhost 5173; then
