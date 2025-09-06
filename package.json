@@ -15,7 +15,7 @@
     "test:unit:output": "jest --maxWorkers=100% --verbose > test-output.txt 2>&1",
     "test:watch": "jest --watch --maxWorkers=50%",
     "test:e2e": "cypress run --quiet",
-    "test:e2e:output": "cypress run --verbose > test-output-e2e.txt 2>&1",
+    "test:e2e:output": "cypress run --headless --browser > test-output-e2e.txt 2>&1",
     "test:e2e:fast": "cypress run --quiet --headless --browser electron",
     "test:e2e:ci": "cypress run --quiet --parallel --record --key=fddc7d69-cb6d-40c0-ae33-d332d294cc19",
     "test:e2e:groups": "./scripts/cypress-parallel.sh",
