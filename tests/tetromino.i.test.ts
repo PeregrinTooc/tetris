@@ -3,13 +3,16 @@ import { TetrominoFactory } from "../src/tetrominoFactory";
 import { Board } from "../src/board";
 import { PreviewBoard } from "../src/preview-board";
 import { TetrominoI } from "../src/tetromino-i";
+import { KeyBindingManager } from "../src/key-binding-manager";
 
 describe("TetrominoI", () => {
 	let tetromino: TetrominoI;
 	let board: Board;
+	let keyBindingManager: KeyBindingManager;
 	const element = document.createElement("div");
 
 	beforeEach(() => {
+		keyBindingManager = new KeyBindingManager();
 		board = new Board(
 			20,
 			11,
@@ -34,7 +37,7 @@ describe("TetrominoI", () => {
 
 	test("should rotate I tetromino to vertical", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 1);
-		tetromino.activateKeyboardControl();
+		tetromino.activateKeyboardControl(keyBindingManager);
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		const positions = tetromino.getBlocks();
 		expect(positions).toEqual([

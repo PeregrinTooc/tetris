@@ -4,23 +4,26 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
 import { Board } from "../src/board";
 import { TetrominoFactory } from "../src/tetrominoFactory";
+import { KeyBindingManager } from "../src/key-binding-manager";
 
 describe("Tetromino rotation with boundaries and collisions", () => {
 	let board: Board;
 	let element: HTMLDivElement;
 	let stubQueue: any;
 	let previewBoard: any;
+	let keyBindingManager: KeyBindingManager;
 
 	beforeEach(() => {
 		element = document.createElement("div");
 		stubQueue = { dequeue: () => 1 };
 		previewBoard = null;
 		board = new Board(20, 10, element, previewBoard, stubQueue);
+		keyBindingManager = new KeyBindingManager();
 	});
 
 	test("Tetromino does not rotate if it would go out of left boundary", () => {
 		const tetromino = TetrominoFactory.createNew(1, board, 1); // I piece, left edge (pivot at 1)
-		tetromino.activateKeyboardControl();
+		tetromino.activateKeyboardControl(keyBindingManager);
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[0, 0],
@@ -32,7 +35,7 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("Tetromino does not rotate if it would go out of right boundary", () => {
 		const tetromino = TetrominoFactory.createNew(7, board, 1); // I piece, right edge (pivot at 7)
-		tetromino.activateKeyboardControl();
+		tetromino.activateKeyboardControl(keyBindingManager);
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[6, 0],
@@ -44,7 +47,7 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("Tetromino does not rotate if it would go out of top boundary", () => {
 		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, top (pivot at 4,0)
-		tetromino.activateKeyboardControl();
+		tetromino.activateKeyboardControl(keyBindingManager);
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[3, 0],
@@ -56,7 +59,7 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("Tetromino does not rotate if it would go out of bottom boundary", () => {
 		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, bottom (pivot at 4,18)
-		tetromino.activateKeyboardControl();
+		tetromino.activateKeyboardControl(keyBindingManager);
 		tetromino.top = 18;
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
@@ -73,7 +76,7 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 		blocker.top = 0;
 		//board.tetrominos.add(blocker);
 		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, blocked (pivot at 4,0)
-		tetromino.activateKeyboardControl();
+		tetromino.activateKeyboardControl(keyBindingManager);
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[3, 0],
@@ -85,7 +88,7 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("Tetromino rotates if there is space", () => {
 		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, free (pivot at 4,0)
-		tetromino.activateKeyboardControl();
+		tetromino.activateKeyboardControl(keyBindingManager);
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[3, 0],
@@ -97,7 +100,7 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("O tetromino does not rotate (should be unchanged)", () => {
 		const tetromino = TetrominoFactory.createNew(4, board, 2); // O piece
-		tetromino.activateKeyboardControl();
+		tetromino.activateKeyboardControl(keyBindingManager);
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[4, 1],

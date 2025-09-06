@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tetris</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/src/key-bindings.css">
 </head>
 
 <body>
@@ -48,7 +49,7 @@
                 </div>
             </div>
             <div class="key-bindings">
-                <h3>Controls</h3>
+                <h3>Controls <button data-settings-button>Customize</button></h3>
                 <div class="key-grid">
                     <div class="key-item"><span class="key">←</span> Move Left</div>
                     <div class="key-item"><span class="key">→</span> Move Right</div>
@@ -60,6 +61,56 @@
             </div>
         </div>
     </div>
+
+    <div id="settings-modal" data-key-rebind-menu class="settings-modal" style="display: none;">
+        <div class="settings-content">
+            <h2>Control Settings</h2>
+            <div class="key-bind-list">
+                <div class="key-bind-row">
+                    <span>Move Left:</span>
+                    <button data-rebind-left data-action="moveLeft">
+                        <span data-current-left-bind>ArrowLeft</span>
+                    </button>
+                </div>
+                <div class="key-bind-row">
+                    <span>Move Right:</span>
+                    <button data-action="moveRight">
+                        <span data-current-right-bind>ArrowRight</span>
+                    </button>
+                </div>
+                <div class="key-bind-row">
+                    <span>Rotate Clockwise:</span>
+                    <button data-action="rotateClockwise">
+                        <span data-current-rotate-bind>ArrowUp</span>
+                    </button>
+                </div>
+                <div class="key-bind-row">
+                    <span>Rotate Counter-clockwise:</span>
+                    <button data-action="rotateCounterClockwise">
+                        <span data-current-counter-rotate-bind>Z</span>
+                    </button>
+                </div>
+                <div class="key-bind-row">
+                    <span>Soft Drop:</span>
+                    <button data-action="softDrop">
+                        <span data-current-soft-drop-bind>ArrowDown</span>
+                    </button>
+                </div>
+                <div class="key-bind-row">
+                    <span>Hard Drop:</span>
+                    <button data-action="hardDrop">
+                        <span data-current-hard-drop-bind>Space</span>
+                    </button>
+                </div>
+            </div>
+            <button data-settings-close>Close</button>
+        </div>
+    </div>
+
+    <div id="rebind-prompt" data-rebind-prompt class="rebind-prompt" style="display: none;">
+        Press a key to bind...
+    </div>
+
     <script type="module" src="/src/main.js"></script>
 </body>
 

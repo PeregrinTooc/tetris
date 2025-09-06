@@ -1,13 +1,14 @@
 import { describe, beforeEach, test, expect, jest } from "@jest/globals";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 import { Board } from "../src/board";
-import { PreviewBoard } from "../src/preview-board";
+import { KeyBindingManager } from "../src/key-binding-manager";
 
 describe("Line completion", () => {
     let board: Board;
     const element = document.createElement("div");
-
+    let keyBindingManager: KeyBindingManager;
     beforeEach(() => {
+        keyBindingManager = new KeyBindingManager();
         element.innerHTML = "";
         board = new Board(
             20,
@@ -21,20 +22,20 @@ describe("Line completion", () => {
     test("should detect and remove completed line", () => {
         // Create and position O piece on right
         const tetroO1 = TetrominoFactory.createNew(1, board, 1337);
-        tetroO1.activateKeyboardControl();
+        tetroO1.activateKeyboardControl(keyBindingManager);
         document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop
         tetroO1.lock();
 
         // Create and position I piece on left
         const tetro02 = TetrominoFactory.createNew(0, board, 1337);
-        tetro02.activateKeyboardControl();
+        tetro02.activateKeyboardControl(keyBindingManager);
         document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop
 
         //locking triggers line removal
         tetro02.lock();
 
         const tetroTester = TetrominoFactory.createNew(0, board, 1338); //tests that invalid seeds are handled by returning a single block
-        tetroTester.activateKeyboardControl();
+        tetroTester.activateKeyboardControl(keyBindingManager);
         document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop
         tetroTester.addEventListener("locked", (event: Event) => {
             const customEvent = event as CustomEvent;

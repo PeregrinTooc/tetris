@@ -1,12 +1,17 @@
 import { TetrominoSingle } from "../src/tetromino-single";
 import { Board } from "../src/board";
+import { KeyBindingManager } from "../src/key-binding-manager";
+
+import { expect } from '@jest/globals';
 
 describe('TetrominoSingle', () => {
     let mockElement: HTMLElement;
     let board: Board;
     let tetromino: TetrominoSingle;
+    let keyBindingManager: KeyBindingManager;
     
     beforeEach(() => {
+        keyBindingManager = new KeyBindingManager();
         mockElement = document.createElement("div");
         document.body.appendChild(mockElement);
         board = new Board(10, 5, mockElement, null, { dequeue: () => 0 });
@@ -157,11 +162,11 @@ describe('TetrominoSingle', () => {
         });
         
         it('should support keyboard control activation', () => {
-            expect(() => tetromino.activateKeyboardControl()).not.toThrow();
+            expect(() => tetromino.activateKeyboardControl(keyBindingManager)).not.toThrow();
         });
-        
+
         it('should support keyboard control deactivation', () => {
-            tetromino.activateKeyboardControl();
+            tetromino.activateKeyboardControl(keyBindingManager);
             expect(() => tetromino.deactivateKeyboardControl()).not.toThrow();
         });
         

@@ -3,9 +3,13 @@ import { Board } from "./board";
 import { ScoreBoard } from "./score-board";
 import { AudioManager } from "./audio";
 import { TetrominoSeedQueue } from "./TetrominoSeedQueue";
+import { KeyBindingManager } from "./key-binding-manager";
 
 const BASE_DROP_TIME = 750;
 const TICK_EVENT_NAME = "tick";
+
+let keyBindingManager: KeyBindingManager;
+let activeRebindButton: HTMLButtonElement | null = null;
 
 declare global {
 	interface Window {
@@ -17,6 +21,7 @@ declare global {
 main();
 
 function main() {
+	keyBindingManager = new KeyBindingManager();
 
 	const audioManager = new AudioManager();
 	const state = {
@@ -38,6 +43,90 @@ function main() {
 	initializePauseToggle();
 	initializeGameOverHandler();
 	initializeStartButton();
+	initializeKeyBindingUI();
+
+	function initializeKeyBindingUI() {
+		const settingsButton = document.querySelector("[data-settings-button]");
+		const settingsModal = document.querySelector("[data-key-rebind-menu]");
+		const closeButton = document.querySelector("[data-settings-close]");
+		const rebindPrompt = document.querySelector("[data-rebind-prompt]") as HTMLElement;
+
+		if (!settingsButton || !settingsModal || !closeButton || !rebindPrompt) return;
+
+		// Show settings modal
+		settingsButton.addEventListener("click", () => {
+			settingsModal.setAttribute("style", "display: flex");
+			updateKeyBindDisplay();
+		});
+
+		// Close settings modal
+		closeButton.addEventListener("click", () => {
+			settingsModal.setAttribute("style", "display: none");
+			rebindPrompt.style.display = "none";
+			activeRebindButton = null;
+		});
+
+		// Handle rebind button clicks
+		const rebindButtons = document.querySelectorAll("[data-action]");
+		rebindButtons.forEach(button => {
+			button.addEventListener("click", (e) => {
+				const target = e.currentTarget as HTMLButtonElement;
+				if (!target) return;
+
+				activeRebindButton = target;
+				const action = target.dataset.action;
+				if (!action) return;
+
+				rebindPrompt.textContent = `Press a key to bind ${action.replace(/([A-Z])/g, " $1").toLowerCase()}`;
+				rebindPrompt.style.display = "block";
+
+				// Focus the document to ensure we catch the next keypress
+				document.body.focus();
+			});
+		});
+
+		// Handle key presses for rebinding
+		document.addEventListener("keydown", handleRebindKeyPress);
+
+		// Initial display update
+		updateKeyBindDisplay();
+	}
+
+	function handleRebindKeyPress(event: KeyboardEvent) {
+		if (!activeRebindButton) return;
+
+		const action = activeRebindButton.dataset.action;
+		if (!action) return;
+
+		// Prevent system keys from being bound
+		if (event.key === "Tab" || event.key === "Escape") return;
+
+		event.preventDefault();
+
+		// Update the binding
+		keyBindingManager.rebindKey(action as any, event.key);
+
+		// Update the display
+		updateKeyBindDisplay();
+
+		// Hide the prompt
+		const rebindPrompt = document.querySelector("[data-rebind-prompt]") as HTMLElement;
+		if (rebindPrompt) {
+			rebindPrompt.style.display = "none";
+		}
+
+		activeRebindButton = null;
+	}
+
+	function updateKeyBindDisplay() {
+		const bindings = keyBindingManager.getCurrentBindings();
+		bindings.forEach(binding => {
+			const displayElement = document.querySelector(`[data-current-${binding.action}-bind]`);
+			if (displayElement) {
+				displayElement.textContent = binding.key;
+			}
+		});
+	}
 
 	function initializeStartButton() {
 		const startButton = document.getElementById("start-button");
@@ -254,7 +343,7 @@ function main() {
 			tetromino.addEventListener("hardDrop", () => {
 				audioManager.playSoundEffect("hardDrop");
 			});
-			tetromino.activateKeyboardControl();
+			tetromino.activateKeyboardControl(keyBindingManager);
 		}
 	}
 

@@ -1,8 +1,15 @@
 import { describe, expect } from "@jest/globals";
 import { Board } from "../src/board";
 import { TetrominoFactory } from "../src/tetrominoFactory";
+import { KeyBindingManager } from "../src/key-binding-manager";
 
 describe("Board scoring", () => {
+    let keyBindingManager: KeyBindingManager;
+
+    beforeEach(() => {
+        keyBindingManager = new KeyBindingManager();
+    });
+
     it("dispatches linesCompleted event with correct data for a double line clear", () => {
         let linesCompletedCount = 0;
         const element = document.createElement("div");
@@ -35,7 +42,7 @@ describe("Board scoring", () => {
 
         for (let i = 0; i < 4; i++) {
             const t = TetrominoFactory.createNew(i, board, 1337);
-            t.activateKeyboardControl();
+            t.activateKeyboardControl(keyBindingManager);
             document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
             t.lock();
         }

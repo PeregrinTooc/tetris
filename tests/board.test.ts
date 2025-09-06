@@ -2,15 +2,17 @@ import { describe, beforeEach, test, expect, jest } from "@jest/globals";
 import { Board } from "../src/board";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 import { PreviewBoard } from "../src/preview-board";
-import { Block } from "../src/tetromino-base";
+import { KeyBindingManager } from "../src/key-binding-manager";
 
 describe("Board", () => {
 	let board: Board;
 	let stubQueue: any;
+	let keyBindingManager: KeyBindingManager;
 	const element = document.createElement("div");
 	const previewBoard = new PreviewBoard(document.createElement("div"));
 
 	beforeEach(() => {
+		keyBindingManager = new KeyBindingManager();
 		stubQueue = { dequeue: () => 1337 };
 		board = new Board(20, 11, element, previewBoard, stubQueue);
 	});
@@ -56,7 +58,7 @@ describe("Board", () => {
 
 	test("locks tetromino at the bottom and prevents further movement", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 1337);
-		tetromino.activateKeyboardControl();
+		tetromino.activateKeyboardControl(keyBindingManager);
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop
 		expect(tetromino.locked).toBe(true);
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
@@ -84,7 +86,7 @@ describe("Board", () => {
 
 	test("T tetromino drop results in correct blocks on the floor", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 0);
-		tetromino.activateKeyboardControl();
+		tetromino.activateKeyboardControl(keyBindingManager);
 		document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop
 		const positions = tetromino.getBlocks();
 		const floorBlocks = positions.filter((p) => p.y === 20);

@@ -3,6 +3,7 @@ import { TetrominoFactory } from "../src/tetrominoFactory";
 import { Board } from "../src/board";
 import { PreviewBoard } from "../src/preview-board";
 import { Tetromino } from "../src/tetromino-base";
+import { KeyBindingManager } from "../src/key-binding-manager";
 
 describe("Tetromino Scoring", () => {
     let tetromino: Tetromino;
@@ -11,6 +12,7 @@ describe("Tetromino Scoring", () => {
     let nextPiece: HTMLElement;
     let boardElement: HTMLElement;
     let stubQueue: any;
+    let keyBindingManager: KeyBindingManager
 
     beforeEach(() => {
         // Create fresh DOM elements for each test
@@ -32,6 +34,8 @@ describe("Tetromino Scoring", () => {
 
         // Ensure no existing listeners
         tetromino.deactivateKeyboardControl();
+        keyBindingManager = new KeyBindingManager();
+
     });
 
     afterEach(() => {
@@ -43,7 +47,7 @@ describe("Tetromino Scoring", () => {
         const scoreListener = jest.fn();
         boardElement.addEventListener("scoreEvent", scoreListener);
 
-        tetromino.activateKeyboardControl();
+        tetromino.activateKeyboardControl(keyBindingManager);
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 
         expect(scoreListener).toHaveBeenCalledWith(
@@ -59,7 +63,7 @@ describe("Tetromino Scoring", () => {
 
         // Position tetromino high up so it has distance to drop
         tetromino.top = 5;
-        tetromino.activateKeyboardControl();
+        tetromino.activateKeyboardControl(keyBindingManager);
 
         // Clear any existing calls
         scoreListener.mockClear();
@@ -101,7 +105,7 @@ describe("Tetromino Scoring", () => {
         boardElement.addEventListener("scoreEvent", scoreListener);
 
         // Drop tetromino to bottom first
-        tetromino.activateKeyboardControl();
+        tetromino.activateKeyboardControl(keyBindingManager);
         document.dispatchEvent(new KeyboardEvent("keydown", { key: " " })); // hard drop to bottom
 
         // Clear previous calls
@@ -118,7 +122,7 @@ describe("Tetromino Scoring", () => {
         const scoreListener = jest.fn();
         boardElement.addEventListener("scoreEvent", scoreListener);
 
-        tetromino.activateKeyboardControl();
+        tetromino.activateKeyboardControl(keyBindingManager);
 
         // Soft drop once (10 points)
         document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));

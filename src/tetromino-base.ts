@@ -1,5 +1,6 @@
 
 import { Board } from "./board";
+import { KeyBindingManager } from "./key-binding-manager";
 
 export class Block {
 	x: number;
@@ -188,21 +189,33 @@ export abstract class Tetromino {
 		this.element.dispatchEvent(event);
 	}
 
-	private _setupKeyboardListener(): void {
+	private _setupKeyboardListener(keyBindingManager: KeyBindingManager): void {
 		this.keyboardListener = (event: KeyboardEvent) => {
 			if (this.locked || !this.board || this.paused) return;
 
-			if (event.key === "ArrowLeft") {
-				this.move("left");
-			} else if (event.key === "ArrowRight") {
-				this.move("right");
-			} else if (event.key === "ArrowDown") {
-				this.move("down");
-			} else if (event.key === " " || event.key === "Space" || event.key === "Spacebar") {
-				if (event.preventDefault) event.preventDefault();
-				this.drop();
-			} else if (event.key === "ArrowUp") {
-				this.rotate();
+			const action = keyBindingManager.getActionForKey(event.key);
+			if (!action) return;
+
+			switch (action) {
+				case "moveLeft":
+					this.move("left");
+					break;
+				case "moveRight":
+					this.move("right");
+					break;
+				case "softDrop":
+					this.move("down");
+					break;
+				case "hardDrop":
+					if (event.preventDefault) event.preventDefault();
+					this.drop();
+					break;
+				case "rotateClockwise":
+					this.rotate();
+					break;
+				case "rotateCounterClockwise":
+					this.rotate(-1);
+					break;
 			}
 		};
 		document.addEventListener("keydown", this.keyboardListener);
@@ -231,19 +244,19 @@ export abstract class Tetromino {
 		this.deactivateKeyboardControl();
 	}
 
-	public activateKeyboardControl(): void {
+	public activateKeyboardControl(keyBindingManager: KeyBindingManager): void {
 		this._removeKeyboardListener(); // Remove any existing listener first
-		this._setupKeyboardListener();
+		this._setupKeyboardListener(keyBindingManager);
 	}
 
 	public deactivateKeyboardControl(): void {
 		this._removeKeyboardListener();
 	}
 
-	public rotate(): void {
+	public rotate(direction: 1 | -1 = 1): void {
 		const board = this.board as Board;
 		const prevRotation = this.rotation;
-		this.rotation++;
+		this.rotation += direction;
 		const previewBlocks = this.getBlocks();
 
 		if (!board.inBounds(previewBlocks) || board.collision(previewBlocks)) {
