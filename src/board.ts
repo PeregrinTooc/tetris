@@ -13,6 +13,12 @@ interface TetrominoSeedQueue {
 }
 
 export class Board {
+	registerEventListener(eventName: string, callback: (event: Event) => void) {
+		this.element.addEventListener(eventName, callback);
+	}
+	pauseGame() {
+		this.activeTetromino.pause();
+	}
 	private height: number;
 	private width: number;
 	private element: HTMLElement;
@@ -151,8 +157,8 @@ export class Board {
 			// Check for collisions with other blocks below this block
 			for (const otherBlock of this.occupiedPositions) {
 				// Exclude blocks from the same tetromino (including deleted blocks that may still be in occupiedPositions)
-				if (otherBlock.parent !== tetromino && 
-					otherBlock.x === block.x && 
+				if (otherBlock.parent !== tetromino &&
+					otherBlock.x === block.x &&
 					otherBlock.y > block.y) {
 					blockMaxDrop = Math.min(blockMaxDrop, otherBlock.y - block.y - 1);
 				}

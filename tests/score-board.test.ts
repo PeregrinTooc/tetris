@@ -9,7 +9,7 @@ describe("ScoreBoard", () => {
     beforeEach(() => {
         scoreElement = document.createElement("div");
         levelElement = document.createElement("div");
-        scoreBoard = new ScoreBoard(scoreElement, levelElement);
+        scoreBoard = new ScoreBoard(scoreElement, levelElement, () => { }, 1000);
     });
 
     test("should display score", () => {

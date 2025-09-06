@@ -6,7 +6,7 @@ export class ScoreBoard {
     private static readonly LEVEL_MULTIPLIER = 2000;
     private static readonly SPEED_REDUCTION_FACTOR = 0.8;
 
-    constructor(element: HTMLElement, levelElement: HTMLElement) {
+    constructor(element: HTMLElement, levelElement: HTMLElement, private setDropTimeCallback: (newDropTime: number) => void, private baseDropTime: number) {
         this.element = element;
         this.levelElement = levelElement;
         // Initialize display
@@ -30,6 +30,9 @@ export class ScoreBoard {
                 bubbles: true
             });
             this.element.dispatchEvent(event);
+            // Update drop time based on new level
+            const newDropTime = this.getDropTimeForLevel(newLevel, this.baseDropTime);
+            this.setDropTimeCallback(newDropTime);
         }
     }
 

@@ -1,4 +1,4 @@
-import { any } from "cypress/types/bluebird";
+
 import { Board } from "./board";
 
 export class Block {
@@ -23,7 +23,35 @@ export class Block {
 }
 
 export abstract class Tetromino {
-	collapseBlocks() {
+	size: number;
+	board: any;
+	locked: boolean;
+	rotation: number;
+	element: HTMLElement;
+	fallListener?: () => void;
+	keyboardListener?: (event: KeyboardEvent) => void;
+	protected pivot: Block;
+	paused: boolean = false;
+	blocks: Block[] = [];
+
+	constructor(left: number, board: Board | null) {
+		this.id = (Tetromino.nextId++).toString();
+		this.pivot = new Block({ x: left, y: 0, parent: this });
+		this.size = 24;
+		this.board = board;
+		this.locked = false;
+		this.rotation = 0;
+		this.element = this._createElement();
+		this.blocks = this.getBlocks();
+		this._renderBlocks();
+		if (this.board) this.board.addTetromino(this);
+	}
+
+
+	public pause() {
+		this.paused = !this.paused;
+	}
+	public collapseBlocks() {
 		for (const block of this.blocks) {
 			let blocksBelow = this.blocks.filter(b => b.x === block.x && b.y > block.y)
 			let highestBelowBlockY = Math.min(...blocksBelow.map(b => b.y))
@@ -33,11 +61,9 @@ export abstract class Tetromino {
 			}
 		}
 	}
-	dropByOne() {
+	public dropByOne() {
 		this.blocks.forEach((block) => block.drop());
 	}
-
-	blocks: Block[] = [];
 
 	static nextId = 1;
 	public readonly id: string;
@@ -54,27 +80,9 @@ export abstract class Tetromino {
 	public set top(value: number) {
 		this.pivot.y = value;
 	}
-	size: number;
-	board: any;
-	locked: boolean;
-	rotation: number;
-	element: HTMLElement;
-	fallListener?: () => void;
-	keyboardListener?: (event: KeyboardEvent) => void;
-	protected pivot: Block;
 
-	constructor(left: number, board: Board | null) {
-		this.id = (Tetromino.nextId++).toString();
-		this.pivot = new Block({ x: left, y: 0, parent: this });
-		this.size = 24;
-		this.board = board;
-		this.locked = false;
-		this.rotation = 0;
-		this.element = this._createElement();
-		this.blocks = this.getBlocks();
-		this._renderBlocks();
-		if (this.board) this.board.addTetromino(this);
-	}
+
+
 	protected createBlocks(): void {
 		this.blocks = this.getBlocks();
 	}
@@ -169,9 +177,9 @@ export abstract class Tetromino {
 
 	public lock(): void {
 		if (this.locked) return;
+		this.deactivateKeyboardControl();
 		this.blocks = this.getBlocks(); //make sure the blocks are up to date: from now on, their position will not be calculated again.
 		this.locked = true;
-		this._removeKeyboardListener();
 
 		// Award 5 points for locking a tetromino
 		this._dispatchScoreEvent(5);
@@ -182,7 +190,7 @@ export abstract class Tetromino {
 
 	private _setupKeyboardListener(): void {
 		this.keyboardListener = (event: KeyboardEvent) => {
-			if (this.locked || !this.board || window.isPaused) return;
+			if (this.locked || !this.board || this.paused) return;
 
 			if (event.key === "ArrowLeft") {
 				this.move("left");
