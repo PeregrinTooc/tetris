@@ -167,8 +167,8 @@ export class Board {
 			// Check for collisions with other blocks below this block
 			for (const otherBlock of this.occupiedPositions) {
 				// Exclude blocks from the same tetromino (including deleted blocks that may still be in occupiedPositions)
-				if (otherBlock.parent !== tetromino && 
-					otherBlock.x === block.x && 
+				if (otherBlock.parent !== tetromino &&
+					otherBlock.x === block.x &&
 					otherBlock.y > block.y) {
 					blockMaxDrop = Math.min(blockMaxDrop, otherBlock.y - block.y - 1);
 				}
@@ -280,6 +280,7 @@ export class Board {
 		this.occupiedPositions = [];
 		this.coordinateBlocks.clear();
 		this.nextTetromino = null;
+		this.activeTetromino.stopListening();
 		this.activeTetromino = null as any;
 
 		// Clear the DOM

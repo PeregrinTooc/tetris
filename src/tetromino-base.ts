@@ -223,7 +223,12 @@ export abstract class Tetromino {
 				if (!canContinue) this.lock();
 			}
 		};
-		document.addEventListener("tick", this.fallListener);
+		document.addEventListener("tick", this.fallListener as EventListener);
+	}
+
+	stopListening() {
+		document.removeEventListener("tick", this.fallListener as EventListener);
+		this.deactivateKeyboardControl();
 	}
 
 	public activateKeyboardControl(): void {

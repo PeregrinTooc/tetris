@@ -1,6 +1,5 @@
 import { PreviewBoard } from "./preview-board";
 import { Board } from "./board";
-import { Tetromino } from "../src/tetromino-base";
 import { ScoreBoard } from "./score-board";
 import { AudioManager } from "./audio";
 import { TetrominoSeedQueue } from "./TetrominoSeedQueue";
