@@ -1,7 +1,6 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 import { Tetromino } from "../src/tetromino-base";
-import { parseXML } from "cypress/types/jquery";
 
 describe("TetrominoZ", () => {
 	const left = 5;

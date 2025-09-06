@@ -35,7 +35,7 @@ describe("Tetromino", () => {
     const moveTetrominoSpy = jest.spyOn(board, "moveTetromino");
     tetromino.activateKeyboardControl(keyBindingManager);
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
-    expect(moveTetrominoSpy).toHaveBeenCalledWith(tetromino, "left");
+    expect((moveTetrominoSpy as any)).toHaveBeenCalledWith(tetromino, "left");
   });
   test("should lock tetromino", () => {
     tetromino.activateKeyboardControl(keyBindingManager);
@@ -99,7 +99,7 @@ describe("Tetromino", () => {
       const moveTetrominoSpy = jest.spyOn(board, "moveTetromino").mockReturnValue(true);
       tetromino.startFalling();
       document.dispatchEvent(new CustomEvent("tick"));
-      expect(moveTetrominoSpy).toHaveBeenCalledWith(tetromino, "down");
+      expect(moveTetrominoSpy as any).toHaveBeenCalledWith(tetromino, "down");
       moveTetrominoSpy.mockRestore();
     });
 

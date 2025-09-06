@@ -1,6 +1,3 @@
-// tests/tetromino.rotation.blocked.test.js
-// Dedicated tests for tetromino rotation blocked by board boundaries or other tetrominos
-
 import { describe, beforeEach, test, expect } from "@jest/globals";
 import { Board } from "../src/board";
 import { TetrominoFactory } from "../src/tetrominoFactory";
