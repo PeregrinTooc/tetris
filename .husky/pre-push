@@ -1,8 +1,9 @@
 # Minimal, clean version
-# Check if post-commit.log contains current commit and successful test run
-CURRENT_COMMIT=$(git rev-parse HEAD)
-if grep -q "Commit: $CURRENT_COMMIT" cypress/post-commit.log && grep -q "E2E tests passed successfully." cypress/post-commit.log; then
-	echo "E2E tests already passed for current commit. Skipping tests."
+STARTING_COMMIT=$(git rev-parse HEAD)
+
+# Check if E2E tests have already passed for this commit
+if grep -q "Commit: $STARTING_COMMIT" cypress/post-commit.log && grep -q "E2E tests passed successfully." cypress/post-commit.log; then
+	echo "E2E tests already passed for current commit. Skipping E2E tests."
 	exit 0
 fi
 
@@ -37,12 +38,25 @@ fi
 
 echo "Running e2e tests before push..."
 npm run test:e2e
-TEST_RESULT=$?
-if [ $TEST_RESULT -ne 0 ]; then
-	echo 'E2E tests failed. Push aborted.'
-	stop_server
-	exit $TEST_RESULT
+E2E_TEST_RESULT=$?
+
+# Check if commit changed during test run
+ENDING_COMMIT=$(git rev-parse HEAD)
+if [ "$STARTING_COMMIT" != "$ENDING_COMMIT" ]; then
+    echo 'Commit changed during E2E test run. Push aborted.'
+    stop_server
+    exit 1
 fi
+
+if [ $E2E_TEST_RESULT -ne 0 ]; then
+    echo 'E2E tests failed. Push aborted.'
+    stop_server
+    exit $E2E_TEST_RESULT
+fi
+
+# Record successful test run
+echo "Commit: $STARTING_COMMIT" >> cypress/post-commit.log
+echo "E2E tests passed successfully." >> cypress/post-commit.log
 
 stop_server
 exit 0
