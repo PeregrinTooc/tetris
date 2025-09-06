@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris</title>
+  <script type="module" crossorigin src="/tetris/assets/index-D7VSRd1x.js"></script>
+  <link rel="stylesheet" crossorigin href="/tetris/assets/index-D5H6XkPE.css">
+</head>
+
+<body>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <h1>Tetris</h1>
+        <div style="display: flex; flex-direction: row; gap: 32px; align-items: flex-start;">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div id="score-board" class="score-box">Score: 0</div>
+                <div id="level-board" class="score-box">Level: 1</div>
+            </div>
+            <div id="game-board" style="position: relative;">
+                <div id="pause-overlay"
+                    style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.8); color: white; padding: 20px; z-index: 100; font-size: 24px;">
+                    Paused</div>
+                <canvas id="tetris"></canvas>
+            </div>
+            <div id="next-board">
+                <h3>Next</h3>
+                <div id="preview-container" style="position: relative; height: 96px;">
+                    <canvas id="next-piece" width="96" height="96"></canvas>
+                </div>
+            </div>
+        </div>
+        <button id="start-button" style="margin-top: 24px;">Start Game</button>
+        <div class="controls-panel">
+            <div class="audio-controls">
+                <div class="control-group">
+                    <label for="music-toggle">Music</label>
+                    <label class="switch">
+                        <input type="checkbox" id="music-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="control-group">
+                    <label for="sfx-toggle">Sound Effects</label>
+                    <label class="switch">
+                        <input type="checkbox" id="sfx-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="key-bindings">
+                <h3>Controls</h3>
+                <div class="key-grid">
+                    <div class="key-item"><span class="key">←</span> Move Left</div>
+                    <div class="key-item"><span class="key">→</span> Move Right</div>
+                    <div class="key-item"><span class="key">↓</span> Soft Drop</div>
+                    <div class="key-item"><span class="key">↑</span> Rotate</div>
+                    <div class="key-item"><span class="key">Space</span> Hard Drop</div>
+                    <div class="key-item"><span class="key">P</span> or <span class="key">Esc</span> Pause</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
