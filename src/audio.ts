@@ -23,78 +23,61 @@ Object.values(soundEffects).forEach(sound => {
 const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
 const audioContext = new AudioContext();
 // Function to resume audio context after user interaction
-export function startMusic() {
-    if (audioContext.state === "suspended") {
-        audioContext.resume();
-    }
-}
 // Setup audio controls
 const musicToggle = document.getElementById("music-toggle") as HTMLInputElement;
 const sfxToggle = document.getElementById("sfx-toggle") as HTMLInputElement;
 let isMusicEnabled = true;
 let isSfxEnabled = true;
 
-function initializeControls(gameRunning: boolean, isPaused: boolean) {
-    if (musicToggle && sfxToggle) {
-        musicToggle.addEventListener("change", () => {
-            isMusicEnabled = musicToggle.checked;
-            updateMusic(gameRunning, isPaused);
-        });
-
-        sfxToggle.addEventListener("change", () => {
-            isSfxEnabled = sfxToggle.checked;
-        });
-    }
-}
-
-export function updateMusic(gameRunning: boolean, isPaused: boolean) {
-    if (isMusicEnabled && gameRunning && !isPaused) {
-        startMusic();
-        bgMusicLevel1.play().catch(error => {
-            console.log('Error playing music:', error);
-        });
-    } else {
-        bgMusicLevel1.pause();
-    }
-}
-export function playSound(sound: HTMLAudioElement) {
-    if (isSfxEnabled && sound !== bgMusicLevel1) {
-        sound.currentTime = 0;
-        startMusic();
-        sound.play().catch(error => {
-            console.log('Error playing sound:', error);
-        });
-    }
-}
-export function pauseMusic(): void {
-    bgMusicLevel1.pause();
-}
-export function resetMusic() {
-    bgMusicLevel1.currentTime = 0;
-    pauseMusic();
-}
-
 export class AudioManager {
     public updateMusic(gameRunning: boolean, isPaused: boolean) {
-        updateMusic(gameRunning, isPaused);
+        if (isMusicEnabled && gameRunning && !isPaused) {
+            this.startMusic();
+            bgMusicLevel1.play().catch(error => {
+                console.log('Error playing music:', error);
+            });
+        } else {
+            bgMusicLevel1.pause();
+        }
     }
+
+
     public playSoundEffect(effect: keyof typeof soundEffects) {
-        playSound(soundEffects[effect]);
+        const sound = soundEffects[effect];
+        if (isSfxEnabled && sound !== bgMusicLevel1) {
+            sound.currentTime = 0;
+            this.startMusic();
+            sound.play().catch(error => {
+                console.log('Error playing sound:', error);
+            });
+        }
     }
 
     public startMusic() {
-        startMusic();
+        if (audioContext.state === "suspended") {
+            audioContext.resume();
+        }
     }
 
     public pauseMusic() {
-        pauseMusic();
+        bgMusicLevel1.pause();
     }
 
     public resetMusic() {
-        resetMusic();
+        bgMusicLevel1.currentTime = 0;
+        this.pauseMusic();
     }
     public initializeControls(gameRunning: boolean, isPaused: boolean) {
-        initializeControls(gameRunning, isPaused);
+        if (musicToggle && sfxToggle) {
+            musicToggle.addEventListener("change", () => {
+                isMusicEnabled = musicToggle.checked;
+                this.updateMusic(gameRunning, isPaused);
+            });
+
+            sfxToggle.addEventListener("change", () => {
+                isSfxEnabled = sfxToggle.checked;
+            });
+        }
     }
 
 
