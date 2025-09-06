@@ -126,8 +126,18 @@ export class Board {
 		}
 
 
-		// Drop locked tetrominoes as complete units
+		// Calculate drop distances for all tetrominoes first
+		const tetrominoDropInfo = [];
 		for (const [tetromino, blocks] of tetrominoGroups) {
+			const maxDrop = this._calculateMaxDrop(tetromino, blocks);
+			tetrominoDropInfo.push({ tetromino, blocks, maxDrop });
+		}
+
+		// Sort by maxDrop in descending order (tetrominoes that can drop more go first)
+		tetrominoDropInfo.sort((a, b) => b.maxDrop - a.maxDrop);
+
+		// Drop tetrominoes in optimal order
+		for (const { tetromino, blocks } of tetrominoDropInfo) {
 			this._dropTetrominoAsUnit(tetromino, blocks);
 			tetromino.collapseBlocks();
 		}
@@ -147,8 +157,8 @@ export class Board {
 		}
 	}
 
-	private _dropTetrominoAsUnit(tetromino: Tetromino, blocks: Block[]) {
-		// Find how far the entire tetromino can drop as a unit
+	private _calculateMaxDrop(tetromino: Tetromino, blocks: Block[]): number {
+		// Calculate how far the tetromino can drop without actually dropping it
 		let maxDrop = this.height;
 
 		for (const block of blocks) {
@@ -157,8 +167,8 @@ export class Board {
 			// Check for collisions with other blocks below this block
 			for (const otherBlock of this.occupiedPositions) {
 				// Exclude blocks from the same tetromino (including deleted blocks that may still be in occupiedPositions)
-				if (otherBlock.parent !== tetromino &&
-					otherBlock.x === block.x &&
+				if (otherBlock.parent !== tetromino && 
+					otherBlock.x === block.x && 
 					otherBlock.y > block.y) {
 					blockMaxDrop = Math.min(blockMaxDrop, otherBlock.y - block.y - 1);
 				}
@@ -166,6 +176,13 @@ export class Board {
 
 			maxDrop = Math.min(maxDrop, blockMaxDrop);
 		}
+
+		return maxDrop;
+	}
+
+	private _dropTetrominoAsUnit(tetromino: Tetromino, blocks: Block[]) {
+		// Recalculate drop distance in case other tetrominoes have moved
+		const maxDrop = this._calculateMaxDrop(tetromino, blocks);
 
 		// Drop all blocks of this tetromino by the same amount
 		for (const block of blocks) {
