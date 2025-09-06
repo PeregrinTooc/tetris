@@ -5,7 +5,6 @@ const bgMusicLevel15 = new Audio("resources/music/fromLevel15.mp3");
 
 bgMusicLevel1.loop = true;
 bgMusicLevel1.preload = "auto";
-bgMusicLevel1.volume = 0.25; // Set a default volume for background music
 
 export const soundEffects = {
     hardDrop: new Audio("resources/effects/hardDrop.mp3"),
@@ -18,11 +17,7 @@ export const soundEffects = {
 // Preload all sound effects
 Object.values(soundEffects).forEach(sound => {
     sound.preload = "auto";
-    sound.volume = 0.45; // Set a default volume for sound effects
 });
-soundEffects.tetrisClear.volume = 1.0; // Louder for tetris clear
-
-
 
 // Audio context setup for handling browser autoplay restrictions
 const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
