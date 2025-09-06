@@ -45,7 +45,10 @@ This TypeScript/JavaScript Tetris implementation follows strict TDD practices wi
 
 - Always use `npm run test:unit:output` when running tests for debugging
 - Read test results from `test-output.txt` file instead of terminal output
-- Clean up old test output files when done debugging
+- Always clean up `test-output.txt` before new runs
+- Always use `npm run test:e2e:output` for Cypress with output to `test-output-e2e.txt`
+- Read test results from `test-output-e2e.txt` file instead of terminal output
+- Always clean up `test-output-e2e.txt` before new runs
 - Use this pattern for specific test files: `npx jest path/to/test.file.ts --verbose > specific-test-output.txt 2>&1`
 
 ## Code Conventions

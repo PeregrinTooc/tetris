@@ -6,3 +6,4 @@ coverage
 test-output.txt
 test.coverage
 .devcontainer/devcontainer.json
+test-output-e2e.txt
