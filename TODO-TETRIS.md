@@ -19,7 +19,7 @@
 - [x] Add O tetromino shape (class, test, style, and factory integration)
 - [x] Add T tetromino shape (class, test, style, and factory integration)
 - [x] All 7 tetromino shapes (I, O, T, S, Z, J, L) implemented
-- [ ] Hold piece functionality
+- [X] Hold piece functionality
 - [x] Hard drop (instantly drop tetromino)
 - [x] Soft drop (faster drop)
 - [X] Increasing speed/level progression
@@ -68,10 +68,10 @@
 - [X] Line clear is detected and board updates
 - [X] Score/level/lines UI updates
 - [X] Hard drop action
-- [ ] Hold action
+- [X] Hold action
 - [x] Preview of next piece is shown
 - [X] Pause/resume works
-- [ ] Music and Sound Effects
+- [X] Music and Sound Effects
 - [ ] Ghost Piece
 - [ ] Mobile/responsive controls
 
@@ -90,7 +90,7 @@
 - [X] Line clear logic
 - [x] Scoring system logic (soft drop, hard drop, piece locking)
 - [X] Level Logic
-- [ ] Hold/next piece logic
+- [X] Hold/next piece logic
 - [ ] Ghost piece logic
 - [ ] Wall kick logic
 
