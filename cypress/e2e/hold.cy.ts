@@ -240,4 +240,16 @@ describe('Tetris Hold Functionality', () => {
         cy.wait(500);
         cy.get('#hold-board .tetromino').should('have.class', 'tetromino-t');
     });
+
+    it('should clear the hold board after reset', () => {
+        // Wait for first T piece and hold it
+        cy.get('#game-board .tetromino').should('have.class', 'tetromino-t');
+        cy.get('body').type('h');
+        cy.wait(500);
+
+        // Start game and wait for first piece
+        cy.get('#start-button').click();
+
+        cy.get('#hold-board .tetromino[data-tetromino-id="1"]').should('not.exist');
+    });
 });

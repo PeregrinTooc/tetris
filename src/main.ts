@@ -316,10 +316,17 @@ function main() {
 			state.board.canHoldPiece = true;
 		}
 
+
 		// Clear preview
 		const previewContainer = document.querySelector("#preview-container");
 		if (previewContainer) {
 			previewContainer.innerHTML = "";
+		}
+
+		// Hold Board
+		const holdContainer = document.querySelector("#hold-board .hold-container");
+		if (holdContainer) {
+			holdContainer.innerHTML = "";
 		}
 
 		audioManager.resetMusic();

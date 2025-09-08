@@ -57,9 +57,6 @@ export class Board {
 
 		// Clear the DOM
 		this.element.innerHTML = "";
-		if (this.previewBoard && this.previewBoard.previewContainer) {
-			this.previewBoard.previewContainer.innerHTML = "";
-		}
 	}
 
 	public registerEventListener(eventName: string, callback: (event: Event) => void) {
