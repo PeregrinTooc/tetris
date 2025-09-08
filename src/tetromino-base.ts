@@ -66,7 +66,7 @@ export abstract class Tetromino {
 		this.blocks.forEach((block) => block.drop());
 	}
 
-	static nextId = 1;
+	private static nextId = 1;
 	public readonly id: string;
 
 	public get left(): number {
@@ -80,6 +80,20 @@ export abstract class Tetromino {
 	}
 	public set top(value: number) {
 		this.pivot.y = value;
+	}
+
+	public reset(): void {
+		// Reset position
+		this.left = Math.floor((this.board?.width || 10) / 2);
+		this.top = 0;
+		// Reset rotation
+		this.rotation = 0;
+		// Reset state
+		this.locked = false;
+		this.paused = false;
+		// Update position first, then blocks
+		this.updatePosition();
+		this.updateBlocks();
 	}
 
 
@@ -178,7 +192,7 @@ export abstract class Tetromino {
 
 	public lock(): void {
 		if (this.locked) return;
-		this.deactivateKeyboardControl();
+		this.stopListening();
 		this.blocks = this.getBlocks(); //make sure the blocks are up to date: from now on, their position will not be calculated again.
 		this.locked = true;
 
@@ -215,6 +229,11 @@ export abstract class Tetromino {
 					break;
 				case "rotateCounterClockwise":
 					this.rotate(-1);
+					break;
+				case "hold":
+					if (this.board) {
+						this.board.hold();
+					}
 					break;
 			}
 		};

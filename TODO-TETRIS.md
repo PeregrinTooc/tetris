@@ -25,6 +25,7 @@
 - [X] Increasing speed/level progression
 - [x] Scoring system (points for line clears, soft/hard drop, piece locking)
 - [x] Sound effects and music
+- [ ] Two player mode
 
 ### Board & Line Mechanics
 
@@ -43,10 +44,14 @@
 - [ ] Responsive/mobile-friendly UI
 - [x] Pause/resume functionality
 - [ ] Settings (volume, controls, etc.)
+- [ ] Main menu music
+- [ ] Change the music based on the level
+- [ ] Line Completion Visual Effect
 
 ### Accessibility
 
-- [ ] Keyboard remapping
+- [X] Keyboard remapping
+- [ ] Colorblind mode/user-defined tetromino colors
 
 ## Test Coverage
 

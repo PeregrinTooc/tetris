@@ -23,10 +23,16 @@
                     Paused</div>
                 <canvas id="tetris"></canvas>
             </div>
-            <div id="next-board">
-                <h3>Next</h3>
-                <div id="preview-container" style="position: relative; height: 96px;">
-                    <canvas id="next-piece" width="96" height="96"></canvas>
+            <div class="side-panel">
+                <div id="next-board">
+                    <h3>Next</h3>
+                    <div id="preview-container" style="position: relative; height: 96px;">
+                        <canvas id="next-piece" width="96" height="96"></canvas>
+                    </div>
+                </div>
+                <div id="hold-board">
+                    <h3>Hold (H)</h3>
+                    <div class="hold-container" style="position: relative; height: 96px;"></div>
                 </div>
             </div>
         </div>
@@ -94,6 +100,12 @@
                     <span>Soft Drop:</span>
                     <button data-action="softDrop">
                         <span data-current-soft-drop-bind>ArrowDown</span>
+                    </button>
+                </div>
+                <div class="key-bind-row">
+                    <span>Hold Piece:</span>
+                    <button data-action="hold">
+                        <span data-current-hold-bind>H</span>
                     </button>
                 </div>
                 <div class="key-bind-row">

@@ -1,5 +1,5 @@
 export interface KeyBinding {
-    action: "moveLeft" | "moveRight" | "rotateClockwise" | "rotateCounterClockwise" | "softDrop" | "hardDrop";
+    action: "moveLeft" | "moveRight" | "rotateClockwise" | "rotateCounterClockwise" | "softDrop" | "hardDrop" | "hold";
     key: string;
 }
 
@@ -12,7 +12,8 @@ export class KeyBindingManager {
         { action: "rotateClockwise", key: "ArrowUp" },
         { action: "rotateCounterClockwise", key: "z" },
         { action: "softDrop", key: "ArrowDown" },
-        { action: "hardDrop", key: " " }
+        { action: "hardDrop", key: " " },
+        { action: "hold", key: "h" }
     ];
 
     constructor() {

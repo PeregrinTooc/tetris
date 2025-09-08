@@ -156,11 +156,9 @@ describe("Board", () => {
 			const nextTetromino = (simpleBoard as any).nextTetromino;
 			expect(nextTetromino).toBeDefined();
 
-			// Lock the first tetromino
+			// Lock the first tetromino, which should trigger spawning the next one
 			firstTetromino.lock();
-
-			// Spawn second tetromino, which should use the stored nextTetromino
-			const secondTetromino = simpleBoard.spawnTetromino();
+			const secondTetromino = simpleBoard.getActiveTetromino();
 			expect(secondTetromino).toBe(nextTetromino);
 		});
 

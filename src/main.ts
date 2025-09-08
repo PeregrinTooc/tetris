@@ -1,6 +1,7 @@
 import { PreviewBoard } from "./preview-board";
 import { Board } from "./board";
 import { ScoreBoard } from "./score-board";
+import { HoldBoard } from "./hold-board";
 import { AudioManager } from "./audio";
 import { TetrominoSeedQueue } from "./TetrominoSeedQueue";
 import { KeyBindingManager } from "./key-binding-manager";
@@ -214,13 +215,20 @@ function main() {
 			}
 
 			function initializeGameBoard() {
+				const holdContainer = document.querySelector("#hold-board .hold-container") as HTMLElement;
+				const holdBoard = new HoldBoard(holdContainer);
+
 				state.board = new Board(
 					20,
 					11,
 					document.getElementById("game-board") as HTMLElement,
 					previewBoard,
-					state.tetrominoSeedQueue
+					state.tetrominoSeedQueue,
+					holdBoard,
+					keyBindingManager,
+					audioManager
 				);
+
 				state.board.registerEventListener("linesCompleted", handleCompleteLinesEvent)
 				state.board.registerEventListener("scoreEvent", handleScoreEvent);
 
@@ -302,9 +310,10 @@ function main() {
 			state.scoreBoard.setScore(0);
 		}
 
-		// Reset game board
+		// Reset game board and canHoldPiece flag
 		if (state.board) {
 			state.board.reset();
+			state.board.canHoldPiece = true;
 		}
 
 		// Clear preview
@@ -334,17 +343,7 @@ function main() {
 
 	function spawnNewTetromino(): void {
 		if (!state.board) return;
-		const tetromino = state.board.spawnTetromino();
-		if (tetromino) {
-			tetromino.addEventListener("locked", () => {
-				spawnNewTetromino();
-				audioManager.playSoundEffect("locked");
-			});
-			tetromino.addEventListener("hardDrop", () => {
-				audioManager.playSoundEffect("hardDrop");
-			});
-			tetromino.activateKeyboardControl(keyBindingManager);
-		}
+		state.board.spawnTetromino();
 	}
 
 }

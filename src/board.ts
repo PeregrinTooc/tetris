@@ -1,6 +1,8 @@
 import { Tetromino, Block } from "./tetromino-base";
 import { TetrominoFactory } from "./tetrominoFactory";
-
+import { HoldBoard } from "./hold-board";
+import { AudioManager } from "./audio";
+import { KeyBindingManager } from "./key-binding-manager";
 
 interface PreviewBoard {
 	element: HTMLElement;
@@ -23,6 +25,7 @@ export class Board {
 	private width: number;
 	private element: HTMLElement;
 	private previewBoard: PreviewBoard | null;
+	private holdBoard: HoldBoard | null;
 	private tetrominos: Set<Tetromino>;
 	private nextTetromino: Tetromino | null = null;
 	private tetrominoSeedQueue: TetrominoSeedQueue;
@@ -30,24 +33,33 @@ export class Board {
 	private activeTetromino: Tetromino;
 	private occupiedPositions: Block[] = [];
 	private coordinateBlocks: Map<string, HTMLElement> = new Map();
+	public canHoldPiece: boolean = true;
+	private keyBindingManager: KeyBindingManager | null = null;
+	private audioManager: AudioManager | null = null;
 
 	constructor(
 		height: number,
 		width: number,
 		element: HTMLElement,
 		previewBoard: PreviewBoard | null,
-		tetrominoSeedQueue: TetrominoSeedQueue
+		tetrominoSeedQueue: TetrominoSeedQueue,
+		holdBoard: HoldBoard | null = null,
+		keyBindingManager: KeyBindingManager | null = null,
+		audioManager: AudioManager | null = null
 	) {
 		this.height = height;
 		this.width = width;
 		this.element = element;
 		this.previewBoard = previewBoard;
+		this.holdBoard = holdBoard;
 		this.tetrominos = new Set();
 		this.nextTetromino = null;
 		this.tetrominoSeedQueue = tetrominoSeedQueue;
+		this.keyBindingManager = keyBindingManager;
+		this.audioManager = audioManager;
 	}
 
-	collision(previewBlocks: Block[]): boolean {
+	public collision(previewBlocks: Block[]): boolean {
 		const collision =
 			this.occupiedPositions.some((other) =>
 				previewBlocks.some(
@@ -56,7 +68,44 @@ export class Board {
 			);
 		return collision;
 	}
-	inBounds(previewBlocks: Block[]) {
+
+	public hold(): void {
+		if (!this.holdBoard || !this.canHoldPiece || this.activeTetromino.locked) {
+			return;
+		}
+
+		// Deactivate current piece's controls		
+		this.activeTetromino.stopListening();
+		const currentPiece = this.activeTetromino;
+		const heldPiece = this.holdBoard.getHeldTetromino();
+
+		// Remove current piece from board
+		this.tetrominos.delete(currentPiece);
+		// Note: element will be moved by showHeldTetromino, not removed here
+
+		this.canHoldPiece = false;
+
+		if (heldPiece) {
+			// Swap pieces
+			this.holdBoard.showHeldTetromino(currentPiece);
+			currentPiece.board = null;
+			this.addTetromino(heldPiece);
+			heldPiece.reset();
+			heldPiece.startFalling();
+			if (this.keyBindingManager) {
+				this.activeTetromino.activateKeyboardControl(this.keyBindingManager);
+			}
+		} else {
+			this.holdBoard.showHeldTetromino(currentPiece);
+			currentPiece.board = null;
+			this.spawnTetromino();
+		}
+	}
+
+	public getActiveTetromino(): Tetromino {
+		return this.activeTetromino;
+	}
+	public inBounds(previewBlocks: Block[]) {
 		return previewBlocks.every(
 			({ x, y }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
 		);
@@ -88,6 +137,7 @@ export class Board {
 		this.tetrominos.add(tetromino);
 		this.element.appendChild(tetromino.element);
 		this.activeTetromino = tetromino;
+		tetromino.board = this;
 		tetromino.addEventListener("locked", this._handleTetrominoLocked.bind(this));
 
 		// Handle coordinate rendering
@@ -102,6 +152,7 @@ export class Board {
 		customEvent.detail.forEach((block: Block) => { this.occupiedPositions.push(block) });
 		this.occupiedPositions.sort((a, b) => b.y - a.y);
 		this._checkForCompletedLines();
+		this.canHoldPiece = true;
 	}
 	private _checkForCompletedLines() {
 		const completedLines = this._findCompletedLines();
@@ -115,36 +166,13 @@ export class Board {
 	}
 
 	private _dropAllBlocks() {
-		// Group blocks by their parent tetromino
-		const tetrominoGroups = new Map<Tetromino, Block[]>();
+		const tetrominoGroups = this._groupBlocksByParent();
+		const tetrominoDropInfo = this._calculateTetrominoDropInfo(tetrominoGroups);
+		this._dropTetrominosInOptimalOrder(tetrominoDropInfo);
+		this._renderAffectedTetrominoes();
+	}
 
-		for (const block of this.occupiedPositions) {
-			if (!tetrominoGroups.has(block.parent)) {
-				tetrominoGroups.set(block.parent, []);
-			}
-			tetrominoGroups.get(block.parent)!.push(block);
-		}
-
-
-		// Calculate drop distances for all tetrominoes first
-		const tetrominoDropInfo = [];
-		for (const [tetromino, blocks] of tetrominoGroups) {
-			const maxDrop = this._calculateMaxDrop(tetromino, blocks);
-			tetrominoDropInfo.push({ tetromino, blocks, maxDrop });
-		}
-
-		// Sort by maxDrop in descending order (tetrominoes that can drop more go first)
-		tetrominoDropInfo.sort((a, b) => b.maxDrop - a.maxDrop);
-
-		// Drop tetrominoes in optimal order
-		for (const { tetromino, blocks } of tetrominoDropInfo) {
-			this._dropTetrominoAsUnit(tetromino, blocks);
-			tetromino.collapseBlocks();
-		}
-
-
-
-		// Update visual representation for all affected tetrominoes
+	private _renderAffectedTetrominoes() {
 		const affectedTetrominoes = new Set();
 		for (const block of this.occupiedPositions) {
 			if (block.parent && block.parent.locked) {
@@ -157,27 +185,62 @@ export class Board {
 		}
 	}
 
+	private _dropTetrominosInOptimalOrder(tetrominoDropInfo: { tetromino: Tetromino; blocks: Block[]; maxDrop: number; }[]) {
+		for (const { tetromino, blocks } of tetrominoDropInfo) {
+			this._dropTetrominoAsUnit(tetromino, blocks);
+			tetromino.collapseBlocks();
+		}
+	}
+
+	private _calculateTetrominoDropInfo(tetrominoGroups: Map<Tetromino, Block[]>) {
+		const tetrominoDropInfo = [];
+		for (const [tetromino, blocks] of tetrominoGroups) {
+			const maxDrop = this._calculateMaxDrop(tetromino, blocks);
+			tetrominoDropInfo.push({ tetromino, blocks, maxDrop });
+		}
+		tetrominoDropInfo.sort((a, b) => b.maxDrop - a.maxDrop);
+		return tetrominoDropInfo;
+	}
+
+	private _groupBlocksByParent() {
+		const tetrominoGroups = new Map<Tetromino, Block[]>();
+		for (const block of this.occupiedPositions) {
+			if (!tetrominoGroups.has(block.parent)) {
+				tetrominoGroups.set(block.parent, []);
+			}
+			tetrominoGroups.get(block.parent)!.push(block);
+		}
+		return tetrominoGroups;
+	}
+
 	private _calculateMaxDrop(tetromino: Tetromino, blocks: Block[]): number {
 		// Calculate how far the tetromino can drop without actually dropping it
 		let maxDrop = this.height;
 
-		for (const block of blocks) {
-			let blockMaxDrop = this.height - block.y;
-
-			// Check for collisions with other blocks below this block
-			for (const otherBlock of this.occupiedPositions) {
-				// Exclude blocks from the same tetromino (including deleted blocks that may still be in occupiedPositions)
-				if (otherBlock.parent !== tetromino &&
-					otherBlock.x === block.x &&
-					otherBlock.y > block.y) {
-					blockMaxDrop = Math.min(blockMaxDrop, otherBlock.y - block.y - 1);
-				}
-			}
-
-			maxDrop = Math.min(maxDrop, blockMaxDrop);
-		}
+		maxDrop = this._calculateBlockDropLimit(blocks, tetromino, maxDrop);
 
 		return maxDrop;
+	}
+
+	private _calculateBlockDropLimit(blocks: Block[], tetromino: Tetromino, maxDrop: number) {
+		for (const block of blocks) {
+			let blockMaxDrop = this.height - block.y;
+			blockMaxDrop = this._findDropDistance(tetromino, block, blockMaxDrop);
+			maxDrop = Math.min(maxDrop, blockMaxDrop);
+		}
+		return maxDrop;
+	}
+
+	private _findDropDistance(tetromino: Tetromino, block: Block, blockMaxDrop: number) {
+		for (const otherBlock of this.occupiedPositions) {
+			// Exclude blocks from the same tetromino (including deleted blocks that may still be in occupiedPositions)
+			if (otherBlock.parent !== tetromino &&
+				otherBlock.x === block.x &&
+				otherBlock.y > block.y) {
+				blockMaxDrop = Math.min(blockMaxDrop, otherBlock.y - block.y - 1);
+			}
+		}
+		return blockMaxDrop;
 	}
 
 	private _dropTetrominoAsUnit(tetromino: Tetromino, blocks: Block[]) {
@@ -280,7 +343,9 @@ export class Board {
 		this.occupiedPositions = [];
 		this.coordinateBlocks.clear();
 		this.nextTetromino = null;
-		this.activeTetromino.stopListening();
+		if (this.activeTetromino) {
+			this.activeTetromino.stopListening();
+		}
 		this.activeTetromino = null as any;
 
 		// Clear the DOM
@@ -294,27 +359,17 @@ export class Board {
 		let tetromino: Tetromino;
 		const center = Math.floor(this.width / 2);
 		if (this.nextTetromino) {
-			if (
-				this.previewBoard &&
-				this.previewBoard.previewContainer.contains(this.nextTetromino.element)
-			) {
-				this.previewBoard.previewContainer.removeChild(
-					this.nextTetromino.element
-				);
-			}
-			tetromino = this.nextTetromino;
-			tetromino.board = this;
-			this.addTetromino(tetromino);
-			tetromino.updatePosition();
+			tetromino = this._reuseNextTetromino();
 		} else {
-			tetromino = TetrominoFactory.createNew(
-				center,
-				this,
-				this.tetrominoSeedQueue.dequeue()
-			);
-			tetromino.updatePosition();
+			tetromino = this._createNewTetromino(center);
 		}
+		this._configureTetrominoListeners(tetromino);
 		tetromino.startFalling();
+		this._prepareNextTetromino(center);
+		return tetromino;
+	}
+
+	private _prepareNextTetromino(center: number) {
 		this.nextTetromino = TetrominoFactory.createNew(
 			center,
 			null,
@@ -324,6 +379,50 @@ export class Board {
 		if (this.previewBoard && this.previewBoard.showNextTetromino) {
 			this.previewBoard.showNextTetromino(this.nextTetromino);
 		}
+	}
+
+	private _configureTetrominoListeners(tetromino: Tetromino) {
+		tetromino.addEventListener("locked", () => {
+			this.spawnTetromino();
+			if (this.audioManager) {
+				this.audioManager.playSoundEffect("locked");
+			}
+		});
+
+		tetromino.addEventListener("hardDrop", () => {
+			if (this.audioManager) {
+				this.audioManager.playSoundEffect("hardDrop");
+			}
+		});
+
+		if (this.keyBindingManager) {
+			tetromino.activateKeyboardControl(this.keyBindingManager);
+		}
+	}
+
+	private _createNewTetromino(center: number) {
+		const tetromino = TetrominoFactory.createNew(
+			center,
+			this,
+			this.tetrominoSeedQueue.dequeue()
+		);
+		tetromino.updatePosition();
+		return tetromino;
+	}
+
+	private _reuseNextTetromino() {
+		if (this.previewBoard &&
+			// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
+			this.previewBoard.previewContainer.contains(this.nextTetromino.element)) {
+			this.previewBoard.previewContainer.removeChild(
+				// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
+				this.nextTetromino.element
+			);
+		}
+		const tetromino = this.nextTetromino as Tetromino;
+		tetromino.board = this;
+		this.addTetromino(tetromino);
+		tetromino.updatePosition();
 		return tetromino;
 	}
 
