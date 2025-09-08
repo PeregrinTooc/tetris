@@ -1,9 +1,9 @@
-import { PreviewBoard } from "./preview-board";
+import { PreviewBoardImpl } from "./preview-board";
 import { Board } from "./board";
 import { ScoreBoard } from "./score-board";
 import { HoldBoard } from "./hold-board";
 import { AudioManager } from "./audio";
-import { TetrominoSeedQueue } from "./TetrominoSeedQueue";
+import { TetrominoSeedQueueImpl } from "./TetrominoSeedQueue";
 import { KeyBindingManager } from "./key-binding-manager";
 
 const BASE_DROP_TIME = 750;
@@ -31,7 +31,7 @@ function main() {
 		isPaused: false,
 		board: undefined as Board | undefined,
 		tickIntervalId: null as ReturnType<typeof setInterval> | null,
-		tetrominoSeedQueue: new TetrominoSeedQueue(),
+		tetrominoSeedQueue: new TetrominoSeedQueueImpl(),
 		currentScore: 0,
 		scoreBoard: new ScoreBoard(
 			document.getElementById("score-board") as HTMLElement,
@@ -255,7 +255,7 @@ function main() {
 		}
 
 		function createPreviewBoard() {
-			const previewBoard = new PreviewBoard(document.getElementById("next-board") as HTMLElement);
+			const previewBoard = new PreviewBoardImpl(document.getElementById("next-board") as HTMLElement);
 			state.scoreBoard = new ScoreBoard(
 				document.getElementById("score-board") as HTMLElement,
 				document.getElementById("level-board") as HTMLElement,

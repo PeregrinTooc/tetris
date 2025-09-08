@@ -1,4 +1,4 @@
-export class TetrominoSeedQueue {
+export class TetrominoSeedQueueImpl {
     items: number[];
     availableSeeds: number[];
 
@@ -18,3 +18,7 @@ export class TetrominoSeedQueue {
         return this.availableSeeds[randomIndex];
     }
 }
+export interface TetrominoSeedQueue {
+    dequeue: () => number;
+}
+

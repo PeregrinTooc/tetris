@@ -1,7 +1,7 @@
 import { describe, beforeEach, test, expect, jest } from "@jest/globals";
 import { Board } from "../src/board";
 import { TetrominoFactory } from "../src/tetrominoFactory";
-import { PreviewBoard } from "../src/preview-board";
+import { PreviewBoardImpl } from "../src/preview-board";
 import { KeyBindingManager } from "../src/key-binding-manager";
 
 describe("Board", () => {
@@ -9,7 +9,7 @@ describe("Board", () => {
 	let stubQueue: any;
 	let keyBindingManager: KeyBindingManager;
 	const element = document.createElement("div");
-	const previewBoard = new PreviewBoard(document.createElement("div"));
+	const previewBoard = new PreviewBoardImpl(document.createElement("div"));
 
 	beforeEach(() => {
 		keyBindingManager = new KeyBindingManager();

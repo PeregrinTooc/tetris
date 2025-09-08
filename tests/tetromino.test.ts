@@ -1,7 +1,7 @@
 import { describe, beforeEach, test, expect, jest } from "@jest/globals";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 import { Board } from "../src/board";
-import { PreviewBoard } from "../src/preview-board";
+import { PreviewBoardImpl } from "../src/preview-board";
 import { Tetromino } from "../src/tetromino-base";
 import { KeyBindingManager } from "../src/key-binding-manager";
 
@@ -22,7 +22,7 @@ describe("Tetromino", () => {
       20,
       boardWidth,
       document.createElement("div"),
-      new PreviewBoard(element),
+      new PreviewBoardImpl(element),
       stubQueue
     );
     tetromino = TetrominoFactory.createNew(5, board, 1337);

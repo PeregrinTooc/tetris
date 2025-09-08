@@ -1,7 +1,7 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 import { Board } from "../src/board";
-import { PreviewBoard } from "../src/preview-board";
+import { PreviewBoardImpl } from "../src/preview-board";
 import { TetrominoI } from "../src/tetromino-i";
 import { KeyBindingManager } from "../src/key-binding-manager";
 
@@ -17,7 +17,7 @@ describe("TetrominoI", () => {
 			20,
 			11,
 			document.createElement("div"),
-			new PreviewBoard(element),
+			new PreviewBoardImpl(element),
 			{ dequeue: () => 1 } // Mocked TetrominoSeedQueue			
 		);
 		tetromino = TetrominoFactory.createNew(5, board, 1) as TetrominoI;

@@ -3,24 +3,10 @@ import { TetrominoFactory } from "./tetrominoFactory";
 import { HoldBoard } from "./hold-board";
 import { AudioManager } from "./audio";
 import { KeyBindingManager } from "./key-binding-manager";
-
-interface PreviewBoard {
-	element: HTMLElement;
-	previewContainer: HTMLElement;
-	showNextTetromino?: (tetromino: Tetromino) => void;
-}
-
-interface TetrominoSeedQueue {
-	dequeue: () => number;
-}
+import { TetrominoSeedQueue } from "./TetrominoSeedQueue";
+import { PreviewBoard } from "./preview-board";
 
 export class Board {
-	registerEventListener(eventName: string, callback: (event: Event) => void) {
-		this.element.addEventListener(eventName, callback);
-	}
-	pauseGame() {
-		this.activeTetromino.pause();
-	}
 	private height: number;
 	private width: number;
 	private element: HTMLElement;
@@ -29,7 +15,6 @@ export class Board {
 	private tetrominos: Set<Tetromino>;
 	private nextTetromino: Tetromino | null = null;
 	private tetrominoSeedQueue: TetrominoSeedQueue;
-	// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 	private activeTetromino: Tetromino;
 	private occupiedPositions: Block[] = [];
 	private coordinateBlocks: Map<string, HTMLElement> = new Map();
@@ -59,14 +44,29 @@ export class Board {
 		this.audioManager = audioManager;
 	}
 
-	public collision(previewBlocks: Block[]): boolean {
-		const collision =
-			this.occupiedPositions.some((other) =>
-				previewBlocks.some(
-					(pos: Block) => other.x === pos.x && other.y === pos.y
-				)
-			);
-		return collision;
+	public reset(): void {
+		// Clear all game state
+		this.tetrominos.clear();
+		this.occupiedPositions = [];
+		this.coordinateBlocks.clear();
+		this.nextTetromino = null;
+		if (this.activeTetromino) {
+			this.activeTetromino.stopListening();
+		}
+		this.activeTetromino = null as any;
+
+		// Clear the DOM
+		this.element.innerHTML = "";
+		if (this.previewBoard && this.previewBoard.previewContainer) {
+			this.previewBoard.previewContainer.innerHTML = "";
+		}
+	}
+
+	public registerEventListener(eventName: string, callback: (event: Event) => void) {
+		this.element.addEventListener(eventName, callback);
+	}
+	public pauseGame() {
+		this.activeTetromino.pause();
 	}
 
 	public hold(): void {
@@ -75,62 +75,44 @@ export class Board {
 		}
 
 		// Deactivate current piece's controls		
+		const { storedTetromino, currentTetromino } = this._resetActiveTetromino();
+
+		if (storedTetromino) {
+			// Swap pieces
+			this._swap(currentTetromino, storedTetromino);
+		} else {
+			this._moveToHoldBoard(currentTetromino);
+		}
+	}
+
+	private _moveToHoldBoard(currentPiece: Tetromino) {
+		this.holdBoard.showHeldTetromino(currentPiece);
+		currentPiece.board = null;
+		this.spawnTetromino();
+	}
+
+	private _swap(currentPiece: Tetromino, heldPiece: Tetromino) {
+
+		this.holdBoard.showHeldTetromino(currentPiece);
+		currentPiece.board = null;
+		this.addTetromino(heldPiece);
+		heldPiece.reset();
+		heldPiece.startFalling();
+		if (this.keyBindingManager) {
+			this.activeTetromino.activateKeyboardControl(this.keyBindingManager);
+		}
+	}
+
+	private _resetActiveTetromino() {
 		this.activeTetromino.stopListening();
-		const currentPiece = this.activeTetromino;
-		const heldPiece = this.holdBoard.getHeldTetromino();
+		const currentTetromino = this.activeTetromino;
+		const storedTetromino = this.holdBoard.getHeldTetromino();
 
 		// Remove current piece from board
-		this.tetrominos.delete(currentPiece);
+		this.tetrominos.delete(currentTetromino);
 		// Note: element will be moved by showHeldTetromino, not removed here
-
 		this.canHoldPiece = false;
-
-		if (heldPiece) {
-			// Swap pieces
-			this.holdBoard.showHeldTetromino(currentPiece);
-			currentPiece.board = null;
-			this.addTetromino(heldPiece);
-			heldPiece.reset();
-			heldPiece.startFalling();
-			if (this.keyBindingManager) {
-				this.activeTetromino.activateKeyboardControl(this.keyBindingManager);
-			}
-		} else {
-			this.holdBoard.showHeldTetromino(currentPiece);
-			currentPiece.board = null;
-			this.spawnTetromino();
-		}
-	}
-
-	public getActiveTetromino(): Tetromino {
-		return this.activeTetromino;
-	}
-	public inBounds(previewBlocks: Block[]) {
-		return previewBlocks.every(
-			({ x, y }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
-		);
-	}
-	private _canMove(direction: string): boolean {
-		if (this.hasCollision(direction)) {
-			if (direction === "down") {
-				this._raiseGameOverIfStackReachesTop();
-			}
-			return false;
-		}
-		return true;
-	}
-
-	private hasCollision(direction: string): boolean {
-		const dx = direction === "left" ? -1 : direction === "right" ? 1 : 0;
-		const dy = direction === "down" ? 1 : 0;
-		return this.activeTetromino.collides(dx, dy, this.occupiedPositions)
-	}
-
-	private _raiseGameOverIfStackReachesTop(): void {
-		if (this.activeTetromino.top === 0) {
-			const gameOverEvent = new Event("gameover");
-			this.element.dispatchEvent(gameOverEvent);
-		}
+		return { storedTetromino, currentTetromino };
 	}
 
 	public addTetromino(tetromino: Tetromino): void {
@@ -146,6 +128,136 @@ export class Board {
 			this.renderTetrominoCoordinates(tetromino);
 		}
 	}
+
+	public moveTetromino(tetromino: Tetromino, direction: string): boolean {
+		let dx = 0, dy = 0;
+		if (direction === "left") dx = -1;
+		if (direction === "right") dx = 1;
+		if (direction === "down") dy = 1;
+		const previewBlocks = tetromino
+			.getBlocks()
+			.map(({ x, y }: { x: number; y: number }) => ({ x: x + dx, y: y + dy }));
+		const inBounds = previewBlocks.every(
+			({ x, y }: { x: number; y: number }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
+		);
+		if (!inBounds) return false;
+		if (!this._canMove(direction)) {
+			return false;
+		}
+		if (direction === "left") {
+			tetromino.left--;
+		}
+		if (direction === "right") {
+			tetromino.left++;
+		}
+		if (direction === "down") {
+			tetromino.top++;
+		}
+		tetromino.updatePosition();
+		return true;
+	}
+
+
+
+	public spawnTetromino(): Tetromino {
+		let tetromino: Tetromino;
+		const center = Math.floor(this.width / 2);
+		if (this.nextTetromino) {
+			tetromino = this._reuseNextTetromino();
+		} else {
+			tetromino = this._createNewTetromino(center);
+		}
+		this._configureTetrominoListeners(tetromino);
+		tetromino.startFalling();
+		this._prepareNextTetromino(center);
+		return tetromino;
+	}
+
+	private _prepareNextTetromino(center: number) {
+		this.nextTetromino = TetrominoFactory.createNew(
+			center,
+			null,
+			this.tetrominoSeedQueue.dequeue()
+		);
+		this.nextTetromino.updatePosition();
+		if (this.previewBoard && this.previewBoard.showNextTetromino) {
+			this.previewBoard.showNextTetromino(this.nextTetromino);
+		}
+	}
+
+	private _configureTetrominoListeners(tetromino: Tetromino) {
+		tetromino.addEventListener("locked", () => {
+			this.spawnTetromino();
+			if (this.audioManager) {
+				this.audioManager.playSoundEffect("locked");
+			}
+		});
+
+		tetromino.addEventListener("hardDrop", () => {
+			if (this.audioManager) {
+				this.audioManager.playSoundEffect("hardDrop");
+			}
+		});
+
+		if (this.keyBindingManager) {
+			tetromino.activateKeyboardControl(this.keyBindingManager);
+		}
+	}
+
+	private _createNewTetromino(center: number) {
+		const tetromino = TetrominoFactory.createNew(
+			center,
+			this,
+			this.tetrominoSeedQueue.dequeue()
+		);
+		tetromino.updatePosition();
+		return tetromino;
+	}
+
+
+
+	public getActiveTetromino(): Tetromino {
+		return this.activeTetromino;
+	}
+	public inBounds(previewBlocks: Block[]) {
+		return previewBlocks.every(
+			({ x, y }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
+		);
+	}
+	public collision(previewBlocks: Block[]): boolean {
+		const collision =
+			this.occupiedPositions.some((other) =>
+				previewBlocks.some(
+					(pos: Block) => other.x === pos.x && other.y === pos.y
+				)
+			);
+		return collision;
+	}
+
+	private _canMove(direction: string): boolean {
+		if (this._hasCollision(direction)) {
+			if (direction === "down") {
+				this._raiseGameOverIfStackReachesTop();
+			}
+			return false;
+		}
+		return true;
+	}
+
+	private _hasCollision(direction: string): boolean {
+		const dx = direction === "left" ? -1 : direction === "right" ? 1 : 0;
+		const dy = direction === "down" ? 1 : 0;
+		return this.activeTetromino.collides(dx, dy, this.occupiedPositions)
+	}
+
+	private _raiseGameOverIfStackReachesTop(): void {
+		if (this.activeTetromino.top === 0) {
+			const gameOverEvent = new Event("gameover");
+			this.element.dispatchEvent(gameOverEvent);
+		}
+	}
+
+
 
 	private _handleTetrominoLocked(event: Event): void {
 		const customEvent = event as CustomEvent;
@@ -163,6 +275,27 @@ export class Board {
 			// Recursively check for new completed lines
 			this._checkForCompletedLines();
 		}
+	}
+
+	private _removeCompletedLines(completedLines: number[]) {
+		completedLines.forEach(line => {
+			this.occupiedPositions.filter(block => block.y === line).forEach(block => block.delete());
+			this.occupiedPositions = this.occupiedPositions.filter(block => block.y !== line);
+		});
+		let numberOfCompletedLines = completedLines.length;
+		// Dispatch event with line completion data for scoring
+		const scoreEvent = new CustomEvent("linesCompleted", {
+			detail: { linesCompleted: numberOfCompletedLines }
+		});
+		this.element.dispatchEvent(scoreEvent);
+	}
+	private _findCompletedLines(): number[] {
+		const completedLines: number[] = [];
+		for (let y = 0; y < this.height + 1; y++) {
+			const isComplete = this.occupiedPositions.filter(pos => pos.y === y).length === this.width;
+			if (isComplete) completedLines.push(y);
+		}
+		return completedLines.sort();
 	}
 
 	private _dropAllBlocks() {
@@ -288,134 +421,14 @@ export class Board {
 			this.renderTetrominoCoordinates(tetromino);
 		}
 	}
-	private _removeCompletedLines(completedLines: number[]) {
-		completedLines.forEach(line => {
-			this.occupiedPositions.filter(block => block.y === line).forEach(block => block.delete());
-			this.occupiedPositions = this.occupiedPositions.filter(block => block.y !== line);
-		});
-		let numberOfCompletedLines = completedLines.length;
-		// Dispatch event with line completion data for scoring
-		const scoreEvent = new CustomEvent("linesCompleted", {
-			detail: { linesCompleted: numberOfCompletedLines }
-		});
-		this.element.dispatchEvent(scoreEvent);
-	}
-	private _findCompletedLines(): number[] {
-		const completedLines: number[] = [];
-		for (let y = 0; y < this.height + 1; y++) {
-			const isComplete = this.occupiedPositions.filter(pos => pos.y === y).length === this.width;
-			if (isComplete) completedLines.push(y);
-		}
-		return completedLines.sort();
-	}
 
-	public moveTetromino(tetromino: Tetromino, direction: string): boolean {
-		let dx = 0, dy = 0;
-		if (direction === "left") dx = -1;
-		if (direction === "right") dx = 1;
-		if (direction === "down") dy = 1;
-		const previewBlocks = tetromino
-			.getBlocks()
-			.map(({ x, y }: { x: number; y: number }) => ({ x: x + dx, y: y + dy }));
-		const inBounds = previewBlocks.every(
-			({ x, y }: { x: number; y: number }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
-		);
-		if (!inBounds) return false;
-		if (!this._canMove(direction)) {
-			return false;
-		}
-		if (direction === "left") {
-			tetromino.left--;
-		}
-		if (direction === "right") {
-			tetromino.left++;
-		}
-		if (direction === "down") {
-			tetromino.top++;
-		}
-		tetromino.updatePosition();
-		return true;
-	}
 
-	public reset(): void {
-		// Clear all game state
-		this.tetrominos.clear();
-		this.occupiedPositions = [];
-		this.coordinateBlocks.clear();
-		this.nextTetromino = null;
-		if (this.activeTetromino) {
-			this.activeTetromino.stopListening();
-		}
-		this.activeTetromino = null as any;
 
-		// Clear the DOM
-		this.element.innerHTML = "";
-		if (this.previewBoard && this.previewBoard.previewContainer) {
-			this.previewBoard.previewContainer.innerHTML = "";
-		}
-	}
-
-	public spawnTetromino(): Tetromino {
-		let tetromino: Tetromino;
-		const center = Math.floor(this.width / 2);
-		if (this.nextTetromino) {
-			tetromino = this._reuseNextTetromino();
-		} else {
-			tetromino = this._createNewTetromino(center);
-		}
-		this._configureTetrominoListeners(tetromino);
-		tetromino.startFalling();
-		this._prepareNextTetromino(center);
-		return tetromino;
-	}
-
-	private _prepareNextTetromino(center: number) {
-		this.nextTetromino = TetrominoFactory.createNew(
-			center,
-			null,
-			this.tetrominoSeedQueue.dequeue()
-		);
-		this.nextTetromino.updatePosition();
-		if (this.previewBoard && this.previewBoard.showNextTetromino) {
-			this.previewBoard.showNextTetromino(this.nextTetromino);
-		}
-	}
-
-	private _configureTetrominoListeners(tetromino: Tetromino) {
-		tetromino.addEventListener("locked", () => {
-			this.spawnTetromino();
-			if (this.audioManager) {
-				this.audioManager.playSoundEffect("locked");
-			}
-		});
-
-		tetromino.addEventListener("hardDrop", () => {
-			if (this.audioManager) {
-				this.audioManager.playSoundEffect("hardDrop");
-			}
-		});
-
-		if (this.keyBindingManager) {
-			tetromino.activateKeyboardControl(this.keyBindingManager);
-		}
-	}
-
-	private _createNewTetromino(center: number) {
-		const tetromino = TetrominoFactory.createNew(
-			center,
-			this,
-			this.tetrominoSeedQueue.dequeue()
-		);
-		tetromino.updatePosition();
-		return tetromino;
-	}
 
 	private _reuseNextTetromino() {
 		if (this.previewBoard &&
-			// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 			this.previewBoard.previewContainer.contains(this.nextTetromino.element)) {
 			this.previewBoard.previewContainer.removeChild(
-				// @ts-expect-error: Suppress possibly undefined warning for activeTetromino
 				this.nextTetromino.element
 			);
 		}

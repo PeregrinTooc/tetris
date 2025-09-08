@@ -1,11 +1,11 @@
-import { TetrominoSeedQueue } from "../src/TetrominoSeedQueue";
+import { TetrominoSeedQueueImpl } from "../src/TetrominoSeedQueue";
 import { describe, beforeEach, expect, jest } from "@jest/globals";
 
 describe('TetrominoSeedQueue', () => {
-    let seedQueue: TetrominoSeedQueue;
+    let seedQueue: TetrominoSeedQueueImpl;
 
     beforeEach(() => {
-        seedQueue = new TetrominoSeedQueue();
+        seedQueue = new TetrominoSeedQueueImpl();
     });
 
     describe('Constructor', () => {

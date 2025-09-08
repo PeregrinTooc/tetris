@@ -1,7 +1,7 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
 import { TetrominoJ } from "../src/tetromino-j";
 import { Board } from "../src/board";
-import { PreviewBoard } from "../src/preview-board";
+import { PreviewBoardImpl } from "../src/preview-board";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 
 describe("TetrominoJ", () => {
@@ -18,7 +18,7 @@ describe("TetrominoJ", () => {
 			20,
 			11,
 			document.createElement("div"),
-			new PreviewBoard(element),
+			new PreviewBoardImpl(element),
 			stubQueue
 		);
 		tetromino = TetrominoFactory.createNew(5, board, 3) as TetrominoJ;

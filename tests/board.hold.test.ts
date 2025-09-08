@@ -1,7 +1,7 @@
 import { Board } from "../src/board";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 import { HoldBoard } from "../src/hold-board";
-import { TetrominoSeedQueue } from "../src/TetrominoSeedQueue";
+import { TetrominoSeedQueueImpl } from "../src/TetrominoSeedQueue";
 import { expect } from '@jest/globals';
 
 describe("Board - Hold Functionality", () => {
@@ -10,7 +10,7 @@ describe("Board - Hold Functionality", () => {
     let holdBoard: HoldBoard;
     let holdElement: HTMLElement;
     let factory: TetrominoFactory;
-    let seedQueue: TetrominoSeedQueue;
+    let seedQueue: TetrominoSeedQueueImpl;
 
     beforeEach(() => {
         element = document.createElement("div");
@@ -20,7 +20,7 @@ describe("Board - Hold Functionality", () => {
 
         holdBoard = new HoldBoard(holdElement);
         factory = new TetrominoFactory();
-        seedQueue = new TetrominoSeedQueue();
+        seedQueue = new TetrominoSeedQueueImpl();
 
         seedQueue.enqueue(0, 0, 0); // Three T pieces in a row
         board = new Board(20, 10, element, null, seedQueue, holdBoard);

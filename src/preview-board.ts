@@ -1,4 +1,6 @@
-export class PreviewBoard {
+import { Tetromino } from "./tetromino-base";
+
+export class PreviewBoardImpl {
 	element: HTMLElement;
 	previewContainer: HTMLElement;
 	size: number;
@@ -17,3 +19,9 @@ export class PreviewBoard {
 		this.previewContainer.appendChild(tetromino.element);
 	}
 }
+export interface PreviewBoard {
+	element: HTMLElement;
+	previewContainer: HTMLElement;
+	showNextTetromino?: (tetromino: Tetromino) => void;
+}
+

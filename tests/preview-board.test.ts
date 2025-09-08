@@ -1,11 +1,11 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
-import { PreviewBoard } from "../src/preview-board";
+import { PreviewBoardImpl } from "../src/preview-board";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 import { Board } from "../src/board";
 
 describe("PreviewBoard", () => {
 	let element: HTMLElement;
-	let previewBoard: PreviewBoard;
+	let previewBoard: PreviewBoardImpl;
 	let board: Board;
 	let stubQueue: any;
 	beforeEach(() => {
@@ -16,7 +16,7 @@ describe("PreviewBoard", () => {
 		nextPiece.id = "next-piece";
 		previewContainer.appendChild(nextPiece);
 		element.appendChild(previewContainer);
-		previewBoard = new PreviewBoard(element);
+		previewBoard = new PreviewBoardImpl(element);
 		stubQueue = { dequeue: () => 1337 };
 		board = new Board(
 			20,
