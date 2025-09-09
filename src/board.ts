@@ -126,6 +126,12 @@ export class Board {
 		}
 	}
 
+	public removeTetromino(tetromino: Tetromino): void {
+		if (this.tetrominos.has(tetromino)) {
+			this.tetrominos.delete(tetromino);
+		}
+	}
+
 	public moveTetromino(tetromino: Tetromino, direction: string): boolean {
 		let dx = 0, dy = 0;
 		if (direction === "left") dx = -1;
@@ -215,6 +221,57 @@ export class Board {
 
 	public getActiveTetromino(): Tetromino {
 		return this.activeTetromino;
+	}
+	public log(): void {
+		console.group("Board");
+		console.log("meta", { height: this.height, width: this.width, canHoldPiece: this.canHoldPiece });
+
+		console.group("Tetrominos");
+		for (const t of this.tetrominos) {
+			const tid = (t as any).id || "unknown";
+			if (typeof (t as any).log === "function") {
+				console.groupCollapsed(`Tetromino ${tid}`);
+				(t as any).log();
+				console.groupEnd();
+			} else {
+				console.log("  Tetromino (no log):", tid);
+			}
+		}
+		console.groupEnd(); // Tetrominos
+
+		if (this.nextTetromino) {
+			console.group("Next Tetromino");
+			(this.nextTetromino as any).log?.();
+			console.groupEnd();
+		}
+		if (this.activeTetromino) {
+			console.group("Active Tetromino");
+			(this.activeTetromino as any).log?.();
+			console.groupEnd();
+		}
+
+		// Group occupied positions by their y (row) and sort each row by x ascending
+		console.group("Occupied Positions by row (y)");
+		const rows = new Map<number, Block[]>();
+		for (const b of this.occupiedPositions) {
+			const arr = rows.get(b.y) || [];
+			arr.push(b);
+			rows.set(b.y, arr);
+		}
+		const sortedYs = Array.from(rows.keys()).sort((a, b) => a - b);
+		for (const y of sortedYs) {
+			const rowBlocks = rows.get(y)!;
+			rowBlocks.sort((a, b) => a.x - b.x);
+			console.group(`y=${y}`);
+			rowBlocks.forEach(b => {
+				if (typeof (b as any).log === "function") (b as any).log();
+				else console.log("  Block:", { x: b.x, y: b.y });
+			});
+			console.groupEnd();
+		}
+		console.groupEnd(); // Occupied Positions
+
+		console.groupEnd(); // Board
 	}
 	public inBounds(previewBlocks: Block[]) {
 		return previewBlocks.every(

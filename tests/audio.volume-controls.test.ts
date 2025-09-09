@@ -52,7 +52,7 @@ describe('AudioManager volume controls', () => {
         maxBtn.id = 'music-max';
         document.body.appendChild(maxBtn);
 
-        audioManager.initializeControls(true, false);
+        audioManager.initializeControls();
 
         // Test slider input event
         musicSlider.value = '50';
@@ -89,7 +89,7 @@ describe('AudioManager volume controls', () => {
         maxBtn.id = 'sfx-max';
         document.body.appendChild(maxBtn);
 
-        audioManager.initializeControls(true, false);
+        audioManager.initializeControls();
 
         // Test slider input event
         sfxSlider.value = '25';

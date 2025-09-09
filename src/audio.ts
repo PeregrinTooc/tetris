@@ -81,7 +81,7 @@ export class AudioManager {
         this.pauseMusic();
     }
 
-    public initializeControls(gameRunning: boolean, isPaused: boolean) {
+    public initializeControls() {
         // Get audio controls dynamically
         const musicVolumeSlider = document.getElementById("music-volume") as HTMLInputElement;
         const sfxVolumeSlider = document.getElementById("sfx-volume") as HTMLInputElement;

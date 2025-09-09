@@ -21,6 +21,11 @@ export class Block {
 		this.parent.removeBlock(this);
 	}
 
+	// Log only x, y and tetromino id as requested
+	public log(): void {
+		console.log("  Block ->", { x: this.x, y: this.y, tetrominoId: this.parent?.id });
+	}
+
 }
 
 export abstract class Tetromino {
@@ -105,6 +110,9 @@ export abstract class Tetromino {
 	public removeBlock(block: Block): void {
 		this.blocks = this.blocks.filter((b) => b !== block);
 		this.updateBlocks();
+		if (this.blocks.length === 0 && this.board) {
+			this.board.removeTetromino(this);
+		}
 	}
 	private _createElement(): HTMLElement {
 		return this._createDiv(this.getClassName());
@@ -303,5 +311,17 @@ export abstract class Tetromino {
 			const block = this._createDiv("block", x - this.left, y - this.top);
 			this.element.appendChild(block);
 		});
+	}
+
+	// Parent-level logging for tetrominoes. Children inherit this.
+	public log(): void {
+		console.log(" Tetromino ->", { id: this.id, left: this.left, top: this.top, locked: this.locked });
+		if (this.blocks && this.blocks.length > 0) {
+			console.log("  Blocks:");
+			this.blocks.forEach(b => {
+				if ((b as any).log) (b as any).log();
+				else console.log("    ", { x: b.x, y: b.y });
+			});
+		}
 	}
 }

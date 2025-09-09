@@ -16,6 +16,7 @@ declare global {
 	interface Window {
 		setTetrominoDropTime: (ms: number) => void;
 		pushTetrominoSeed: (seed: number) => void;
+		logBoard?: () => void;
 	}
 }
 
@@ -39,7 +40,7 @@ function main() {
 			setTetrominoDropTime, BASE_DROP_TIME
 		)
 	};
-	audioManager.initializeControls(state.gameRunning, state.isPaused);
+	audioManager.initializeControls();
 	registerGlobalTetrominoFunctions();
 	initializePauseToggle();
 	initializeGameOverHandler();
@@ -150,6 +151,14 @@ function main() {
 
 		window.pushTetrominoSeed = function (...items: number[]): void {
 			state.tetrominoSeedQueue.enqueue(...items);
+		};
+
+		window.logBoard = function (): void {
+			if (state.board && typeof (state.board as any).log === "function") {
+				(state.board as any).log();
+			} else {
+				console.log("No board available to log.");
+			}
 		};
 	}
 
