@@ -36,33 +36,40 @@
                 </div>
             </div>
         </div>
-        <button id="start-button" style="margin-top: 24px;">Start Game</button>
-        <div class="controls-panel">
-            <div class="audio-controls">
-                <div class="control-group">
-                    <label for="music-toggle">Music</label>
-                    <label class="switch">
-                        <input type="checkbox" id="music-toggle" checked>
-                        <span class="slider"></span>
-                    </label>
+        <div class="controls-container">
+            <button id="start-button">Start Game</button>
+
+            <div class="controls-row">
+                <div class="controls-panel">
+                    <h3>Controls <button data-settings-button>Customize</button></h3>
+                    <div class="key-grid">
+                        <div class="key-item"><span class="key">←</span> Move Left</div>
+                        <div class="key-item"><span class="key">→</span> Move Right</div>
+                        <div class="key-item"><span class="key">↓</span> Soft Drop</div>
+                        <div class="key-item"><span class="key">↑</span> Rotate</div>
+                        <div class="key-item"><span class="key">Space</span> Hard Drop</div>
+                        <div class="key-item"><span class="key">P</span> or <span class="key">Esc</span> Pause</div>
+                    </div>
                 </div>
-                <div class="control-group">
-                    <label for="sfx-toggle">Sound Effects</label>
-                    <label class="switch">
-                        <input type="checkbox" id="sfx-toggle" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="key-bindings">
-                <h3>Controls <button data-settings-button>Customize</button></h3>
-                <div class="key-grid">
-                    <div class="key-item"><span class="key">←</span> Move Left</div>
-                    <div class="key-item"><span class="key">→</span> Move Right</div>
-                    <div class="key-item"><span class="key">↓</span> Soft Drop</div>
-                    <div class="key-item"><span class="key">↑</span> Rotate</div>
-                    <div class="key-item"><span class="key">Space</span> Hard Drop</div>
-                    <div class="key-item"><span class="key">P</span> or <span class="key">Esc</span> Pause</div>
+
+                <div class="audio-panel">
+                    <h3>Audio</h3>
+                    <div class="audio-controls">
+                        <div class="vertical-slider-group">
+                            <label>Music</label>
+                            <button id="music-max" class="volume-btn-small" aria-label="Max Music">🔊</button>
+                            <input type="range" id="music-volume" min="0" max="100" value="100" step="1"
+                                class="vertical-slider" orient="vertical">
+                            <button id="music-min" class="volume-btn-small" aria-label="Mute Music">🔇</button>
+                        </div>
+                        <div class="vertical-slider-group">
+                            <label>Sound FX</label>
+                            <button id="sfx-max" class="volume-btn-small" aria-label="Max SFX">🔊</button>
+                            <input type="range" id="sfx-volume" min="0" max="100" value="100" step="1"
+                                class="vertical-slider" orient="vertical">
+                            <button id="sfx-min" class="volume-btn-small" aria-label="Mute SFX">🔇</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

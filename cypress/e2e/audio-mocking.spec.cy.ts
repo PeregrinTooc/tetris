@@ -18,4 +18,16 @@ describe('Audio Mocking', () => {
             expect(() => audioContext.resume()).not.to.throw();
         });
     });
+
+    it('should show music and sfx volume sliders with min/max buttons', () => {
+        cy.visit('/');
+        // Music controls
+        cy.get('#music-volume').should('exist');
+        cy.get('#music-min').should('exist');
+        cy.get('#music-max').should('exist');
+        // SFX controls
+        cy.get('#sfx-volume').should('exist');
+        cy.get('#sfx-min').should('exist');
+        cy.get('#sfx-max').should('exist');
+    });
 });
