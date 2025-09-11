@@ -128,12 +128,11 @@ export class Board {
 
 	public removeTetromino(tetromino: Tetromino): void {
 		if (this.tetrominos.has(tetromino)) {
-			if (this.occupiedPositions.some(b => b.parent === tetromino)) {
-
-				console.error("Removing tetromino with blocks still in occupiedPositions:");
+			if (this.occupiedPositions.some(b => b.parent.id === tetromino.id)) {
+				console.error("Removing tetromino with id " + tetromino.id + " with blocks still in occupiedPositions:");
 				tetromino.log();
 				this.log();
-				this.occupiedPositions = this.occupiedPositions.filter(b => b.parent !== tetromino);
+				this.occupiedPositions = this.occupiedPositions.filter(b => b.parent.id !== tetromino.id);
 			}
 			this.tetrominos.delete(tetromino);
 		}

@@ -2,7 +2,6 @@ export class ScoreBoard {
     private element: HTMLElement;
     private levelElement: HTMLElement;
     private currentLevel: number = 1;
-    private currentScore: number = 0;
     private static readonly LEVEL_MULTIPLIER = 2000;
     private static readonly SPEED_REDUCTION_FACTOR = 0.8;
 
@@ -14,7 +13,6 @@ export class ScoreBoard {
     }
 
     setScore(score: number): void {
-        this.currentScore = score;
         this.element.textContent = `Score: ${score}`;
 
         // Check for level changes

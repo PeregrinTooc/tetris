@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "type": "module",
   "scripts": {
-    "start": "vite",
+    "start": "vite build && vite preview --open true",
     "dev": "vite",
     "build": "vite build",
     "test": "jest --maxWorkers=100% --silent && cypress run --quiet",

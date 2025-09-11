@@ -30,15 +30,11 @@ function main() {
 		tetrominoDropTime: 750,
 		gameRunning: false,
 		isPaused: false,
-		board: undefined as Board | undefined,
+		board: null as Board,
 		tickIntervalId: null as ReturnType<typeof setInterval> | null,
 		tetrominoSeedQueue: new TetrominoSeedQueueImpl(),
 		currentScore: 0,
-		scoreBoard: new ScoreBoard(
-			document.getElementById("score-board") as HTMLElement,
-			document.getElementById("level-board") as HTMLElement,
-			setTetrominoDropTime, BASE_DROP_TIME
-		)
+		scoreBoard: null as ScoreBoard,
 	};
 	audioManager.initializeControls();
 	registerGlobalTetrominoFunctions();
@@ -146,7 +142,7 @@ function main() {
 
 	function registerGlobalTetrominoFunctions() {
 		window.setTetrominoDropTime = function (ms: number): void {
-			state.tetrominoDropTime = ms;
+			_setTetrominoDropTime(ms);
 		};
 
 		window.pushTetrominoSeed = function (...items: number[]): void {
@@ -186,8 +182,9 @@ function main() {
 		}
 	}
 
-	function setTetrominoDropTime(ms: number): void {
+	function _setTetrominoDropTime(ms: number): void {
 		state.tetrominoDropTime = ms;
+		startTicking();
 	}
 
 	function startGame(): void {
@@ -215,6 +212,11 @@ function main() {
 			initializeScoreBoard();
 
 			function initializeScoreBoard() {
+				state.scoreBoard = new ScoreBoard(
+					document.getElementById("score-board") as HTMLElement,
+					document.getElementById("level-board") as HTMLElement,
+					_setTetrominoDropTime, BASE_DROP_TIME
+				);
 				state.scoreBoard.setScore(state.currentScore);
 				state.scoreBoard.addEventListener("levelChange", (event: Event) => {
 					const customEvent = event as CustomEvent;
@@ -265,11 +267,6 @@ function main() {
 
 		function createPreviewBoard() {
 			const previewBoard = new PreviewBoardImpl(document.getElementById("next-board") as HTMLElement);
-			state.scoreBoard = new ScoreBoard(
-				document.getElementById("score-board") as HTMLElement,
-				document.getElementById("level-board") as HTMLElement,
-				setTetrominoDropTime, BASE_DROP_TIME
-			);
 			return previewBoard;
 		}
 	}
@@ -296,6 +293,7 @@ function main() {
 		state.gameRunning = false;
 		state.isPaused = false;
 		state.currentScore = 0;
+		state.tetrominoDropTime = BASE_DROP_TIME;
 
 		// Reset UI elements
 		const gameOverElement = document.getElementById("game-over");
