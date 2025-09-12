@@ -33,23 +33,20 @@ This TypeScript/JavaScript Tetris implementation follows strict TDD practices wi
 - E2E tests: Use `cy.window()` to seed tetrominos and control timing for deterministic tests
 - Test setup pattern: `win.setTetrominoDropTime(100); win.pushTetrominoSeed(1337);`
 
-**Commands:**
-
-- `npm run dev` - Start Vite dev server
-- `npm test` - Run all tests (blocked by Husky pre-push)
-- `npm run test:unit` - Jest only
-- `npm run test:unit:output` - Jest with verbose output to `test-output.txt` file (AI should use this)
-- `npm run test:e2e` - Cypress only
-
 **AI Testing Guidelines:**
 
 - Always use `npm run test:unit:output` when running tests for debugging
-- Read test results from `test-output.txt` file instead of terminal output
-- Always clean up `test-output.txt` before new runs
+- Read unit test results from `test-output.txt` file instead of terminal output
 - Always use `npm run test:e2e:output` for Cypress with output to `test-output-e2e.txt`
-- Read test results from `test-output-e2e.txt` file instead of terminal output
-- Always clean up `test-output-e2e.txt` before new runs
+- Read e2e test results from `test-output-e2e.txt` file instead of terminal output
 - Use this pattern for specific test files: `npx jest path/to/test.file.ts --verbose > specific-test-output.txt 2>&1`
+
+**Commands:**
+
+- `npm run dev` - Start Vite dev server
+- `npm test` - Run all tests
+- `npm run test:unit` - Jest only
+- `npm run test:e2e` - Cypress only
 
 ## Code Conventions
 

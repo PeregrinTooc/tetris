@@ -49,7 +49,7 @@ export default defineConfig({
 
 		// Viewport optimizations
 		viewportWidth: 1000, // Smaller viewport for speed
-		viewportHeight: 600,
+		viewportHeight: 1000,
 
 		// Test isolation for parallel safety
 		testIsolation: true,
