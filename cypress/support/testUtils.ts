@@ -116,3 +116,26 @@ export function pressHardDrop() {
 	cy.wait(50);
 }
 
+/**
+ * Simulates pressing the hold key (default 'h'). Use instead of raw typing to ease future key remapping.
+ */
+export function pressHold() {
+	cy.get('body').trigger('keydown', { key: 'h' });
+}
+
+/**
+ * Simulates toggling pause (default 'p').
+ */
+export function pressPause() {
+	cy.get('body').trigger('keydown', { key: 'p' });
+}
+
+/**
+ * Convenience: enqueue multiple seeds in one call using existing window varargs push.
+ */
+export function addTetrominoSeeds(win: Window, ...seeds: number[]) {
+	if (seeds.length === 0) return;
+	// Prefer one push to reduce log noise; cast to any to satisfy variadic signature defined at runtime
+	(win.pushTetrominoSeed as any)(...seeds);
+}
+

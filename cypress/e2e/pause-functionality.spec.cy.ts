@@ -1,3 +1,5 @@
+import { pressPause } from "../support/testUtils";
+
 describe("Pause functionality", () => {
     beforeEach(() => {
         cy.visit("/");
@@ -13,8 +15,7 @@ describe("Pause functionality", () => {
         cy.get("[data-tetromino-id]").then(($tetromino) => {
             const initialTop = $tetromino.position().top;
 
-            // Press P to pause
-            cy.get("body").type("p");
+            pressPause();
 
             // Verify pause overlay is shown
             cy.get("#pause-overlay").should("be.visible");
@@ -27,8 +28,7 @@ describe("Pause functionality", () => {
                 expect($pausedTetromino.position().top).to.equal(initialTop);
             });
 
-            // Resume game with P and verify movement continues
-            cy.get("body").type("p");
+            pressPause();
 
             // Verify pause overlay is hidden
             cy.get("#pause-overlay").should("not.be.visible");

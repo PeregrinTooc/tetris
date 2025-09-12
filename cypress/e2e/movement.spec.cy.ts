@@ -1,4 +1,4 @@
-import { setTetrominoDropTimeInMiliseconds, addTetrominoBase, pressLeft, pressRight, pressHardDrop, doTimes } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoBase, pressLeft, pressRight, pressHardDrop, pressDown, doTimes } from "../support/testUtils";
 
 describe("Tetris Game Movement", () => {
   beforeEach(() => {
@@ -93,7 +93,7 @@ describe("Tetris Game Movement", () => {
       const tetrominoId = $tetromino.attr("data-tetromino-id") as string;
       const initialTop = parseInt($tetromino.css("top"), 10);
 
-      cy.get("body").type("{downarrow}");
+  pressDown();
 
       cy.get(`[data-tetromino-id="${tetrominoId}"]`).not(".block").should($el2 => {
         const newTop = parseInt($el2.css("top"), 10);
@@ -115,36 +115,4 @@ function validateTetrominoDrop(tetrominoId: string) {
   });
 }
 
-function moveTetrominoToLeftEdge() {
-  // Helper function for moving tetromino to left edge using ID selectors
-  cy.get("#game-board [data-tetromino-id]").first().then($tetromino => {
-    const tetrominoId = $tetromino.attr("data-tetromino-id") as string;
-    const moveLeft = () => {
-      cy.get(`[data-tetromino-id="${tetrominoId}"]`).not(".block").then($currentTetromino => {
-        const left = parseInt($currentTetromino.css("left"), 10);
-        if (left > 0) {
-          cy.get("body").type("{leftarrow}");
-          moveLeft();
-        }
-      });
-    };
-    moveLeft();
-  });
-}
-
-function moveTetrominoToRightEdge() {
-  // Helper function for moving tetromino to right edge using ID selectors
-  cy.get("#game-board [data-tetromino-id]").first().then($tetromino => {
-    const tetrominoId = $tetromino.attr("data-tetromino-id") as string;
-    const moveRight = () => {
-      cy.get(`[data-tetromino-id="${tetrominoId}"]`).not(".block").then($currentTetromino => {
-        const right = parseInt($currentTetromino.css("right"), 10);
-        if (right > 0) {
-          cy.get("body").type("{rightarrow}");
-          moveRight();
-        }
-      });
-    };
-    moveRight();
-  });
-}
+// Removed ad-hoc movement recursion helpers; prefer explicit directional presses via provided helpers.

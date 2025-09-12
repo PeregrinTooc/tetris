@@ -95,7 +95,7 @@ Piece enqueue helpers (each pushes a seed): `addTetrominoT(win)`, `addTetrominoI
 
 Timing: `setTetrominoDropTimeInMiliseconds(win, ms)` (note spelling retained in file—reuse exactly; consider refactor only with search + update tests).
 
-Input simulation: `pressLeft()`, `pressRight()`, `pressDown()` (soft drop scoring), `pressRotate()`, `pressHardDrop()` (triggers hard drop event + waits 50ms). Prefer these over ad‑hoc `cy.get('body').trigger(...)` to keep future key-binding centralization simple.
+Input simulation: `pressLeft()`, `pressRight()`, `pressDown()` (soft drop scoring), `pressRotate()`, `pressHardDrop()` (triggers hard drop event + waits 50ms), `pressHold()` (hold/swap current piece), `pressPause()` (toggle pause). Prefer these over ad‑hoc `cy.get('body').trigger(...)` to keep future key-binding centralization simple.
 
 Loop utility: `doTimes(n, fn)` for repeated presses, e.g. lateral positioning:
 ```
@@ -106,6 +106,8 @@ cy.window().then(win => {
 doTimes(4, () => pressLeft());
 pressHardDrop();
 ```
+
+Additional enqueue convenience: `addTetrominoSeeds(win, ...seeds)` batches multiple seeds in one call (reduces log noise versus multiple single pushes).
 
 Guidelines:
 1. Always enqueue ALL pieces needed for the scenario up front (before start or before previous lock) via wrappers.

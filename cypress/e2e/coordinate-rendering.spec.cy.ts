@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { setTetrominoDropTimeInMiliseconds, addTetrominoBase } from "../support/testUtils";
+import { setTetrominoDropTimeInMiliseconds, addTetrominoBase, pressRight } from "../support/testUtils";
 
 describe("Coordinate-Based Rendering", () => {
     beforeEach(() => {
@@ -28,8 +28,8 @@ describe("Coordinate-Based Rendering", () => {
         cy.get("#game-board .coordinate-block").first().then($block => {
             const initialLeft = parseInt($block.css("left"));
 
-            // Move tetromino right
-            cy.get("body").type("{rightarrow}");
+            // Move tetromino right via helper
+            pressRight();
 
             // Block should have moved
             cy.get("#game-board .coordinate-block").first().should($movedBlock => {

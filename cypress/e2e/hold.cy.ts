@@ -1,18 +1,12 @@
+import { pressHold, pressHardDrop, pressLeft, pressDown, addTetrominoSeeds } from "../support/testUtils";
+
 describe('Tetris Hold Functionality', () => {
     beforeEach(() => {
         cy.visit('/');
-
-        // Set up deterministic piece sequence for testing
-        cy.window().then((win) => {
-            win.setTetrominoDropTime(10000); // Very slow drops for testing
-            // Queue up many of the same pieces for deterministic testing
-            win.pushTetrominoSeed(0); // First T piece
-            win.pushTetrominoSeed(0); // Second T piece for swap test
-            win.pushTetrominoSeed(0); // Third T piece as backup
-            win.pushTetrominoSeed(0); // Fourth T piece as backup
+        cy.window().then(win => {
+            win.setTetrominoDropTime(10000); // Slow fall to remove timing races
+            addTetrominoSeeds(win, 0,0,0,0); // deterministic sequence of T pieces
         });
-
-        // Start game and wait for first piece
         cy.get('#start-button').click();
         cy.get('#game-board .tetromino').should('exist');
     });
@@ -23,9 +17,7 @@ describe('Tetris Hold Functionality', () => {
             const initialId = $tetromino.attr('data-tetromino-id');
             expect(initialId).to.not.be.undefined;
 
-            // Press H to hold
-            cy.get('body').type('h');
-            cy.wait(500);
+            pressHold();
 
             // First piece should now be in hold board with same ID
             cy.get('#hold-board').find(`[data-tetromino-id="${initialId}"]`).should('exist');
@@ -45,9 +37,7 @@ describe('Tetris Hold Functionality', () => {
             expect($tetromino.attr('data-tetromino-id')).to.equal(firstId);
             cy.log(`First piece ID: ${firstId}`);
 
-            // Hold first piece
-            cy.get('body').type('h');
-            cy.wait(500);
+            pressHold();
 
             // Get second piece's ID
             cy.get('#game-board .tetromino').then($secondTetromino => {
@@ -61,17 +51,15 @@ describe('Tetris Hold Functionality', () => {
                 cy.log('First hold completed successfully');
 
                 // Drop the current piece to lock it so we can hold again
-                cy.get('body').trigger('keydown', { key: ' ' }); // Space bar for hard drop
-                cy.wait(500); // Wait for the piece to lock and new piece to spawn
+                pressHardDrop();
+                cy.get('#game-board .tetromino[data-tetromino-id="3"]').should('exist');
 
                 // Get the third piece's ID (spawned after second piece locked)
                 cy.get('#game-board .tetromino[data-tetromino-id="3"]').then($thirdTetromino => {
                     const thirdId = $thirdTetromino.attr('data-tetromino-id');
                     cy.log(`Third piece ID: ${thirdId}`);
 
-                    // Press H again to swap third piece with first piece
-                    cy.get('body').type('h');
-                    cy.wait(500);
+                    pressHold();
 
                     // Debug: Log what's actually on the game board
                     cy.get('#game-board').then($board => {
@@ -99,17 +87,14 @@ describe('Tetris Hold Functionality', () => {
             const initialLeft = $tetromino.position().left;
             expect(tetrominoId).to.not.be.undefined;
 
-            // Press H to hold piece
-            cy.get('body').type('h');
-            cy.wait(100);
+            pressHold();
 
             // Get held piece by ID
             cy.get(`#hold-board [data-tetromino-id="${tetrominoId}"]`).then($held => {
                 const heldPosition = $held.position().left;
 
                 // Try to move with arrow keys
-                cy.get('body').type('{leftarrow}');
-                cy.wait(100);
+                pressLeft();
 
                 // Position should not change
                 cy.get(`#hold-board [data-tetromino-id="${tetrominoId}"]`).then($afterMove => {
@@ -120,11 +105,8 @@ describe('Tetris Hold Functionality', () => {
     });
 
     it('should re-enable keyboard controls when piece is swapped back in', () => {
-        // Hold T piece
-        cy.get('body').type('h');
-
-        // Swap T piece back in
-        cy.get('body').type('h');
+    pressHold();
+    pressHold();
 
         // Store reference to piece after swap
         cy.get('#game-board .tetromino-t')
@@ -133,8 +115,7 @@ describe('Tetris Hold Functionality', () => {
         cy.get('@swappedPiece').then($initial => {
             const initialPos = $initial.position().left;
 
-            // Try moving left
-            cy.get('body').type('{leftarrow}');
+            pressLeft();
 
             // Verify piece moved
             cy.get('#game-board .tetromino-t').then($afterMove => {
@@ -147,10 +128,7 @@ describe('Tetris Hold Functionality', () => {
         // Reset key bindings by clearing local storage and reload page
         cy.clearLocalStorage();
         cy.reload();
-        cy.window().then((win) => {
-            win.setTetrominoDropTime(10000); // Very slow drops for testing
-            win.pushTetrominoSeed(0); // T piece for testing
-        });
+        cy.window().then(win => { win.setTetrominoDropTime(10000); addTetrominoSeeds(win,0); });
         // Open settings
         cy.get('[data-settings-button]').click();
         cy.get('[data-key-rebind-menu]').should('be.visible');
@@ -181,24 +159,20 @@ describe('Tetris Hold Functionality', () => {
                 const initialId = $initial.attr('data-tetromino-id');
 
                 // Try old key - should not trigger hold, piece should stay in same place
-                cy.get('body').type('h');
-                cy.wait(500);
+                pressHold();
 
                 // Same piece should still be active on game board
                 cy.get('#game-board').find(`[data-tetromino-id="${initialId}"]`).should('exist');
                 cy.get('#hold-board .tetromino').should('not.exist');
 
                 // Try new key - should trigger hold and move piece to hold board
-                cy.get('body').type('x');
-                cy.wait(500);
+                cy.get('body').type('x'); // custom rebind not wrapped; intentional
                 cy.get('#hold-board').find(`[data-tetromino-id="${initialId}"]`).should('exist');
             });
     });
 
     it('should prevent holding piece twice without locking', () => {
-        // Hold first T piece
-        cy.get('body').type('h');
-        cy.wait(500);
+    pressHold();
 
         // Store reference to second T piece
         cy.get('#game-board .tetromino')
@@ -209,8 +183,7 @@ describe('Tetris Hold Functionality', () => {
             const initialPos = $initial.position().left;
 
             // Try to hold again immediately
-            cy.get('body').type('h');
-            cy.wait(500);
+            pressHold();
 
             // T piece should still be active and in same position
             cy.get('#game-board .tetromino')
@@ -223,29 +196,23 @@ describe('Tetris Hold Functionality', () => {
 
     it('should allow holding after piece lock', () => {
         // Wait for first T piece and hold it
-        cy.get('#game-board .tetromino').should('have.class', 'tetromino-t');
-        cy.get('body').type('h');
-        cy.wait(500);
+    cy.get('#game-board .tetromino').should('have.class', 'tetromino-t');
+    pressHold();
 
         // Wait for second T piece and drop it
-        cy.get('#game-board .tetromino').should('have.class', 'tetromino-t');
-        cy.get('body').type('{downarrow}'.repeat(20));
+    cy.get('#game-board .tetromino').should('have.class', 'tetromino-t');
+    for (let i=0;i<20;i++) pressDown();
 
-        // Wait for lock and third T piece spawn
-        cy.wait(1100);
+    // Wait for third piece by presence of data-tetromino-id="3" or at least one tetromino existing
         cy.get('#game-board .tetromino').should('have.class', 'tetromino-t');
 
-        // Should be able to hold T piece now
-        cy.get('body').type('h');
-        cy.wait(500);
+    pressHold();
         cy.get('#hold-board .tetromino').should('have.class', 'tetromino-t');
     });
 
     it('should clear the hold board after reset', () => {
-        // Wait for first T piece and hold it
-        cy.get('#game-board .tetromino').should('have.class', 'tetromino-t');
-        cy.get('body').type('h');
-        cy.wait(500);
+    cy.get('#game-board .tetromino').should('have.class', 'tetromino-t');
+    pressHold();
 
         // Start game and wait for first piece
         cy.get('#start-button').click();
