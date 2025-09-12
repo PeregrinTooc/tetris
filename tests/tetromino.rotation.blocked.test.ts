@@ -1,27 +1,18 @@
 import { describe, beforeEach, test, expect } from "@jest/globals";
-import { Board } from "../src/board";
-import { TetrominoFactory } from "../src/tetrominoFactory";
-import { KeyBindingManager } from "../src/key-binding-manager";
+import { createTestBoard, createTetromino, rotateTetromino } from "./testUtils.unit";
 
 describe("Tetromino rotation with boundaries and collisions", () => {
-	let board: Board;
+	let board: any;
 	let element: HTMLDivElement;
-	let stubQueue: any;
-	let previewBoard: any;
-	let keyBindingManager: KeyBindingManager;
 
 	beforeEach(() => {
 		element = document.createElement("div");
-		stubQueue = { dequeue: () => 1 };
-		previewBoard = null;
-		board = new Board(20, 10, element, previewBoard, stubQueue);
-		keyBindingManager = new KeyBindingManager();
+		board = createTestBoard({ height: 20, width: 10, seeds: [1], preview: false, element });
 	});
 
 	test("Tetromino does not rotate if it would go out of left boundary", () => {
-		const tetromino = TetrominoFactory.createNew(1, board, 1); // I piece, left edge (pivot at 1)
-		tetromino.activateKeyboardControl(keyBindingManager);
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+		const tetromino = createTetromino(board, 1, 1); // I piece, left edge (pivot at 1)
+		rotateTetromino(tetromino);
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[0, 0],
 			[1, 0],
@@ -31,9 +22,8 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 	});
 
 	test("Tetromino does not rotate if it would go out of right boundary", () => {
-		const tetromino = TetrominoFactory.createNew(7, board, 1); // I piece, right edge (pivot at 7)
-		tetromino.activateKeyboardControl(keyBindingManager);
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+		const tetromino = createTetromino(board, 1, 7); // I piece, right edge (pivot at 7)
+		rotateTetromino(tetromino);
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[6, 0],
 			[7, 0],
@@ -43,9 +33,8 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 	});
 
 	test("Tetromino does not rotate if it would go out of top boundary", () => {
-		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, top (pivot at 4,0)
-		tetromino.activateKeyboardControl(keyBindingManager);
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+		const tetromino = createTetromino(board, 1, 4); // I piece, top (pivot at 4,0)
+		rotateTetromino(tetromino);
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[3, 0],
 			[4, 0],
@@ -55,10 +44,9 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 	});
 
 	test("Tetromino does not rotate if it would go out of bottom boundary", () => {
-		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, bottom (pivot at 4,18)
-		tetromino.activateKeyboardControl(keyBindingManager);
+		const tetromino = createTetromino(board, 1, 4); // I piece, bottom (pivot at 4,18)
 		tetromino.top = 18;
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+		rotateTetromino(tetromino);
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[4, 17],
 			[4, 18],
@@ -69,12 +57,10 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("Tetromino does not rotate if another block is in the way", () => {
 		// Place a blocking tetromino at (4,0)
-		const blocker = TetrominoFactory.createNew(4, board, 2); // O piece, but only one block matters
+		const blocker = createTetromino(board, 2, 4); // O piece, but only one block matters
 		blocker.top = 0;
-		//board.tetrominos.add(blocker);
-		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, blocked (pivot at 4,0)
-		tetromino.activateKeyboardControl(keyBindingManager);
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+		const tetromino = createTetromino(board, 1, 4); // I piece, blocked (pivot at 4,0)
+		rotateTetromino(tetromino);
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[3, 0],
 			[4, 0],
@@ -84,9 +70,8 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 	});
 
 	test("Tetromino rotates if there is space", () => {
-		const tetromino = TetrominoFactory.createNew(4, board, 1); // I piece, free (pivot at 4,0)
-		tetromino.activateKeyboardControl(keyBindingManager);
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+		const tetromino = createTetromino(board, 1, 4); // I piece, free (pivot at 4,0)
+		rotateTetromino(tetromino);
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[3, 0],
 			[4, 0],
@@ -96,9 +81,8 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 	});
 
 	test("O tetromino does not rotate (should be unchanged)", () => {
-		const tetromino = TetrominoFactory.createNew(4, board, 2); // O piece
-		tetromino.activateKeyboardControl(keyBindingManager);
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+		const tetromino = createTetromino(board, 2, 4); // O piece
+		rotateTetromino(tetromino);
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[4, 1],
 			[5, 1],
@@ -109,11 +93,10 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 
 	test("T tetromino does not rotate if blocked by another block", () => {
 		// Place a blocking tetromino at (5,1)
-		const blocker = TetrominoFactory.createNew(5, board, 2); // O piece
+		const blocker = createTetromino(board, 2, 5); // O piece
 		blocker.top = 1;
-		//board.tetrominos.add(blocker);
-		const tetromino = TetrominoFactory.createNew(4, board, 0); // T piece
-		tetromino.rotate();
+		const tetromino = createTetromino(board, 0, 4); // T piece
+		rotateTetromino(tetromino);
 		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
 			[4, 0],
 			[3, 0],
