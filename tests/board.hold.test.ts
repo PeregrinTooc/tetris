@@ -1,15 +1,14 @@
 import { Board } from "../src/board";
-import { TetrominoFactory } from "../src/tetrominoFactory";
 import { HoldBoard } from "../src/hold-board";
 import { TetrominoSeedQueueImpl } from "../src/TetrominoSeedQueue";
 import { expect } from '@jest/globals';
+import { createTestBoard } from "./testUtils.unit";
 
 describe("Board - Hold Functionality", () => {
     let board: Board;
     let element: HTMLElement;
     let holdBoard: HoldBoard;
     let holdElement: HTMLElement;
-    let factory: TetrominoFactory;
     let seedQueue: TetrominoSeedQueueImpl;
 
     beforeEach(() => {
@@ -18,13 +17,13 @@ describe("Board - Hold Functionality", () => {
         document.body.appendChild(element);
         document.body.appendChild(holdElement);
 
-        holdBoard = new HoldBoard(holdElement);
-        factory = new TetrominoFactory();
-        seedQueue = new TetrominoSeedQueueImpl();
+    holdBoard = new HoldBoard(holdElement);
+    seedQueue = new TetrominoSeedQueueImpl();
 
-        seedQueue.enqueue(0, 0, 0); // Three T pieces in a row
-        board = new Board(20, 10, element, null, seedQueue, holdBoard);
-        board.spawnTetromino(); // Initialize like main.ts does
+    seedQueue.enqueue(0, 0, 0); // Three T pieces in a row
+    // createTestBoard handles preview/keybindings wiring, we pass the element and queue via a minimal wrapper by reusing Board directly here
+    board = new Board(20, 10, element, null, seedQueue, holdBoard);
+    board.spawnTetromino();
         board.canHoldPiece = true;
     });
 

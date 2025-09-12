@@ -116,5 +116,34 @@ Guidelines:
 4. When adding new input helpers, follow naming `press<Action>` and implement in `testUtils.ts` rather than duplicating triggers in tests.
 5. If refactoring the drop-time helper name, update both instructions and every test that imports it—its current long name prevents accidental collision.
 
+### Jest Unit Test Helpers (`tests/testUtils.unit.ts`)
+Use these helpers to keep unit tests deterministic and concise without relying on DOM key events:
+
+- `createTestBoard({ height, width, seeds, preview, element, keyBindings })`: Returns a `Board` wired with a stub queue that dequeues from `seeds` in order. Set `preview: false` when you don't assert preview behavior.
+- `createTetromino(board, seed, left)`: Factory wrapper creating a tetromino by seed at a `left` position.
+- Actions: `moveTetromino(t, dir)`, `rotateTetromino(t, dir)`, `hardDropTetromino(t)`, `lockTetromino(t)`, `holdPiece(board)`.
+- Events/assertions: `listenForEvent(el, name)`, `expectTetrominoPosition(t, { left, top })`, `expectTetrominoLocked(t)`, `expectTetrominoBlocks(t, blocks)`, `expectLinesCleared(event, n)`.
+
+Example patterns:
+```
+const element = document.createElement("div");
+const board = createTestBoard({ height: 4, width: 4, seeds: [2,2], preview: false, element });
+
+element.addEventListener("linesCompleted", (e: Event) => {
+	const { linesCompleted } = (e as CustomEvent).detail;
+	expect(linesCompleted).toBe(2);
+});
+
+const leftO = createTetromino(board, 2, 0);
+lockTetromino(leftO);
+const rightO = createTetromino(board, 2, 2);
+lockTetromino(rightO);
+```
+
+Guidelines:
+1. Prefer helpers over dispatching keyboard events in unit tests.
+2. Always specify `seeds` up front for deterministic spawns; pass `preview: false` unless preview is asserted.
+3. Keep tests focused on one behavior; extract small helpers if your test exceeds ~10 lines of logic.
+
 ---
 If any section is unclear (e.g. scoring specifics, rotation edge cases, line-clear sequencing), request refinement and include failing test context.
