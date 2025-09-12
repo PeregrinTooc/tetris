@@ -30,15 +30,6 @@ let musicVolume = 1.0; // 0.0 to 1.0
 let sfxVolume = 1.0; // 0.0 to 1.0
 
 export class AudioManager {
-    // For testing: allow direct setting of volume
-    public setMusicVolume(vol: number) {
-        musicVolume = vol;
-        bgMusicLevel1.volume = vol;
-    }
-    public setSfxVolume(vol: number) {
-        sfxVolume = vol;
-        Object.values(soundEffects).forEach(s => s.volume = vol);
-    }
 
     public updateMusic(gameRunning: boolean, isPaused: boolean) {
         if (musicVolume > 0 && gameRunning && !isPaused) {
