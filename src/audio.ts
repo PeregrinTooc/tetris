@@ -8,12 +8,12 @@ bgMusicLevel1.loop = true;
 bgMusicLevel1.preload = "auto";
 
 export const soundEffects = {
-    hardDrop: new Audio("resources/effects/hardDrop.mp3"),
-    levelUp: new Audio("resources/effects/levelUp.mp3"),
-    lineComplete: new Audio("resources/effects/lineCompletion.mp3"),
-    tetrisClear: new Audio("resources/effects/tetrisClear.mp3"),
-    gameOver: new Audio("resources/effects/gameOver.mp3"),
-    locked: new Audio("resources/effects/locked.mp3")
+    hardDrop: new Audio("resources/sfx/hardDrop.mp3"),
+    levelUp: new Audio("resources/sfx/levelUp.mp3"),
+    lineComplete: new Audio("resources/sfx/lineCompletion.mp3"),
+    tetrisClear: new Audio("resources/sfx/tetrisClear.mp3"),
+    gameOver: new Audio("resources/sfx/gameOver.mp3"),
+    locked: new Audio("resources/sfx/locked.mp3")
 };
 // Preload all sound effects
 Object.values(soundEffects).forEach(sound => {
