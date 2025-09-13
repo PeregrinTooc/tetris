@@ -3,7 +3,8 @@
 		"Orta.vscode-jest",
 		"cypress.vscode-cypress",
 		"ms-vscode.vscode-typescript-next",
-		"GitHub.copilot"
+		"GitHub.copilot",
+		"esbenp.prettier-vscode"
 	],
 	"unwantedRecommendations": []
 }

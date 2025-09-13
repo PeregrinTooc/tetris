@@ -29,6 +29,8 @@
 	"[json]": {
 		"editor.defaultFormatter": "vscode.json-language-features"
 	},
+	"prettier.configPath": ".prettierrc.json",
+	"prettier.requireConfig": true,
 	"jest.runMode": "on-demand",
 	"jest.jestCommandLine": "npm run test:unit",
 	"cypressHelper.specPattern": "cypress/e2e/**/*.cy.ts",
