@@ -2,7 +2,6 @@
 	"editor.insertSpaces": false,
 	"editor.tabSize": 4,
 	"editor.detectIndentation": false,
-	"editor.formatOnSave": true,
 	"files.eol": "\n",
 	"files.trimTrailingWhitespace": true,
 	"files.insertFinalNewline": true,
@@ -36,5 +35,34 @@
 		"statusBar.background": "#222222",
 		"statusBar.noFolderBackground": "#222222",
 		"statusBar.debuggingBackground": "#444444"
+	},
+	"git.autofetch": true,
+	"saveAndRun": {
+		"commands": [
+			{
+				"match": ".js$",
+				"cmd": "npm test",
+				"useShortcut": false,
+				"silent": false,
+				"isAsync": true
+			}
+		]
+	},
+	"files.autoSave": "onFocusChange",
+	"editor.formatOnSave": true,
+	"git.confirmSync": false,
+	"github.copilot.nextEditSuggestions.enabled": true,
+	"github.copilot.chat.codesearch.enabled": true,
+	"github.copilot.chat.agent.thinkingTool": true,
+	"chat.agent.maxRequests": 100,
+	"terminal.integrated.defaultProfile.windows": "PowerShell",
+	"terminal.integrated.defaultProfile.osx": "zsh",
+	"chat.mcp.autostart": "newAndOutdated",
+	"chat.tools.terminal.autoApprove": {
+		"npm run": true,
+		"npx cypress run": true,
+		"git add": true,
+		"git push": true,
+		"git commit": true
 	}
 }
