@@ -69,6 +69,10 @@ Unit only (verbose file output): `npm run test:unit:output`
 E2E deterministic output: `npm run test:e2e:output`
 Parallel full suite: `npm run test:parallel`
 
+### Important Command Chaining Policy
+
+Under no circumstances should commands be chained in the terminal. Always execute commands separately to ensure clarity and prevent unintended consequences.
+
 ### Git Push Policy (Important)
 
 - Always run `git push` as a separate command. Do not chain it together with other commands (e.g., avoid `&& git push`). This prevents long E2E pre-push hooks from blocking unrelated steps and makes failures easier to spot.

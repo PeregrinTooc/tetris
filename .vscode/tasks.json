@@ -40,10 +40,7 @@
 			"command": "echo",
 			"args": ["Running unit then e2e tests..."],
 			"problemMatcher": [],
-			"dependsOn": [
-				"unit tests",
-				"e2e tests (output)"
-			],
+			"dependsOn": ["unit tests", "e2e tests (output)"],
 			"dependsOrder": "sequence",
 			"presentation": {
 				"reveal": "always",
