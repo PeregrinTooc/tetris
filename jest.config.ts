@@ -1,6 +1,7 @@
 import type { Config } from "jest";
 
 const config: Config = {
+	setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
 	preset: "ts-jest",
 	testEnvironment: "jsdom",
 

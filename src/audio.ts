@@ -1,11 +1,16 @@
-// (Testing helpers are only inside AudioManager class below)
-// Audio management
+const mainMenuMusic = new Audio("resources/music/mainMenu.mp3");
 const bgMusicLevel1 = new Audio("resources/music/fromLevel1.mp3");
 const bgMusicLevel8 = new Audio("resources/music/fromLevel8.mp3");
 const bgMusicLevel15 = new Audio("resources/music/fromLevel15.mp3");
 
+mainMenuMusic.loop = true;
+mainMenuMusic.preload = "auto";
 bgMusicLevel1.loop = true;
 bgMusicLevel1.preload = "auto";
+bgMusicLevel8.loop = true;
+bgMusicLevel8.preload = "auto";
+bgMusicLevel15.loop = true;
+bgMusicLevel15.preload = "auto";
 
 export const soundEffects = {
 	hardDrop: new Audio("resources/sfx/hardDrop.mp3"),
@@ -30,21 +35,78 @@ let musicVolume = 1.0; // 0.0 to 1.0
 let sfxVolume = 1.0; // 0.0 to 1.0
 
 export class AudioManager {
-	public updateMusic(gameRunning: boolean, isPaused: boolean) {
-		if (musicVolume > 0 && gameRunning && !isPaused) {
+	private currentMusic: HTMLAudioElement | null = null;
+	private currentLevel: number = 1;
+
+	/**
+	 * Call this to play main menu music (when not in game)
+	 */
+	public playMainMenuMusic() {
+		this._switchMusic(mainMenuMusic);
+	}
+
+	/**
+	 * Call this to start game music for a given level (1+)
+	 */
+	public playGameMusic(level: number) {
+		let music: HTMLAudioElement;
+		if (level >= 15) {
+			music = bgMusicLevel15;
+		} else if (level >= 8) {
+			music = bgMusicLevel8;
+		} else {
+			music = bgMusicLevel1;
+		}
+		this.currentLevel = level;
+		this._switchMusic(music);
+	}
+
+	/**
+	 * Call this when the level changes during the game
+	 */
+	public handleLevelChange(newLevel: number) {
+		// Only switch if the music track should change
+		if (
+			(this.currentLevel < 8 && newLevel >= 8) ||
+			(this.currentLevel < 15 && newLevel >= 15)
+		) {
+			this.playGameMusic(newLevel);
+		}
+		this.currentLevel = newLevel;
+	}
+
+	/**
+	 * Call this to stop all music (e.g. on game over)
+	 */
+	public stopMusic() {
+		if (this.currentMusic) {
+			this.currentMusic.pause();
+			this.currentMusic.currentTime = 0;
+		}
+		this.currentMusic = null;
+	}
+
+	/**
+	 * Internal: switch to a new music track, pausing any previous
+	 */
+	private _switchMusic(music: HTMLAudioElement) {
+		if (this.currentMusic && this.currentMusic !== music) {
+			this.currentMusic.pause();
+			this.currentMusic.currentTime = 0;
+		}
+		this.currentMusic = music;
+		if (musicVolume > 0) {
+			music.volume = musicVolume;
 			this.startMusic();
-			bgMusicLevel1.volume = musicVolume;
-			bgMusicLevel1.play().catch((error) => {
+			music.play().catch((error) => {
 				console.log("Error playing music:", error);
 			});
-		} else {
-			bgMusicLevel1.pause();
 		}
 	}
 
 	public playSoundEffect(effect: keyof typeof soundEffects) {
 		const sound = soundEffects[effect];
-		if (sfxVolume > 0 && sound !== bgMusicLevel1) {
+		if (sfxVolume > 0) {
 			sound.currentTime = 0;
 			sound.volume = sfxVolume;
 			this.startMusic();
@@ -61,12 +123,16 @@ export class AudioManager {
 	}
 
 	public pauseMusic() {
-		bgMusicLevel1.pause();
+		if (this.currentMusic) {
+			this.currentMusic.pause();
+		}
 	}
 
 	public resetMusic() {
-		bgMusicLevel1.currentTime = 0;
-		this.pauseMusic();
+		if (this.currentMusic) {
+			this.currentMusic.currentTime = 0;
+			this.currentMusic.pause();
+		}
 	}
 
 	public initializeControls() {

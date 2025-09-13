@@ -199,4 +199,7 @@ Guidelines:
 
 ---
 
+Never hesitate to ask for clarification or additional examples if any part of this guide is unclear. The goal is to empower you to contribute confidently and effectively.
+Never report tests as passing without running both unit and E2E output scripts and inspecting the artifacts.
+
 If any section is unclear (e.g. scoring specifics, rotation edge cases, line-clear sequencing), request refinement and include failing test context.

@@ -37,6 +37,7 @@ function main() {
 		scoreBoard: null as ScoreBoard,
 	};
 	audioManager.initializeControls();
+	audioManager.playMainMenuMusic(); // Play main menu music on load
 	registerGlobalTetrominoFunctions();
 	initializePauseToggle();
 	initializeGameOverHandler();
@@ -172,7 +173,7 @@ function main() {
 			gameBoardElement.addEventListener("gameover", () => {
 				stopTicking();
 				audioManager.playSoundEffect("gameOver");
-				audioManager.pauseMusic();
+				audioManager.stopMusic(); // Stop all music on game over
 				const gameOverElement = document.createElement("div");
 				gameOverElement.id = "game-over";
 				gameOverElement.className = "game-over";
@@ -190,8 +191,8 @@ function main() {
 	function startGame(): void {
 		state.gameRunning = true;
 		state.currentScore = 0;
-		audioManager.startMusic();
-		audioManager.updateMusic(state.gameRunning, state.isPaused); // Start background music if enabled
+		// Start game music for level 1
+		audioManager.playGameMusic(1);
 
 		configureGameElements();
 		switchStartButtonToReset();
@@ -223,6 +224,7 @@ function main() {
 					const customEvent = event as CustomEvent;
 					const { newLevel } = customEvent.detail;
 					audioManager.playSoundEffect("levelUp");
+					audioManager.handleLevelChange(newLevel); // Switch music if needed
 				});
 			}
 
@@ -288,7 +290,7 @@ function main() {
 		if (pauseOverlay) {
 			pauseOverlay.style.display = state.isPaused ? "block" : "none";
 		}
-		audioManager.updateMusic(state.gameRunning, state.isPaused); // Pause/resume music based on game state
+		// audioManager.updateMusic removed: music is now managed by playMainMenuMusic, playGameMusic, and handleLevelChange
 	}
 
 	function resetGame(): void {
@@ -339,7 +341,7 @@ function main() {
 			holdContainer.innerHTML = "";
 		}
 
-		audioManager.resetMusic();
+		audioManager.playMainMenuMusic(); // Play main menu music on reset
 	}
 
 	function startTicking(): void {
