@@ -1,15 +1,12 @@
 import { describe, beforeEach, test, expect, jest } from "@jest/globals";
 import { TetrominoFactory } from "../src/tetrominoFactory";
-import { Board } from "../src/board";
-import { KeyBindingManager } from "../src/key-binding-manager";
+import { createTestBoard, createTetromino, rotateTetromino } from "./testUtils.unit";
 
 describe("O-shaped Tetromino", () => {
-	let board: Board;
-	let keyBindingManager: KeyBindingManager;
+	let board: any;
 
 	beforeEach(() => {
-		board = new Board(20, 10, { appendChild: jest.fn() } as any, null, { dequeue: () => 2 });
-		keyBindingManager = new KeyBindingManager();
+		board = createTestBoard({ height: 20, width: 10, seeds: [2], preview: false, keyBindings: false, element: { appendChild: jest.fn() } as any });
 	});
 
 	test("should create a 2x2 square shape", () => {
@@ -23,10 +20,9 @@ describe("O-shaped Tetromino", () => {
 	});
 
 	test("should not rotate (remain same shape)", () => {
-		const tetromino = TetrominoFactory.createNew(5, board, 2);
+		const tetromino = createTetromino(board, 2, 5);
 		const originalShape = tetromino.getBlocks();
-		tetromino.activateKeyboardControl(keyBindingManager);
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+		rotateTetromino(tetromino);
 		expect(tetromino.getBlocks()).toEqual(originalShape);
 	});
 });
