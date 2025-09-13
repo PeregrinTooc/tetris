@@ -28,44 +28,48 @@ tetris-game/
 ## Development
 
 1. **Setup:**
-   ```bash
-   git clone <repository-url>
-   cd tetris-game
-   npm install
-   ```
+
+    ```bash
+    git clone <repository-url>
+    cd tetris-game
+    npm install
+    ```
 
 2. **Run locally:**
-   ```bash
-   npm run dev
-   ```
-   Access at `http://localhost:5173`
+
+    ```bash
+    npm run dev
+    ```
+
+    Access at `http://localhost:5173`
 
 3. **Run tests:**
-   ```bash
-   # Run all tests with parallel e2e (fastest complete suite ~17s)
-   npm run test:parallel
 
-   # Run all tests sequentially (standard ~27s)
-   npm test
+    ```bash
+    # Run all tests with parallel e2e (fastest complete suite ~17s)
+    npm run test:parallel
 
-   # Run only unit tests (super fast ~0.9s)
-   npm run test:unit
+    # Run all tests sequentially (standard ~27s)
+    npm test
 
-   # Run in watch mode for development
-   npm run test:watch
+    # Run only unit tests (super fast ~0.9s)
+    npm run test:unit
 
-   # Run only end-to-end tests (optimized ~13s)
-   npm run test:e2e
+    # Run in watch mode for development
+    npm run test:watch
 
-   # Run e2e tests with maximum optimizations
-   npm run test:e2e:fast
+    # Run only end-to-end tests (optimized ~13s)
+    npm run test:e2e
 
-   # Run e2e tests in parallel groups (local ~14s)
-   npm run test:e2e:groups
+    # Run e2e tests with maximum optimizations
+    npm run test:e2e:fast
 
-   # Run e2e tests with CI parallel execution  
-   npm run test:e2e:ci
-   ```
+    # Run e2e tests in parallel groups (local ~14s)
+    npm run test:e2e:groups
+
+    # Run e2e tests with CI parallel execution
+    npm run test:e2e:ci
+    ```
 
 ## Deployment
 

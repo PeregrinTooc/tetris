@@ -84,35 +84,35 @@ export function setTetrominoDropTimeInMiliseconds(win: Window, ms: number) {
  * Simulates pressing the left arrow key.
  */
 export function pressLeft() {
-	cy.get('body').trigger('keydown', { key: 'ArrowLeft' });
+	cy.get("body").trigger("keydown", { key: "ArrowLeft" });
 }
 
 /**
  * Simulates pressing the right arrow key.
  */
 export function pressRight() {
-	cy.get('body').trigger('keydown', { key: 'ArrowRight' });
+	cy.get("body").trigger("keydown", { key: "ArrowRight" });
 }
 
 /**
  * Simulates pressing the down arrow key.
  */
 export function pressDown() {
-	cy.get('body').trigger('keydown', { key: 'ArrowDown' });
+	cy.get("body").trigger("keydown", { key: "ArrowDown" });
 }
 
 /**
  * Simulates pressing the up arrow key (rotate).
  */
 export function pressRotate() {
-	cy.get('body').trigger('keydown', { key: 'ArrowUp' });
+	cy.get("body").trigger("keydown", { key: "ArrowUp" });
 }
 
 /**
  * Simulates pressing the space bar (hard drop).
  */
 export function pressHardDrop() {
-	cy.get('body').trigger('keydown', { key: ' ' });
+	cy.get("body").trigger("keydown", { key: " " });
 	cy.wait(50);
 }
 
@@ -120,14 +120,14 @@ export function pressHardDrop() {
  * Simulates pressing the hold key (default 'h'). Use instead of raw typing to ease future key remapping.
  */
 export function pressHold() {
-	cy.get('body').trigger('keydown', { key: 'h' });
+	cy.get("body").trigger("keydown", { key: "h" });
 }
 
 /**
  * Simulates toggling pause (default 'p').
  */
 export function pressPause() {
-	cy.get('body').trigger('keydown', { key: 'p' });
+	cy.get("body").trigger("keydown", { key: "p" });
 }
 
 /**
@@ -138,4 +138,3 @@ export function addTetrominoSeeds(win: Window, ...seeds: number[]) {
 	// Prefer one push to reduce log noise; cast to any to satisfy variadic signature defined at runtime
 	(win.pushTetrominoSeed as any)(...seeds);
 }
-

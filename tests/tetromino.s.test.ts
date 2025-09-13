@@ -16,7 +16,7 @@ describe("TetrominoS", () => {
 			{ x: 5, y: 0, parent: tetro },
 			{ x: 6, y: 0, parent: tetro },
 			{ x: 5, y: 1, parent: tetro },
-			{ x: 4, y: 1, parent: tetro }
+			{ x: 4, y: 1, parent: tetro },
 		]);
 	});
 
@@ -26,8 +26,7 @@ describe("TetrominoS", () => {
 			{ x: 4, y: -1, parent: tetro },
 			{ x: 4, y: 0, parent: tetro },
 			{ x: 5, y: 0, parent: tetro },
-			{ x: 5, y: 1, parent: tetro }
+			{ x: 5, y: 1, parent: tetro },
 		]);
 	});
-
 });

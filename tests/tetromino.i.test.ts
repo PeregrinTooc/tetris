@@ -8,7 +8,13 @@ describe("TetrominoI", () => {
 	let board: any;
 
 	beforeEach(() => {
-		board = createTestBoard({ height: 20, width: 11, seeds: [1], preview: false, keyBindings: false });
+		board = createTestBoard({
+			height: 20,
+			width: 11,
+			seeds: [1],
+			preview: false,
+			keyBindings: false,
+		});
 		tetromino = createTetromino(board, 1, 5) as TetrominoI;
 	});
 	test("should create I tetromino with correct initial position and shape", () => {

@@ -1,4 +1,3 @@
-
 import { Board } from "./board";
 import { KeyBindingManager } from "./key-binding-manager";
 
@@ -25,7 +24,6 @@ export class Block {
 	public log(): void {
 		console.log("  Block ->", { x: this.x, y: this.y, tetrominoId: this.parent?.id });
 	}
-
 }
 
 export abstract class Tetromino {
@@ -53,17 +51,16 @@ export abstract class Tetromino {
 		if (this.board) this.board.addTetromino(this);
 	}
 
-
 	public pause() {
 		this.paused = !this.paused;
 	}
 	public collapseBlocks() {
 		for (const block of this.blocks) {
-			let blocksBelow = this.blocks.filter(b => b.x === block.x && b.y > block.y)
-			let highestBelowBlockY = Math.min(...blocksBelow.map(b => b.y))
+			let blocksBelow = this.blocks.filter((b) => b.x === block.x && b.y > block.y);
+			let highestBelowBlockY = Math.min(...blocksBelow.map((b) => b.y));
 			if (blocksBelow.length > 0 && highestBelowBlockY - 1 > block.y) {
 				block.drop();
-				this.collapseBlocks(); // Recursively collapse until no more blocks can drop			
+				this.collapseBlocks(); // Recursively collapse until no more blocks can drop
 			}
 		}
 	}
@@ -101,8 +98,6 @@ export abstract class Tetromino {
 		this.updateBlocks();
 	}
 
-
-
 	protected createBlocks(): void {
 		this.blocks = this.getBlocks();
 	}
@@ -118,8 +113,7 @@ export abstract class Tetromino {
 		return this._createDiv(this.getClassName());
 	}
 	public collides(dx: number, dy: number, occupiedPositions: Block[]): boolean {
-		const movingBlocks = this.getBlocks()
-			.map(({ x, y }) => ({ x: x + dx, y: y + dy }));
+		const movingBlocks = this.getBlocks().map(({ x, y }) => ({ x: x + dx, y: y + dy }));
 		return movingBlocks.some(({ x, y }) =>
 			occupiedPositions.some(({ x: bx, y: by }) => bx === x && by === y)
 		);
@@ -179,7 +173,7 @@ export abstract class Tetromino {
 	private _dispatchScoreEvent(points: number): void {
 		const event = new CustomEvent("scoreEvent", {
 			detail: { points },
-			bubbles: true
+			bubbles: true,
 		});
 		this.element.dispatchEvent(event);
 	}
@@ -296,8 +290,7 @@ export abstract class Tetromino {
 
 	public updateBlocks(): void {
 		this.blocks = this.getBlocks();
-		while (this.element.firstChild)
-			this.element.removeChild(this.element.firstChild);
+		while (this.element.firstChild) this.element.removeChild(this.element.firstChild);
 		this._renderBlocks();
 
 		// Update coordinate rendering if enabled
@@ -315,10 +308,15 @@ export abstract class Tetromino {
 
 	// Parent-level logging for tetrominoes. Children inherit this.
 	public log(): void {
-		console.log(" Tetromino ->", { id: this.id, left: this.left, top: this.top, locked: this.locked });
+		console.log(" Tetromino ->", {
+			id: this.id,
+			left: this.left,
+			top: this.top,
+			locked: this.locked,
+		});
 		if (this.blocks && this.blocks.length > 0) {
 			console.log("  Blocks:");
-			this.blocks.forEach(b => {
+			this.blocks.forEach((b) => {
 				if ((b as any).log) (b as any).log();
 				else console.log("    ", { x: b.x, y: b.y });
 			});

@@ -1,8 +1,6 @@
 import { Tetromino, Block } from "./tetromino-base";
 
 export class TetrominoZ extends Tetromino {
-
-
 	getClassName(): string {
 		return "tetromino tetromino-z";
 	}
@@ -16,7 +14,7 @@ export class TetrominoZ extends Tetromino {
 					this.pivot,
 					new Block({ x: this.pivot.x - 1, y: this.pivot.y, parent: this }),
 					new Block({ x: this.pivot.x, y: this.pivot.y + 1, parent: this }),
-					new Block({ x: this.pivot.x + 1, y: this.pivot.y + 1, parent: this })
+					new Block({ x: this.pivot.x + 1, y: this.pivot.y + 1, parent: this }),
 				];
 				break;
 			default:
@@ -24,7 +22,7 @@ export class TetrominoZ extends Tetromino {
 					new Block({ x: this.pivot.x, y: this.pivot.y - 1, parent: this }),
 					this.pivot,
 					new Block({ x: this.pivot.x - 1, y: this.pivot.y, parent: this }),
-					new Block({ x: this.pivot.x - 1, y: this.pivot.y + 1, parent: this })
+					new Block({ x: this.pivot.x - 1, y: this.pivot.y + 1, parent: this }),
 				];
 		}
 

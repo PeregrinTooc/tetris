@@ -66,7 +66,7 @@ function main() {
 
 		// Handle rebind button clicks
 		const rebindButtons = document.querySelectorAll("[data-action]");
-		rebindButtons.forEach(button => {
+		rebindButtons.forEach((button) => {
 			button.addEventListener("click", (e) => {
 				const target = e.currentTarget as HTMLButtonElement;
 				if (!target) return;
@@ -118,7 +118,7 @@ function main() {
 
 	function updateKeyBindDisplay() {
 		const bindings = keyBindingManager.getCurrentBindings();
-		bindings.forEach(binding => {
+		bindings.forEach((binding) => {
 			const displayElement = document.querySelector(`[data-current-${binding.action}-bind]`);
 			if (displayElement) {
 				displayElement.textContent = binding.key;
@@ -215,7 +215,8 @@ function main() {
 				state.scoreBoard = new ScoreBoard(
 					document.getElementById("score-board") as HTMLElement,
 					document.getElementById("level-board") as HTMLElement,
-					_setTetrominoDropTime, BASE_DROP_TIME
+					_setTetrominoDropTime,
+					BASE_DROP_TIME
 				);
 				state.scoreBoard.setScore(state.currentScore);
 				state.scoreBoard.addEventListener("levelChange", (event: Event) => {
@@ -226,7 +227,9 @@ function main() {
 			}
 
 			function initializeGameBoard() {
-				const holdContainer = document.querySelector("#hold-board .hold-container") as HTMLElement;
+				const holdContainer = document.querySelector(
+					"#hold-board .hold-container"
+				) as HTMLElement;
 				const holdBoard = new HoldBoard(holdContainer);
 
 				state.board = new Board(
@@ -240,13 +243,13 @@ function main() {
 					audioManager
 				);
 
-				state.board.registerEventListener("linesCompleted", handleCompleteLinesEvent)
+				state.board.registerEventListener("linesCompleted", handleCompleteLinesEvent);
 				state.board.registerEventListener("scoreEvent", handleScoreEvent);
 
 				function handleCompleteLinesEvent(event: Event) {
 					const customEvent = event as CustomEvent;
 					const linesCompleted = customEvent.detail.linesCompleted;
-					state.currentScore += (linesCompleted * (linesCompleted + 1) * 50);
+					state.currentScore += linesCompleted * (linesCompleted + 1) * 50;
 
 					if (linesCompleted >= 4) {
 						audioManager.playSoundEffect("tetrisClear");
@@ -254,7 +257,7 @@ function main() {
 						audioManager.playSoundEffect("lineComplete");
 					}
 					state.scoreBoard.setScore(state.currentScore);
-				};
+				}
 
 				function handleScoreEvent(event: Event) {
 					const customEvent = event as CustomEvent;
@@ -266,11 +269,12 @@ function main() {
 		}
 
 		function createPreviewBoard() {
-			const previewBoard = new PreviewBoardImpl(document.getElementById("next-board") as HTMLElement);
+			const previewBoard = new PreviewBoardImpl(
+				document.getElementById("next-board") as HTMLElement
+			);
 			return previewBoard;
 		}
 	}
-
 
 	function togglePause() {
 		if (!state.gameRunning) return;
@@ -323,7 +327,6 @@ function main() {
 			state.board.canHoldPiece = true;
 		}
 
-
 		// Clear preview
 		const previewContainer = document.querySelector("#preview-container");
 		if (previewContainer) {
@@ -359,5 +362,4 @@ function main() {
 		if (!state.board) return;
 		state.board.spawnTetromino();
 	}
-
 }

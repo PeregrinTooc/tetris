@@ -1,7 +1,6 @@
 import { Tetromino, Block } from "./tetromino-base";
 
 export class TetrominoL extends Tetromino {
-
 	getClassName(): string {
 		return "tetromino tetromino-l";
 	}

@@ -1,136 +1,182 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Tetris</title>
+		<link rel="stylesheet" href="styles.css" />
+		<link rel="stylesheet" href="/src/key-bindings.css" />
+	</head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tetris</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="/src/key-bindings.css">
-</head>
+	<body>
+		<div style="display: flex; flex-direction: column; align-items: center">
+			<h1>Tetris</h1>
+			<div style="display: flex; flex-direction: row; gap: 32px; align-items: flex-start">
+				<div style="display: flex; flex-direction: column; gap: 16px">
+					<div id="score-board" class="score-box">Score: 0</div>
+					<div id="level-board" class="score-box">Level: 1</div>
+				</div>
+				<div id="game-board" style="position: relative">
+					<div
+						id="pause-overlay"
+						style="
+							display: none;
+							position: absolute;
+							top: 50%;
+							left: 50%;
+							transform: translate(-50%, -50%);
+							background: rgba(0, 0, 0, 0.8);
+							color: white;
+							padding: 20px;
+							z-index: 100;
+							font-size: 24px;
+						"
+					>
+						Paused
+					</div>
+					<canvas id="tetris"></canvas>
+				</div>
+				<div class="side-panel">
+					<div id="next-board">
+						<h3>Next</h3>
+						<div id="preview-container" style="position: relative; height: 96px">
+							<canvas id="next-piece" width="96" height="96"></canvas>
+						</div>
+					</div>
+					<div id="hold-board">
+						<h3>Hold (H)</h3>
+						<div class="hold-container" style="position: relative; height: 96px"></div>
+					</div>
+				</div>
+			</div>
+			<div class="controls-container">
+				<button id="start-button">Start Game</button>
 
-<body>
-    <div style="display: flex; flex-direction: column; align-items: center;">
-        <h1>Tetris</h1>
-        <div style="display: flex; flex-direction: row; gap: 32px; align-items: flex-start;">
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-                <div id="score-board" class="score-box">Score: 0</div>
-                <div id="level-board" class="score-box">Level: 1</div>
-            </div>
-            <div id="game-board" style="position: relative;">
-                <div id="pause-overlay"
-                    style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.8); color: white; padding: 20px; z-index: 100; font-size: 24px;">
-                    Paused</div>
-                <canvas id="tetris"></canvas>
-            </div>
-            <div class="side-panel">
-                <div id="next-board">
-                    <h3>Next</h3>
-                    <div id="preview-container" style="position: relative; height: 96px;">
-                        <canvas id="next-piece" width="96" height="96"></canvas>
-                    </div>
-                </div>
-                <div id="hold-board">
-                    <h3>Hold (H)</h3>
-                    <div class="hold-container" style="position: relative; height: 96px;"></div>
-                </div>
-            </div>
-        </div>
-        <div class="controls-container">
-            <button id="start-button">Start Game</button>
+				<div class="controls-row">
+					<div class="controls-panel">
+						<h3>Controls <button data-settings-button>Customize</button></h3>
+						<div class="key-grid">
+							<div class="key-item"><span class="key">←</span> Move Left</div>
+							<div class="key-item"><span class="key">→</span> Move Right</div>
+							<div class="key-item"><span class="key">↓</span> Soft Drop</div>
+							<div class="key-item"><span class="key">↑</span> Rotate</div>
+							<div class="key-item"><span class="key">Space</span> Hard Drop</div>
+							<div class="key-item">
+								<span class="key">P</span> or <span class="key">Esc</span> Pause
+							</div>
+						</div>
+					</div>
 
-            <div class="controls-row">
-                <div class="controls-panel">
-                    <h3>Controls <button data-settings-button>Customize</button></h3>
-                    <div class="key-grid">
-                        <div class="key-item"><span class="key">←</span> Move Left</div>
-                        <div class="key-item"><span class="key">→</span> Move Right</div>
-                        <div class="key-item"><span class="key">↓</span> Soft Drop</div>
-                        <div class="key-item"><span class="key">↑</span> Rotate</div>
-                        <div class="key-item"><span class="key">Space</span> Hard Drop</div>
-                        <div class="key-item"><span class="key">P</span> or <span class="key">Esc</span> Pause</div>
-                    </div>
-                </div>
+					<div class="audio-panel">
+						<h3>Audio</h3>
+						<div class="audio-controls">
+							<div class="vertical-slider-group">
+								<label>Music</label>
+								<button
+									id="music-max"
+									class="volume-btn-small"
+									aria-label="Max Music"
+								>
+									🔊
+								</button>
+								<input
+									type="range"
+									id="music-volume"
+									min="0"
+									max="100"
+									value="100"
+									step="1"
+									class="vertical-slider"
+									orient="vertical"
+								/>
+								<button
+									id="music-min"
+									class="volume-btn-small"
+									aria-label="Mute Music"
+								>
+									🔇
+								</button>
+							</div>
+							<div class="vertical-slider-group">
+								<label>Sound FX</label>
+								<button id="sfx-max" class="volume-btn-small" aria-label="Max SFX">
+									🔊
+								</button>
+								<input
+									type="range"
+									id="sfx-volume"
+									min="0"
+									max="100"
+									value="100"
+									step="1"
+									class="vertical-slider"
+									orient="vertical"
+								/>
+								<button id="sfx-min" class="volume-btn-small" aria-label="Mute SFX">
+									🔇
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-                <div class="audio-panel">
-                    <h3>Audio</h3>
-                    <div class="audio-controls">
-                        <div class="vertical-slider-group">
-                            <label>Music</label>
-                            <button id="music-max" class="volume-btn-small" aria-label="Max Music">🔊</button>
-                            <input type="range" id="music-volume" min="0" max="100" value="100" step="1"
-                                class="vertical-slider" orient="vertical">
-                            <button id="music-min" class="volume-btn-small" aria-label="Mute Music">🔇</button>
-                        </div>
-                        <div class="vertical-slider-group">
-                            <label>Sound FX</label>
-                            <button id="sfx-max" class="volume-btn-small" aria-label="Max SFX">🔊</button>
-                            <input type="range" id="sfx-volume" min="0" max="100" value="100" step="1"
-                                class="vertical-slider" orient="vertical">
-                            <button id="sfx-min" class="volume-btn-small" aria-label="Mute SFX">🔇</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+		<div id="settings-modal" data-key-rebind-menu class="settings-modal" style="display: none">
+			<div class="settings-content">
+				<h2>Control Settings</h2>
+				<div class="key-bind-list">
+					<div class="key-bind-row">
+						<span>Move Left:</span>
+						<button data-rebind-left data-action="moveLeft">
+							<span data-current-left-bind>ArrowLeft</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Move Right:</span>
+						<button data-action="moveRight">
+							<span data-current-right-bind>ArrowRight</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Rotate Clockwise:</span>
+						<button data-action="rotateClockwise">
+							<span data-current-rotate-bind>ArrowUp</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Rotate Counter-clockwise:</span>
+						<button data-action="rotateCounterClockwise">
+							<span data-current-counter-rotate-bind>Z</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Soft Drop:</span>
+						<button data-action="softDrop">
+							<span data-current-soft-drop-bind>ArrowDown</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Hold Piece:</span>
+						<button data-action="hold">
+							<span data-current-hold-bind>H</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Hard Drop:</span>
+						<button data-action="hardDrop">
+							<span data-current-hard-drop-bind>Space</span>
+						</button>
+					</div>
+				</div>
+				<button data-settings-close>Close</button>
+			</div>
+		</div>
 
-    <div id="settings-modal" data-key-rebind-menu class="settings-modal" style="display: none;">
-        <div class="settings-content">
-            <h2>Control Settings</h2>
-            <div class="key-bind-list">
-                <div class="key-bind-row">
-                    <span>Move Left:</span>
-                    <button data-rebind-left data-action="moveLeft">
-                        <span data-current-left-bind>ArrowLeft</span>
-                    </button>
-                </div>
-                <div class="key-bind-row">
-                    <span>Move Right:</span>
-                    <button data-action="moveRight">
-                        <span data-current-right-bind>ArrowRight</span>
-                    </button>
-                </div>
-                <div class="key-bind-row">
-                    <span>Rotate Clockwise:</span>
-                    <button data-action="rotateClockwise">
-                        <span data-current-rotate-bind>ArrowUp</span>
-                    </button>
-                </div>
-                <div class="key-bind-row">
-                    <span>Rotate Counter-clockwise:</span>
-                    <button data-action="rotateCounterClockwise">
-                        <span data-current-counter-rotate-bind>Z</span>
-                    </button>
-                </div>
-                <div class="key-bind-row">
-                    <span>Soft Drop:</span>
-                    <button data-action="softDrop">
-                        <span data-current-soft-drop-bind>ArrowDown</span>
-                    </button>
-                </div>
-                <div class="key-bind-row">
-                    <span>Hold Piece:</span>
-                    <button data-action="hold">
-                        <span data-current-hold-bind>H</span>
-                    </button>
-                </div>
-                <div class="key-bind-row">
-                    <span>Hard Drop:</span>
-                    <button data-action="hardDrop">
-                        <span data-current-hard-drop-bind>Space</span>
-                    </button>
-                </div>
-            </div>
-            <button data-settings-close>Close</button>
-        </div>
-    </div>
+		<div id="rebind-prompt" data-rebind-prompt class="rebind-prompt" style="display: none">
+			Press a key to bind...
+		</div>
 
-    <div id="rebind-prompt" data-rebind-prompt class="rebind-prompt" style="display: none;">
-        Press a key to bind...
-    </div>
-
-    <script type="module" src="/src/main.js"></script>
-</body>
-
+		<script type="module" src="/src/main.js"></script>
+	</body>
 </html>

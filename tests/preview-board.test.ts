@@ -18,13 +18,7 @@ describe("PreviewBoard", () => {
 		element.appendChild(previewContainer);
 		previewBoard = new PreviewBoardImpl(element);
 		stubQueue = { dequeue: () => 1337 };
-		board = new Board(
-			20,
-			11,
-			document.createElement("div"),
-			previewBoard,
-			stubQueue
-		);
+		board = new Board(20, 11, document.createElement("div"), previewBoard, stubQueue);
 	});
 	test("should clear preview container and add tetromino element", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 1337);

@@ -6,7 +6,14 @@ describe("O-shaped Tetromino", () => {
 	let board: any;
 
 	beforeEach(() => {
-		board = createTestBoard({ height: 20, width: 10, seeds: [2], preview: false, keyBindings: false, element: { appendChild: jest.fn() } as any });
+		board = createTestBoard({
+			height: 20,
+			width: 10,
+			seeds: [2],
+			preview: false,
+			keyBindings: false,
+			element: { appendChild: jest.fn() } as any,
+		});
 	});
 
 	test("should create a 2x2 square shape", () => {

@@ -10,7 +10,6 @@ describe("TetrominoL", () => {
 		tetro = TetrominoFactory.createNew(left, null, 4);
 	});
 
-
 	test("rotation 0: correct block positions", () => {
 		tetro.rotation = 0;
 		expect(tetro.getBlocks()).toEqual([

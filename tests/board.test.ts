@@ -7,7 +7,7 @@ import {
 	hardDropTetromino,
 	lockTetromino,
 	expectTetrominoPosition,
-	expectTetrominoLocked
+	expectTetrominoLocked,
 } from "./testUtils.unit";
 
 import { Board } from "../src/board";
@@ -21,30 +21,28 @@ describe("Board", () => {
 		board = createTestBoard({ height: 20, width: 11, seeds: [1337] });
 	});
 
+	test("moves tetromino left within board boundaries", () => {
+		const tetromino: Tetromino = createTetromino(board, 1337, 5);
+		moveTetromino(tetromino, "left");
+		expectTetrominoPosition(tetromino, { left: 4 });
+	});
 
-		test("moves tetromino left within board boundaries", () => {
-			const tetromino: Tetromino = createTetromino(board, 1337, 5);
-			moveTetromino(tetromino, "left");
-			expectTetrominoPosition(tetromino, { left: 4 });
-		});
+	test("prevents tetromino from moving left outside board boundaries", () => {
+		const tetromino: Tetromino = createTetromino(board, 1337, 0);
+		moveTetromino(tetromino, "left");
+		expectTetrominoPosition(tetromino, { left: 0 });
+	});
 
-
-		test("prevents tetromino from moving left outside board boundaries", () => {
-			const tetromino: Tetromino = createTetromino(board, 1337, 0);
-			moveTetromino(tetromino, "left");
-			expectTetrominoPosition(tetromino, { left: 0 });
-		});
-
-		test("prevents tetromino from moving left or right outside board boundaries (via moveTetromino)", () => {
-			const tetromino: Tetromino = createTetromino(board, 1337, 0);
-			// move left
-			moveTetromino(tetromino, "left");
-			expectTetrominoPosition(tetromino, { left: 0 });
-			// move right from far right
-			tetromino.left = 10;
-			moveTetromino(tetromino, "right");
-			expectTetrominoPosition(tetromino, { left: 10 });
-		});
+	test("prevents tetromino from moving left or right outside board boundaries (via moveTetromino)", () => {
+		const tetromino: Tetromino = createTetromino(board, 1337, 0);
+		// move left
+		moveTetromino(tetromino, "left");
+		expectTetrominoPosition(tetromino, { left: 0 });
+		// move right from far right
+		tetromino.left = 10;
+		moveTetromino(tetromino, "right");
+		expectTetrominoPosition(tetromino, { left: 10 });
+	});
 
 	test("detects collision when tetromino moves down onto a locked tetromino", () => {
 		const tetromino1 = createTetromino(board, 1337, 5);
@@ -124,7 +122,12 @@ describe("Board", () => {
 	describe("spawnTetromino", () => {
 		test("spawns first tetromino when no nextTetromino exists", () => {
 			// Use board without preview board to avoid null container issues
-			const simpleBoard = createTestBoard({ height: 20, width: 11, seeds: [1337], preview: false });
+			const simpleBoard = createTestBoard({
+				height: 20,
+				width: 11,
+				seeds: [1337],
+				preview: false,
+			});
 			const spawnedTetromino = simpleBoard.spawnTetromino();
 			expect(spawnedTetromino).toBeDefined();
 			expect(spawnedTetromino.left).toBe(Math.floor(11 / 2)); // center of board
@@ -132,7 +135,12 @@ describe("Board", () => {
 
 		test("uses nextTetromino when it exists", () => {
 			// Use board without preview board to avoid null container issues
-			const simpleBoard = createTestBoard({ height: 20, width: 11, seeds: [1337], preview: false });
+			const simpleBoard = createTestBoard({
+				height: 20,
+				width: 11,
+				seeds: [1337],
+				preview: false,
+			});
 
 			// Spawn first tetromino to create nextTetromino
 			const firstTetromino = simpleBoard.spawnTetromino();
@@ -152,9 +160,9 @@ describe("Board", () => {
 			const mockPreviewBoard = {
 				previewContainer: {
 					contains: jest.fn().mockReturnValue(true),
-					removeChild: jest.fn()
+					removeChild: jest.fn(),
 				},
-				showNextTetromino: jest.fn()
+				showNextTetromino: jest.fn(),
 			};
 
 			const stubQueue = { dequeue: () => 1337 };
@@ -175,9 +183,9 @@ describe("Board", () => {
 			const mockPreviewBoard = {
 				previewContainer: {
 					contains: jest.fn().mockReturnValue(false),
-					removeChild: jest.fn()
+					removeChild: jest.fn(),
 				},
-				showNextTetromino: jest.fn()
+				showNextTetromino: jest.fn(),
 			};
 
 			const stubQueue = { dequeue: () => 1337 };

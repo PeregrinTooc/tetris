@@ -19,18 +19,18 @@
 - [x] Add O tetromino shape (class, test, style, and factory integration)
 - [x] Add T tetromino shape (class, test, style, and factory integration)
 - [x] All 7 tetromino shapes (I, O, T, S, Z, J, L) implemented
-- [X] Hold piece functionality
+- [x] Hold piece functionality
 - [x] Hard drop (instantly drop tetromino)
 - [x] Soft drop (faster drop)
-- [X] Increasing speed/level progression
+- [x] Increasing speed/level progression
 - [x] Scoring system (points for line clears, soft/hard drop, piece locking)
 - [x] Sound effects and music
 - [ ] Two player mode
 
 ### Board & Line Mechanics
 
-- [X] Line clear detection and removal
-- [X] Multiple line clears (double, triple, Tetris)
+- [x] Line clear detection and removal
+- [x] Multiple line clears (double, triple, Tetris)
 - [ ] Ghost piece (shows where tetromino will land)
 - [ ] Wall kicks (rotation near walls)
 - [x] Lock delay (brief pause before locking)
@@ -40,7 +40,7 @@
 - [x] Start/Reset game button
 - [x] Game over message
 - [x] Preview of next piece
-- [X] Display for score, level, and lines cleared
+- [x] Display for score, level, and lines cleared
 - [ ] Responsive/mobile-friendly UI
 - [x] Pause/resume functionality
 - [ ] Settings (volume, controls, etc.)
@@ -50,7 +50,7 @@
 
 ### Accessibility
 
-- [X] Keyboard remapping
+- [x] Keyboard remapping
 - [ ] Colorblind mode/user-defined tetromino colors
 
 ## Test Coverage
@@ -65,13 +65,13 @@
 - [x] Game over is detected and displayed
 - [x] Tetromino rotation via keyboard (T-shape, ArrowUp)
 - [x] All tetromino shapes appear
-- [X] Line clear is detected and board updates
-- [X] Score/level/lines UI updates
-- [X] Hard drop action
-- [X] Hold action
+- [x] Line clear is detected and board updates
+- [x] Score/level/lines UI updates
+- [x] Hard drop action
+- [x] Hold action
 - [x] Preview of next piece is shown
-- [X] Pause/resume works
-- [X] Music and Sound Effects
+- [x] Pause/resume works
+- [x] Music and Sound Effects
 - [ ] Ghost Piece
 - [ ] Mobile/responsive controls
 
@@ -87,10 +87,10 @@
 - [x] Board resets and clears tetrominos
 - [x] PreviewBoard shows next tetromino
 - [x] Tetromino rotation logic (T-shape)
-- [X] Line clear logic
+- [x] Line clear logic
 - [x] Scoring system logic (soft drop, hard drop, piece locking)
-- [X] Level Logic
-- [X] Hold/next piece logic
+- [x] Level Logic
+- [x] Hold/next piece logic
 - [ ] Ghost piece logic
 - [ ] Wall kick logic
 

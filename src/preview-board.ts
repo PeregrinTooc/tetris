@@ -24,4 +24,3 @@ export interface PreviewBoard {
 	previewContainer: HTMLElement;
 	showNextTetromino?: (tetromino: Tetromino) => void;
 }
-

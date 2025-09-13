@@ -71,7 +71,7 @@ export class Board {
 			return;
 		}
 
-		// Deactivate current piece's controls		
+		// Deactivate current piece's controls
 		const { storedTetromino, currentTetromino } = this._resetActiveTetromino();
 
 		if (storedTetromino) {
@@ -89,7 +89,6 @@ export class Board {
 	}
 
 	private _swap(currentPiece: Tetromino, heldPiece: Tetromino) {
-
 		this.holdBoard.showHeldTetromino(currentPiece);
 		currentPiece.board = null;
 		this.addTetromino(heldPiece);
@@ -128,18 +127,25 @@ export class Board {
 
 	public removeTetromino(tetromino: Tetromino): void {
 		if (this.tetrominos.has(tetromino)) {
-			if (this.occupiedPositions.some(b => b.parent.id === tetromino.id)) {
-				console.error("Removing tetromino with id " + tetromino.id + " with blocks still in occupiedPositions:");
+			if (this.occupiedPositions.some((b) => b.parent.id === tetromino.id)) {
+				console.error(
+					"Removing tetromino with id " +
+						tetromino.id +
+						" with blocks still in occupiedPositions:"
+				);
 				tetromino.log();
 				this.log();
-				this.occupiedPositions = this.occupiedPositions.filter(b => b.parent.id !== tetromino.id);
+				this.occupiedPositions = this.occupiedPositions.filter(
+					(b) => b.parent.id !== tetromino.id
+				);
 			}
 			this.tetrominos.delete(tetromino);
 		}
 	}
 
 	public moveTetromino(tetromino: Tetromino, direction: string): boolean {
-		let dx = 0, dy = 0;
+		let dx = 0,
+			dy = 0;
 		if (direction === "left") dx = -1;
 		if (direction === "right") dx = 1;
 		if (direction === "down") dy = 1;
@@ -147,7 +153,8 @@ export class Board {
 			.getBlocks()
 			.map(({ x, y }: { x: number; y: number }) => ({ x: x + dx, y: y + dy }));
 		const inBounds = previewBlocks.every(
-			({ x, y }: { x: number; y: number }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
+			({ x, y }: { x: number; y: number }) =>
+				x >= 0 && x < this.width && y >= 0 && y <= this.height
 		);
 		if (!inBounds) return false;
 		if (!this._canMove(direction)) {
@@ -165,8 +172,6 @@ export class Board {
 		tetromino.updatePosition();
 		return true;
 	}
-
-
 
 	public spawnTetromino(): Tetromino {
 		let tetromino: Tetromino;
@@ -223,14 +228,16 @@ export class Board {
 		return tetromino;
 	}
 
-
-
 	public getActiveTetromino(): Tetromino {
 		return this.activeTetromino;
 	}
 	public log(): void {
 		console.group("Board");
-		console.log("meta", { height: this.height, width: this.width, canHoldPiece: this.canHoldPiece });
+		console.log("meta", {
+			height: this.height,
+			width: this.width,
+			canHoldPiece: this.canHoldPiece,
+		});
 
 		console.group("Tetrominos");
 		for (const t of this.tetrominos) {
@@ -269,7 +276,7 @@ export class Board {
 			const rowBlocks = rows.get(y)!;
 			rowBlocks.sort((a, b) => a.x - b.x);
 			console.group(`y=${y}`);
-			rowBlocks.forEach(b => {
+			rowBlocks.forEach((b) => {
 				if (typeof (b as any).log === "function") (b as any).log();
 				else console.log("  Block:", { x: b.x, y: b.y });
 			});
@@ -285,12 +292,9 @@ export class Board {
 		);
 	}
 	public collision(previewBlocks: Block[]): boolean {
-		const collision =
-			this.occupiedPositions.some((other) =>
-				previewBlocks.some(
-					(pos: Block) => other.x === pos.x && other.y === pos.y
-				)
-			);
+		const collision = this.occupiedPositions.some((other) =>
+			previewBlocks.some((pos: Block) => other.x === pos.x && other.y === pos.y)
+		);
 		return collision;
 	}
 
@@ -307,7 +311,7 @@ export class Board {
 	private _hasCollision(direction: string): boolean {
 		const dx = direction === "left" ? -1 : direction === "right" ? 1 : 0;
 		const dy = direction === "down" ? 1 : 0;
-		return this.activeTetromino.collides(dx, dy, this.occupiedPositions)
+		return this.activeTetromino.collides(dx, dy, this.occupiedPositions);
 	}
 
 	private _raiseGameOverIfStackReachesTop(): void {
@@ -317,11 +321,11 @@ export class Board {
 		}
 	}
 
-
-
 	private _handleTetrominoLocked(event: Event): void {
 		const customEvent = event as CustomEvent;
-		customEvent.detail.forEach((block: Block) => { this.occupiedPositions.push(block) });
+		customEvent.detail.forEach((block: Block) => {
+			this.occupiedPositions.push(block);
+		});
 		this.occupiedPositions.sort((a, b) => b.y - a.y);
 		this._checkForCompletedLines();
 		this.canHoldPiece = true;
@@ -338,21 +342,24 @@ export class Board {
 	}
 
 	private _removeCompletedLines(completedLines: number[]) {
-		completedLines.forEach(line => {
-			this.occupiedPositions.filter(block => block.y === line).forEach(block => block.delete());
-			this.occupiedPositions = this.occupiedPositions.filter(block => block.y !== line);
+		completedLines.forEach((line) => {
+			this.occupiedPositions
+				.filter((block) => block.y === line)
+				.forEach((block) => block.delete());
+			this.occupiedPositions = this.occupiedPositions.filter((block) => block.y !== line);
 		});
 		let numberOfCompletedLines = completedLines.length;
 		// Dispatch event with line completion data for scoring
 		const scoreEvent = new CustomEvent("linesCompleted", {
-			detail: { linesCompleted: numberOfCompletedLines }
+			detail: { linesCompleted: numberOfCompletedLines },
 		});
 		this.element.dispatchEvent(scoreEvent);
 	}
 	private _findCompletedLines(): number[] {
 		const completedLines: number[] = [];
 		for (let y = 0; y < this.height + 1; y++) {
-			const isComplete = this.occupiedPositions.filter(pos => pos.y === y).length === this.width;
+			const isComplete =
+				this.occupiedPositions.filter((pos) => pos.y === y).length === this.width;
 			if (isComplete) completedLines.push(y);
 		}
 		return completedLines.sort();
@@ -378,7 +385,9 @@ export class Board {
 		}
 	}
 
-	private _dropTetrominosInOptimalOrder(tetrominoDropInfo: { tetromino: Tetromino; blocks: Block[]; maxDrop: number; }[]) {
+	private _dropTetrominosInOptimalOrder(
+		tetrominoDropInfo: { tetromino: Tetromino; blocks: Block[]; maxDrop: number }[]
+	) {
 		for (const { tetromino, blocks } of tetrominoDropInfo) {
 			this._dropTetrominoAsUnit(tetromino, blocks);
 			tetromino.collapseBlocks();
@@ -427,9 +436,11 @@ export class Board {
 	private _findDropDistance(tetromino: Tetromino, block: Block, blockMaxDrop: number) {
 		for (const otherBlock of this.occupiedPositions) {
 			// Exclude blocks from the same tetromino (including deleted blocks that may still be in occupiedPositions)
-			if (otherBlock.parent !== tetromino &&
+			if (
+				otherBlock.parent !== tetromino &&
 				otherBlock.x === block.x &&
-				otherBlock.y > block.y) {
+				otherBlock.y > block.y
+			) {
 				blockMaxDrop = Math.min(blockMaxDrop, otherBlock.y - block.y - 1);
 			}
 		}
@@ -447,7 +458,6 @@ export class Board {
 			}
 		}
 	}
-
 
 	private _updateLockedTetrominoVisuals(tetromino: any): void {
 		// For locked tetrominoes, update visual representation to match current block positions
@@ -482,15 +492,12 @@ export class Board {
 		}
 	}
 
-
-
-
 	private _reuseNextTetromino() {
-		if (this.previewBoard &&
-			this.previewBoard.previewContainer.contains(this.nextTetromino.element)) {
-			this.previewBoard.previewContainer.removeChild(
-				this.nextTetromino.element
-			);
+		if (
+			this.previewBoard &&
+			this.previewBoard.previewContainer.contains(this.nextTetromino.element)
+		) {
+			this.previewBoard.previewContainer.removeChild(this.nextTetromino.element);
 		}
 		const tetromino = this.nextTetromino as Tetromino;
 		tetromino.board = this;
@@ -508,7 +515,7 @@ export class Board {
 
 		this.clearTetrominoCoordinates(tetromino);
 
-		tetromino.getBlocks().forEach(block => {
+		tetromino.getBlocks().forEach((block) => {
 			const blockElement = this.createCoordinateBlock(block, tetromino);
 			const key = `${tetromino.id}-${block.x}-${block.y}`;
 			this.coordinateBlocks.set(key, blockElement);
@@ -529,7 +536,7 @@ export class Board {
 			}
 		});
 
-		keysToRemove.forEach(key => this.coordinateBlocks.delete(key));
+		keysToRemove.forEach((key) => this.coordinateBlocks.delete(key));
 	}
 
 	private createCoordinateBlock(block: Block, tetromino: Tetromino): HTMLElement {

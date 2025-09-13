@@ -14,71 +14,70 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
-Cypress.on('window:before:load', (win) => {
-    // Add CSP meta tag to block media
-    const meta = win.document.createElement('meta');
-    meta.setAttribute('http-equiv', 'Content-Security-Policy');
-    meta.setAttribute('content', "media-src 'none';");
-    win.document.head.appendChild(meta);
+Cypress.on("window:before:load", (win) => {
+	// Add CSP meta tag to block media
+	const meta = win.document.createElement("meta");
+	meta.setAttribute("http-equiv", "Content-Security-Policy");
+	meta.setAttribute("content", "media-src 'none';");
+	win.document.head.appendChild(meta);
 
-    // Mock Audio and AudioContext before any scripts run
-    Object.defineProperty(win, 'Audio', {
-        writable: true,
-        value: class MockAudio {
-            constructor() {
-                return {
-                    play: () => Promise.resolve(),
-                    pause: () => { },
-                    load: () => { },
-                    addEventListener: () => { },
-                    removeEventListener: () => { },
-                    currentTime: 0,
-                    volume: 1,
-                    muted: true,
-                    loop: false,
-                    autoplay: false,
-                    src: '',
-                    preload: 'none'
-                };
-            }
-        }
-    });
+	// Mock Audio and AudioContext before any scripts run
+	Object.defineProperty(win, "Audio", {
+		writable: true,
+		value: class MockAudio {
+			constructor() {
+				return {
+					play: () => Promise.resolve(),
+					pause: () => {},
+					load: () => {},
+					addEventListener: () => {},
+					removeEventListener: () => {},
+					currentTime: 0,
+					volume: 1,
+					muted: true,
+					loop: false,
+					autoplay: false,
+					src: "",
+					preload: "none",
+				};
+			}
+		},
+	});
 
-    Object.defineProperty(win, 'AudioContext', {
-        writable: true,
-        value: class MockAudioContext {
-            constructor() {
-                return {
-                    state: "suspended",
-                    resume: () => Promise.resolve(),
-                    suspend: () => Promise.resolve(),
-                    close: () => Promise.resolve(),
-                    createMediaElementSource: () => ({}),
-                    createMediaStreamDestination: () => ({}),
-                    createBuffer: () => ({}),
-                    createBufferSource: () => ({}),
-                    createGain: () => ({}),
-                    createOscillator: () => ({}),
-                    baseLatency: 0,
-                    outputLatency: 0
-                };
-            }
-        }
-    });
+	Object.defineProperty(win, "AudioContext", {
+		writable: true,
+		value: class MockAudioContext {
+			constructor() {
+				return {
+					state: "suspended",
+					resume: () => Promise.resolve(),
+					suspend: () => Promise.resolve(),
+					close: () => Promise.resolve(),
+					createMediaElementSource: () => ({}),
+					createMediaStreamDestination: () => ({}),
+					createBuffer: () => ({}),
+					createBufferSource: () => ({}),
+					createGain: () => ({}),
+					createOscillator: () => ({}),
+					baseLatency: 0,
+					outputLatency: 0,
+				};
+			}
+		},
+	});
 
-    // Also mock webkitAudioContext
-    Object.defineProperty(win, 'webkitAudioContext', {
-        writable: true,
-        value: win.AudioContext
-    });
+	// Also mock webkitAudioContext
+	Object.defineProperty(win, "webkitAudioContext", {
+		writable: true,
+		value: win.AudioContext,
+	});
 });
 
 beforeEach(() => {
-    // Block audio file requests completely
-    cy.intercept('**/*.mp3', { statusCode: 404 });
-    cy.intercept('**/*.wav', { statusCode: 404 });
-    cy.intercept('**/*.ogg', { statusCode: 404 });
+	// Block audio file requests completely
+	cy.intercept("**/*.mp3", { statusCode: 404 });
+	cy.intercept("**/*.wav", { statusCode: 404 });
+	cy.intercept("**/*.ogg", { statusCode: 404 });
 });
-

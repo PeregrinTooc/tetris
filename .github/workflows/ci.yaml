@@ -1,66 +1,66 @@
 name: Test and Deploy Tetris Game
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.x"
-          cache: "npm"
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+                  cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Run unit tests (fast)
-        run: npm run test:unit
+            - name: Run unit tests (fast)
+              run: npm run test:unit
 
-      - name: Start dev server and run e2e tests (parallel)
-        uses: cypress-io/github-action@v6
-        with:
-          start: npm run dev
-          wait-on: "http://localhost:5173"
-          wait-on-timeout: 60
-          command: npm run test:e2e:ci
-          record: true
-          parallel: true
-          group: "e2e-tests"
-        env:
-          CYPRESS_RECORD_KEY: fddc7d69-cb6d-40c0-ae33-d332d294cc19
+            - name: Start dev server and run e2e tests (parallel)
+              uses: cypress-io/github-action@v6
+              with:
+                  start: npm run dev
+                  wait-on: "http://localhost:5173"
+                  wait-on-timeout: 60
+                  command: npm run test:e2e:ci
+                  record: true
+                  parallel: true
+                  group: "e2e-tests"
+              env:
+                  CYPRESS_RECORD_KEY: fddc7d69-cb6d-40c0-ae33-d332d294cc19
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
+    deploy:
+        needs: test
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/main'
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.x"
-          cache: "npm"
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+                  cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Build
-        run: npm run build
+            - name: Build
+              run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
+            - name: Deploy to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./dist
+                  force_orphan: true
