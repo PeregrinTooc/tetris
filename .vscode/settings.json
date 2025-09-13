@@ -1,0 +1,40 @@
+{
+	"editor.insertSpaces": false,
+	"editor.tabSize": 4,
+	"editor.detectIndentation": false,
+	"editor.formatOnSave": true,
+	"files.eol": "\n",
+	"files.trimTrailingWhitespace": true,
+	"files.insertFinalNewline": true,
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"search.exclude": {
+		"**/dist": true,
+		"**/coverage": true,
+		"**/.nyc_output": true
+	},
+	"files.exclude": {
+		"**/.DS_Store": true,
+		"**/.git": true,
+		"**/.hg": true,
+		"**/.svn": true,
+		"**/node_modules": true,
+		"**/dist": true,
+		"**/coverage": true
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features",
+		"editor.formatOnSave": true
+	},
+	"[json]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+	"jest.runMode": "on-demand",
+	"jest.jestCommandLine": "npm run test:unit",
+	"cypressHelper.specPattern": "cypress/e2e/**/*.cy.ts",
+	"workbench.colorCustomizations": {
+		"statusBar.background": "#222222",
+		"statusBar.noFolderBackground": "#222222",
+		"statusBar.debuggingBackground": "#444444"
+	}
+}
