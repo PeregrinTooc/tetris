@@ -69,6 +69,35 @@ Unit only (verbose file output): `npm run test:unit:output`
 E2E deterministic output: `npm run test:e2e:output`
 Parallel full suite: `npm run test:parallel`
 
+### Git Push Policy (Important)
+
+- Always run `git push` as a separate command. Do not chain it together with other commands (e.g., avoid `&& git push`). This prevents long E2E pre-push hooks from blocking unrelated steps and makes failures easier to spot.
+- Pre-push hook runs the E2E suite. It can take time; prefer non-blocking push patterns when working locally.
+
+Non‑blocking push patterns (PowerShell):
+
+- Start push in the background and capture the process:
+
+```
+Start-Process -FilePath git -ArgumentList "push" -NoNewWindow
+```
+
+- Or use a VS Code Task so pushes run in a dedicated terminal that you can let run while you continue coding. In `.vscode/tasks.json` define a `git push` task and bind a keyboard shortcut.
+
+Failure detection options:
+
+- Monitor Git output panel/Task terminal; the pre-push hook writes failing test output.
+- Use a small wrapper script that exits non‑zero on failure and logs to a file for quick review, then run `git push` separately:
+
+```
+# Example wrapper (pwsh)
+npm run test:unit; if ($LastExitCode -ne 0) { exit $LastExitCode }
+npm run test:e2e:output; if ($LastExitCode -ne 0) { Write-Host "E2E failed; skipping push"; exit $LastExitCode }
+git push
+```
+
+Note: We do not bypass the pre-push hook. These patterns only avoid blocking your primary terminal and improve failure visibility.
+
 ### Extend / Integrate
 
 Inject optional services (audio, key bindings) via `Board` constructor—favor dependency injection to keep pure logic testable.
