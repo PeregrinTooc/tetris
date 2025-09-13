@@ -1,0 +1,54 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "git push (dedicated terminal)",
+			"type": "shell",
+			"command": "git",
+			"args": ["push"],
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			}
+		},
+		{
+			"label": "unit tests",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "test:unit"],
+			"problemMatcher": ["$eslint-stylish"],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			}
+		},
+		{
+			"label": "e2e tests (output)",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "test:e2e:output"],
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			}
+		},
+		{
+			"label": "pre-push: unit then e2e",
+			"type": "shell",
+			"command": "echo",
+			"args": ["Running unit then e2e tests..."],
+			"problemMatcher": [],
+			"dependsOn": [
+				"unit tests",
+				"e2e tests (output)"
+			],
+			"dependsOrder": "sequence",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			}
+		}
+	]
+}
