@@ -11,15 +11,12 @@ import {
 } from "./testUtils.unit";
 
 import { Board } from "../src/board";
-import { KeyBindingManager } from "../src/key-binding-manager";
 import type { Tetromino } from "../src/tetromino-base";
 
 describe("Board", () => {
 	let board: Board;
-	let keyBindingManager: KeyBindingManager;
 	let element: HTMLElement;
 	beforeEach(() => {
-		keyBindingManager = new KeyBindingManager();
 		element = document.createElement("div");
 		board = createTestBoard({ height: 20, width: 11, seeds: [1337] });
 	});
@@ -70,9 +67,9 @@ describe("Board", () => {
 		// Use helper to perform hard drop without relying on key bindings
 		hardDropTetromino(tetromino);
 		expect(tetromino.locked).toBe(true);
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+		moveTetromino(tetromino, "left");
 		expect(tetromino.left).toBe(5);
-		document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+		moveTetromino(tetromino, "right");
 		expect(tetromino.left).toBe(5);
 	});
 
