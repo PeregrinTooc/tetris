@@ -186,9 +186,9 @@ export abstract class Tetromino {
 		this.element.style.top = this.top * this.size + "px";
 		this.element.style.left = this.left * this.size + "px";
 
-		// Update coordinate rendering if enabled
-		if (this.board && (window as any).USE_COORDINATE_RENDERING === true) {
-			(this.board as any).renderTetrominoCoordinates(this);
+		// Update rendering using BlockRenderer if board is available
+		if (this.board && typeof (this.board as any).getBlockRenderer === "function") {
+			(this.board as any).getBlockRenderer().updateTetromino(this);
 		}
 	}
 
@@ -290,12 +290,14 @@ export abstract class Tetromino {
 
 	public updateBlocks(): void {
 		this.blocks = this.getBlocks();
-		while (this.element.firstChild) this.element.removeChild(this.element.firstChild);
-		this._renderBlocks();
 
-		// Update coordinate rendering if enabled
-		if (this.board && (window as any).USE_COORDINATE_RENDERING === true) {
-			(this.board as any).renderTetrominoCoordinates(this);
+		// Use BlockRenderer if available, otherwise fall back to legacy rendering
+		if (this.board && typeof (this.board as any).getBlockRenderer === "function") {
+			(this.board as any).getBlockRenderer().updateTetromino(this);
+		} else {
+			// Legacy fallback
+			while (this.element.firstChild) this.element.removeChild(this.element.firstChild);
+			this._renderBlocks();
 		}
 	}
 
