@@ -148,7 +148,9 @@ export class AudioManager {
 		if (musicVolumeSlider) {
 			musicVolumeSlider.addEventListener("input", () => {
 				musicVolume = parseInt(musicVolumeSlider.value, 10) / 100;
-				bgMusicLevel1.volume = musicVolume;
+				if (this.currentMusic) {
+					this.currentMusic.volume = musicVolume;
+				}
 				// Don't call updateMusic() here - just update volume
 				// Let main.ts handle play/pause state based on game conditions
 			});
@@ -164,7 +166,9 @@ export class AudioManager {
 			musicMinBtn.addEventListener("click", () => {
 				musicVolume = 0;
 				musicVolumeSlider.value = "0";
-				bgMusicLevel1.volume = 0;
+				if (this.currentMusic) {
+					this.currentMusic.volume = 0;
+				}
 				// Don't call updateMusic() - just set volume to 0
 			});
 		}
@@ -172,7 +176,9 @@ export class AudioManager {
 			musicMaxBtn.addEventListener("click", () => {
 				musicVolume = 1;
 				musicVolumeSlider.value = "100";
-				bgMusicLevel1.volume = 1;
+				if (this.currentMusic) {
+					this.currentMusic.volume = 1;
+				}
 				// Don't call updateMusic() - just set volume to 1
 			});
 		}
