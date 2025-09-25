@@ -8,6 +8,8 @@
 	width: 24px;
 	height: 24px;
 	position: absolute;
+	box-sizing: border-box; /* Include 1px border inside 24px so bottom row is flush */
+	transform: translateZ(0); /* Prevent subpixel anti-alias rounding gaps */
 }
 
 .line-clear {

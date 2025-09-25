@@ -8,6 +8,11 @@ import { PreviewBoard } from "./preview-board";
 import { BlockRenderer } from "./block-renderer";
 
 export class Board {
+	// Height & bounds semantics:
+	// The board uses EXCLUSIVE upper bounds for rows. Valid y coordinates are 0..height-1.
+	// No block (active, locked, during drop calculations or rendering) may reach y === height.
+	// All boundary / drop / line-clear logic must therefore use (y < height) rather than (y <= height)
+	// and the maximum vertical drop distance for a block at y is (height - 1) - y.
 	private height: number;
 	private width: number;
 	private element: HTMLElement;
@@ -154,7 +159,7 @@ export class Board {
 			.map(({ x, y }: { x: number; y: number }) => ({ x: x + dx, y: y + dy }));
 		const inBounds = previewBlocks.every(
 			({ x, y }: { x: number; y: number }) =>
-				x >= 0 && x < this.width && y >= 0 && y <= this.height
+				x >= 0 && x < this.width && y >= 0 && y < this.height
 		);
 		if (!inBounds) return false;
 		if (!this._canMove(direction)) {
@@ -235,6 +240,15 @@ export class Board {
 	public getBlockRenderer(): BlockRenderer {
 		return this.blockRenderer;
 	}
+
+	public getHeight(): number {
+		return this.height;
+	}
+
+	// Dev/testing helper: returns true if any occupied block has invalid y
+	public hasOutOfBoundsLockedBlock(): boolean {
+		return this.occupiedPositions.some((b) => b.y < 0 || b.y >= this.height);
+	}
 	public log(): void {
 		console.group("Board");
 		console.log("meta", {
@@ -292,7 +306,7 @@ export class Board {
 	}
 	public inBounds(previewBlocks: Block[]) {
 		return previewBlocks.every(
-			({ x, y }) => x >= 0 && x < this.width && y >= 0 && y <= this.height
+			({ x, y }) => x >= 0 && x < this.width && y >= 0 && y < this.height
 		);
 	}
 	public collision(previewBlocks: Block[]): boolean {
@@ -361,7 +375,7 @@ export class Board {
 	}
 	private _findCompletedLines(): number[] {
 		const completedLines: number[] = [];
-		for (let y = 0; y < this.height + 1; y++) {
+		for (let y = 0; y < this.height; y++) {
 			const isComplete =
 				this.occupiedPositions.filter((pos) => pos.y === y).length === this.width;
 			if (isComplete) completedLines.push(y);
@@ -421,7 +435,7 @@ export class Board {
 
 	private _calculateMaxDrop(tetromino: Tetromino, blocks: Block[]): number {
 		// Calculate how far the tetromino can drop without actually dropping it
-		let maxDrop = this.height;
+		let maxDrop = this.height; // will be reduced below; represents number of single-step drops
 
 		maxDrop = this._calculateBlockDropLimit(blocks, tetromino, maxDrop);
 
@@ -430,7 +444,8 @@ export class Board {
 
 	private _calculateBlockDropLimit(blocks: Block[], tetromino: Tetromino, maxDrop: number) {
 		for (const block of blocks) {
-			let blockMaxDrop = this.height - block.y;
+			// Maximum permissible drop steps for this block until it would reach bottom (exclusive bound)
+			let blockMaxDrop = this.height - 1 - block.y;
 			blockMaxDrop = this._findDropDistance(tetromino, block, blockMaxDrop);
 			maxDrop = Math.min(maxDrop, blockMaxDrop);
 		}
@@ -499,17 +514,5 @@ export class Board {
 	 */
 	public clearTetrominoCoordinates(tetromino: Tetromino): void {
 		this.blockRenderer.clearTetromino(tetromino);
-	}
-
-	private createCoordinateBlock(block: Block, tetromino: Tetromino): HTMLElement {
-		const blockElement = document.createElement("div");
-		blockElement.className = `coordinate-block ${tetromino.getClassName()}-coordinate-block`;
-		blockElement.style.position = "absolute";
-		blockElement.style.width = "24px";
-		blockElement.style.height = "24px";
-		blockElement.style.left = `${block.x * 24}px`;
-		blockElement.style.top = `${block.y * 24}px`;
-		blockElement.setAttribute("data-tetromino-id", tetromino.id);
-		return blockElement;
 	}
 }

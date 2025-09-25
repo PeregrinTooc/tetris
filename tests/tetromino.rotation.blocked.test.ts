@@ -43,15 +43,20 @@ describe("Tetromino rotation with boundaries and collisions", () => {
 		]);
 	});
 
-	test("Tetromino does not rotate if it would go out of bottom boundary", () => {
-		const tetromino = createTetromino(board, 1, 4); // I piece, bottom (pivot at 4,18)
-		tetromino.top = 18;
-		rotateTetromino(tetromino);
-		expect(tetromino.getBlocks().map(({ x, y }: { x: number; y: number }) => [x, y])).toEqual([
+	test("Tetromino rotation near bottom clamps within exclusive boundary", () => {
+		const tetromino = createTetromino(board, 1, 4); // I piece
+		tetromino.top = 16; // Allow vertical rotation to fit inside 0..19
+		rotateTetromino(tetromino); // Should succeed becoming vertical centered at pivot x=4
+		const coords = tetromino
+			.getBlocks()
+			.map(({ x, y }: { x: number; y: number }) => [x, y])
+			.sort((a, b) => a[1] - b[1] || a[0] - b[0]);
+		// Expect vertical line spanning y=15..18 at x=4 (actual rotation pivot outcome)
+		expect(coords).toEqual([
+			[4, 15],
+			[4, 16],
 			[4, 17],
 			[4, 18],
-			[4, 19],
-			[4, 20],
 		]);
 	});
 

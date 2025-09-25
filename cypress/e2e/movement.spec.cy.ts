@@ -7,6 +7,7 @@ import {
 	pressDown,
 	doTimes,
 } from "../support/testUtils";
+import { BOTTOM_ROW_PIXEL } from "../support/constants";
 
 describe("Tetris Game Movement", () => {
 	beforeEach(() => {
@@ -102,7 +103,7 @@ describe("Tetris Game Movement", () => {
 					.not(".block")
 					.should(($el2) => {
 						const newTop = parseInt($el2.css("top"), 10);
-						expect(newTop).to.equal(480);
+						expect(newTop).to.equal(BOTTOM_ROW_PIXEL);
 					});
 			});
 	});
@@ -127,7 +128,7 @@ describe("Tetris Game Movement", () => {
 					.should(($el2) => {
 						const newTop = parseInt($el2.css("top"), 10);
 						expect(newTop).to.be.greaterThan(initialTop);
-						expect(newTop).to.be.lessThan(480);
+						expect(newTop).to.be.lessThan(BOTTOM_ROW_PIXEL);
 					});
 			});
 	});

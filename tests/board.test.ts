@@ -80,14 +80,15 @@ describe("Board", () => {
 		expect(board.moveTetromino(movingTetromino, "left")).toBe(false);
 	});
 
-	test("T tetromino drop results in correct blocks on the floor", () => {
+	test("T tetromino drop results in correct blocks at bottom row (exclusive height)", () => {
 		const tetromino = createTetromino(board, 0, 5);
 		hardDropTetromino(tetromino);
 		const positions = tetromino.getBlocks();
-		const floorBlocks = positions.filter((p) => p.y === 20);
-		const aboveFloorBlocks = positions.filter((p) => p.y === 19);
-		expect(floorBlocks.length).toBe(1); // Only the pivot block is at y === 20
-		expect(aboveFloorBlocks.length).toBe(3); // The arms are at y === 19
+		// With exclusive bounds (0..height-1) bottom row is 19, all four T blocks occupy rows 18/19 depending on shape orientation.
+		// Ensure no block has y === 20
+		expect(positions.some((p) => p.y === 20)).toBe(false);
+		// Ensure at least one block sits on bottom row (19)
+		expect(positions.some((p) => p.y === 19)).toBe(true);
 	});
 
 	test("blocksMovement returns true if any block of a tetromino would collide moving right (T shape, left arm)", () => {

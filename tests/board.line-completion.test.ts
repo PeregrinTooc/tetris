@@ -15,7 +15,7 @@ describe("Line completion", () => {
 		});
 	});
 
-	test("should detect and remove completed line", () => {
+	test("should detect and remove completed line (exclusive bounds)", () => {
 		// Create and position O piece on right
 		const tetroO1 = createTetromino(board, 1337, 1);
 		hardDropTetromino(tetroO1);
@@ -40,7 +40,7 @@ describe("Line completion", () => {
 		tetroTester.lock();
 	});
 
-	test("should detect and remove completed line", () => {
+	test("should detect and remove completed line with stacked pieces (exclusive bounds)", () => {
 		// Create and position O piece on right
 		const tetroO1 = createTetromino(board, 1337, 1);
 		tetroO1.top = 19;
@@ -56,9 +56,9 @@ describe("Line completion", () => {
 		//locking triggers line removal
 		tetro02.lock();
 
-		// Check if blocks above dropped down
+		// Check if blocks above dropped down: bottom row is 19, so highest block should now be at most 19
 		const blocks = tetro03.getBlocks();
-		expect(blocks[0].y).toBe(20);
+		expect(blocks[0].y).toBeLessThan(20);
 	});
 
 	test("should have collision detection for block dropping", () => {

@@ -11,6 +11,7 @@ import {
 	pressHardDrop,
 	doTimes,
 } from "../support/testUtils";
+import { BOTTOM_ROW_PIXEL } from "../support/constants";
 
 describe("Line completion", () => {
 	beforeEach(() => {
@@ -55,7 +56,8 @@ describe("Line completion", () => {
 
 		cy.get('#game-board [data-tetromino-id="5"]').should(($el) => {
 			const top = parseInt($el.css("top"), 10);
-			expect(top).to.equal(480); // Should drop to bottom line
+			// Bottom row index is 19 (0..19) so pixel top should equal BOTTOM_ROW_PIXEL.
+			expect(top).to.equal(BOTTOM_ROW_PIXEL);
 		});
 	});
 });
