@@ -1,9 +1,0 @@
-/* Top-level stylesheet that composes modules */
-@import "./modules/base.css";
-@import "./modules/layout.css";
-@import "./modules/boards.css";
-@import "./modules/controls.css";
-@import "./modules/audio.css";
-@import "./modules/sliders.css";
-@import "./modules/tetrominos.css";
-@import "./modules/key-bindings.css";
