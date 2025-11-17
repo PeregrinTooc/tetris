@@ -1,5 +1,6 @@
 import { Board } from "./board";
 import { KeyBindingManager } from "./key-binding-manager";
+import { SizingConfig } from "./sizing-config";
 
 export class Block {
 	x: number;
@@ -41,7 +42,10 @@ export abstract class Tetromino {
 	constructor(left: number, board: Board | null) {
 		this.id = (Tetromino.nextId++).toString();
 		this.pivot = new Block({ x: left, y: 0, parent: this });
-		this.size = 24;
+		this.size =
+			board && typeof (board as any).getBlockSize === "function"
+				? (board as any).getBlockSize()
+				: SizingConfig.BLOCK_SIZE;
 		this.board = board;
 		this.locked = false;
 		this.rotation = 0;

@@ -143,10 +143,10 @@ export class BlockRenderer {
 		const blockElement = document.createElement("div");
 		blockElement.className = `coordinate-block ${tetromino.getClassName()}-coordinate-block`;
 		blockElement.style.position = "absolute";
-		blockElement.style.width = "24px";
-		blockElement.style.height = "24px";
-		blockElement.style.left = `${block.x * 24}px`;
-		blockElement.style.top = `${block.y * 24}px`;
+		blockElement.style.width = tetromino.size + "px";
+		blockElement.style.height = tetromino.size + "px";
+		blockElement.style.left = `${block.x * tetromino.size}px`;
+		blockElement.style.top = `${block.y * tetromino.size}px`;
 		blockElement.setAttribute("data-tetromino-id", tetromino.id);
 		return blockElement;
 	}

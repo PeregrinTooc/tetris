@@ -6,6 +6,7 @@ import { KeyBindingManager } from "./key-binding-manager";
 import { TetrominoSeedQueue } from "./TetrominoSeedQueue";
 import { PreviewBoard } from "./preview-board";
 import { BlockRenderer } from "./block-renderer";
+import { SizingConfig } from "./sizing-config";
 
 export class Board {
 	// Height & bounds semantics:
@@ -15,6 +16,7 @@ export class Board {
 	// and the maximum vertical drop distance for a block at y is (height - 1) - y.
 	private height: number;
 	private width: number;
+	private blockSize: number;
 	private element: HTMLElement;
 	private previewBoard: PreviewBoard | null;
 	private holdBoard: HoldBoard | null;
@@ -37,10 +39,12 @@ export class Board {
 		tetrominoSeedQueue: TetrominoSeedQueue,
 		holdBoard: HoldBoard | null = null,
 		keyBindingManager: KeyBindingManager | null = null,
-		audioManager: AudioManager | null = null
+		audioManager: AudioManager | null = null,
+		blockSize: number = SizingConfig.BLOCK_SIZE
 	) {
 		this.height = height;
 		this.width = width;
+		this.blockSize = blockSize;
 		this.element = element;
 		this.previewBoard = previewBoard;
 		this.holdBoard = holdBoard;
@@ -50,6 +54,15 @@ export class Board {
 		this.keyBindingManager = keyBindingManager;
 		this.audioManager = audioManager;
 		this.blockRenderer = new BlockRenderer(element);
+
+		this._applyDimensions();
+	}
+
+	private _applyDimensions(): void {
+		const widthPx = this.blockSize * this.width;
+		const heightPx = this.blockSize * this.height;
+		this.element.style.width = widthPx + "px";
+		this.element.style.height = heightPx + "px";
 	}
 
 	public reset(): void {
@@ -243,6 +256,10 @@ export class Board {
 
 	public getHeight(): number {
 		return this.height;
+	}
+
+	public getBlockSize(): number {
+		return this.blockSize;
 	}
 
 	// Dev/testing helper: returns true if any occupied block has invalid y

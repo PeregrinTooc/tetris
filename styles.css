@@ -151,28 +151,23 @@ body {
 	background-color: #111;
 	border: 4px solid #fff;
 	border-radius: 0px;
-	padding: 8px;
+	padding: 0;
 	box-sizing: content-box;
 	display: inline-block;
 }
 
 #game-board {
-	width: 248px;
-	height: 464px;
 	position: relative;
 	overflow: hidden;
 }
 
 #next-board,
 #hold-board {
-	width: 112px;
 	text-align: center;
 	color: #fff;
 }
 
 #hold-board .hold-container {
-	width: 112px;
-	height: 112px;
 	position: relative;
 	border: none;
 	padding: 0;
@@ -252,8 +247,6 @@ body {
 }
 
 .block {
-	width: 24px;
-	height: 24px;
 	position: absolute;
 }
 

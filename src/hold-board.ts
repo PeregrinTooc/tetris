@@ -1,4 +1,5 @@
 import { Tetromino } from "./tetromino-base";
+import { SizingConfig } from "./sizing-config";
 
 export class HoldBoard {
 	private element: HTMLElement;
@@ -6,6 +7,16 @@ export class HoldBoard {
 
 	constructor(element: HTMLElement) {
 		this.element = element;
+		this._applyDimensions();
+	}
+
+	private _applyDimensions(): void {
+		this.element.style.width = SizingConfig.HOLD_BOARD_WIDTH + "px";
+		const holdContainer = this.element.querySelector(".hold-container") as HTMLElement;
+		if (holdContainer) {
+			holdContainer.style.width = SizingConfig.HOLD_CONTAINER_SIZE + "px";
+			holdContainer.style.height = SizingConfig.HOLD_CONTAINER_SIZE + "px";
+		}
 	}
 
 	showHeldTetromino(tetromino: Tetromino) {
@@ -20,10 +31,10 @@ export class HoldBoard {
 		}
 
 		// Position the tetromino element in hold board
-		const blockSize = 30;
 		tetromino.element.style.position = "absolute";
-		tetromino.element.style.left = `${(this.element.clientWidth - blockSize * 2) / 2}px`;
-		tetromino.element.style.top = `${(this.element.clientHeight - blockSize * 2) / 2}px`;
+		const centerOffset = (this.element.clientWidth - tetromino.size * 2) / 2;
+		tetromino.element.style.left = `${centerOffset}px`;
+		tetromino.element.style.top = `${centerOffset}px`;
 
 		// Add the actual tetromino element to preserve its structure and ID
 		this.element.appendChild(tetromino.element);

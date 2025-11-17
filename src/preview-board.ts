@@ -1,21 +1,26 @@
 import { Tetromino } from "./tetromino-base";
+import { SizingConfig } from "./sizing-config";
 
 export class PreviewBoardImpl {
 	element: HTMLElement;
 	previewContainer: HTMLElement;
-	size: number;
 
 	constructor(element: HTMLElement) {
 		this.element = element;
 		this.previewContainer = element.querySelector("#preview-container") as HTMLElement;
-		this.size = 24;
+		this._applyDimensions();
+	}
+
+	private _applyDimensions(): void {
+		this.element.style.width = SizingConfig.PREVIEW_BOARD_WIDTH + "px";
 	}
 
 	showNextTetromino(tetromino: any): void {
 		this.previewContainer.innerHTML = "";
 		tetromino.element.style.position = "absolute";
-		tetromino.element.style.left = "36px";
-		tetromino.element.style.top = "36px";
+		const centerOffset = (SizingConfig.PREVIEW_BOARD_WIDTH - tetromino.size * 2) / 2;
+		tetromino.element.style.left = centerOffset + "px";
+		tetromino.element.style.top = centerOffset + "px";
 		this.previewContainer.appendChild(tetromino.element);
 	}
 }

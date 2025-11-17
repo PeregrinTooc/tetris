@@ -6,13 +6,14 @@ describe("O-shaped Tetromino", () => {
 	let board: any;
 
 	beforeEach(() => {
+		const mockElement = document.createElement("div");
 		board = createTestBoard({
 			height: 20,
 			width: 10,
 			seeds: [2],
 			preview: false,
 			keyBindings: false,
-			element: { appendChild: jest.fn() } as any,
+			element: mockElement,
 		});
 	});
 
