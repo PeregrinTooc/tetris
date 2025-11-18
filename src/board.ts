@@ -389,13 +389,16 @@ export class Board {
 
 	private _removeCompletedLines(completedLines: number[]) {
 		completedLines.forEach((line) => {
-			this.occupiedPositions
-				.filter((block) => block.y === line)
-				.forEach((block) => block.delete());
+			const blocksToRemove = this.occupiedPositions.filter((block) => block.y === line);
 			this.occupiedPositions = this.occupiedPositions.filter((block) => block.y !== line);
+			blocksToRemove.forEach((block) => {
+				block.parent.blocks = block.parent.blocks.filter((b) => b !== block);
+				if (block.parent.blocks.length === 0 && this.tetrominos.has(block.parent)) {
+					this.tetrominos.delete(block.parent);
+				}
+			});
 		});
-		let numberOfCompletedLines = completedLines.length;
-		// Dispatch event with line completion data for scoring
+		const numberOfCompletedLines = completedLines.length;
 		const scoreEvent = new CustomEvent("linesCompleted", {
 			detail: { linesCompleted: numberOfCompletedLines },
 		});
