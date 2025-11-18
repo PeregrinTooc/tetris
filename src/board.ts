@@ -262,6 +262,14 @@ export class Board {
 		return this.blockSize;
 	}
 
+	private _assertInBounds(x: number, y: number, context: string = ""): void {
+		if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
+			throw new Error(
+				`Block coordinate out of bounds: (${x}, ${y}) not in [0..${this.width - 1}, 0..${this.height - 1}]${context ? " - " + context : ""}`
+			);
+		}
+	}
+
 	// Dev/testing helper: returns true if any occupied block has invalid y
 	public hasOutOfBoundsLockedBlock(): boolean {
 		return this.occupiedPositions.some((b) => b.y < 0 || b.y >= this.height);
@@ -359,6 +367,7 @@ export class Board {
 	private _handleTetrominoLocked(event: Event): void {
 		const customEvent = event as CustomEvent;
 		customEvent.detail.forEach((block: Block) => {
+			this._assertInBounds(block.x, block.y, "when locking tetromino");
 			this.occupiedPositions.push(block);
 		});
 		this.occupiedPositions.sort((a, b) => b.y - a.y);

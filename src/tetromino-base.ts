@@ -14,6 +14,14 @@ export class Block {
 	}
 
 	drop(): void {
+		const board = this.parent?.board;
+		if (board && typeof (board as any).getHeight === "function") {
+			const maxY = (board as any).getHeight() - 1;
+			if (this.y >= maxY) {
+				console.warn(`Block cannot drop: already at maximum y (${this.y} >= ${maxY})`);
+				return;
+			}
+		}
 		this.y++;
 	}
 
