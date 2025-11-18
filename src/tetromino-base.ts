@@ -59,13 +59,30 @@ export abstract class Tetromino {
 		this.paused = !this.paused;
 	}
 	public collapseBlocks() {
-		for (const block of this.blocks) {
-			let blocksBelow = this.blocks.filter((b) => b.x === block.x && b.y > block.y);
-			let highestBelowBlockY = Math.min(...blocksBelow.map((b) => b.y));
-			if (blocksBelow.length > 0 && highestBelowBlockY - 1 > block.y) {
-				block.drop();
-				this.collapseBlocks(); // Recursively collapse until no more blocks can drop
+		const MAX_ITERATIONS = 100;
+		let iterations = 0;
+		let collapsed = true;
+
+		while (collapsed && iterations < MAX_ITERATIONS) {
+			collapsed = false;
+			iterations++;
+
+			for (const block of this.blocks) {
+				const blocksBelow = this.blocks.filter((b) => b.x === block.x && b.y > block.y);
+				if (blocksBelow.length > 0) {
+					const highestBelowBlockY = Math.min(...blocksBelow.map((b) => b.y));
+					if (highestBelowBlockY - 1 > block.y) {
+						block.drop();
+						collapsed = true;
+					}
+				}
 			}
+		}
+
+		if (iterations >= MAX_ITERATIONS) {
+			console.warn(
+				"Block collapse exceeded maximum iterations. Possible infinite loop prevented."
+			);
 		}
 	}
 	public dropByOne() {

@@ -366,13 +366,24 @@ export class Board {
 		this.canHoldPiece = true;
 	}
 	private _checkForCompletedLines() {
-		const completedLines = this._findCompletedLines();
-		if (completedLines.length > 0) {
+		const MAX_ITERATIONS = 100;
+		let iterations = 0;
+
+		while (iterations < MAX_ITERATIONS) {
+			const completedLines = this._findCompletedLines();
+			if (completedLines.length === 0) {
+				break;
+			}
+
 			this._removeCompletedLines(completedLines);
-			// Drop all remaining blocks to their lowest possible positions
 			this._dropAllBlocks();
-			// Recursively check for new completed lines
-			this._checkForCompletedLines();
+			iterations++;
+		}
+
+		if (iterations >= MAX_ITERATIONS) {
+			console.warn(
+				"Line clearing exceeded maximum iterations. Possible infinite loop prevented."
+			);
 		}
 	}
 
