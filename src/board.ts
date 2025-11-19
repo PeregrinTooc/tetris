@@ -397,16 +397,35 @@ export class Board {
 	}
 
 	private _removeCompletedLines(completedLines: number[]) {
+		const affectedTetrominos = new Set<Tetromino>();
+
 		completedLines.forEach((line) => {
 			const blocksToRemove = this.occupiedPositions.filter((block) => block.y === line);
 			this.occupiedPositions = this.occupiedPositions.filter((block) => block.y !== line);
+
 			blocksToRemove.forEach((block) => {
+				affectedTetrominos.add(block.parent);
 				block.parent.blocks = block.parent.blocks.filter((b) => b !== block);
-				if (block.parent.blocks.length === 0 && this.tetrominos.has(block.parent)) {
-					this.tetrominos.delete(block.parent);
-				}
 			});
 		});
+
+		for (const tetromino of affectedTetrominos) {
+			if (tetromino.blocks.length === 0) {
+				if (this.tetrominos.has(tetromino)) {
+					this.tetrominos.delete(tetromino);
+				}
+				if (tetromino.element.parentNode) {
+					tetromino.element.parentNode.removeChild(tetromino.element);
+				}
+			} else {
+				tetromino.blocks.forEach((block) => {
+					if (!this.occupiedPositions.includes(block)) {
+						this.occupiedPositions.push(block);
+					}
+				});
+			}
+		}
+
 		const numberOfCompletedLines = completedLines.length;
 		const scoreEvent = new CustomEvent("linesCompleted", {
 			detail: { linesCompleted: numberOfCompletedLines },
