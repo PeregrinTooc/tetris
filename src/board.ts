@@ -161,12 +161,20 @@ export class Board {
 		}
 	}
 
-	public moveTetromino(tetromino: Tetromino, direction: string): boolean {
+	private _getMovementDelta(direction: string): { dx: number; dy: number } {
 		let dx = 0,
 			dy = 0;
 		if (direction === "left") dx = -1;
 		if (direction === "right") dx = 1;
 		if (direction === "down") dy = 1;
+		return { dx, dy };
+	}
+
+	private _isValidMove(
+		tetromino: Tetromino,
+		{ dx, dy }: { dx: number; dy: number },
+		direction: string
+	): boolean {
 		const previewBlocks = tetromino
 			.getBlocks()
 			.map(({ x, y }: { x: number; y: number }) => ({ x: x + dx, y: y + dy }));
@@ -178,6 +186,10 @@ export class Board {
 		if (!this._canMove(direction)) {
 			return false;
 		}
+		return true;
+	}
+
+	private _applyMovement(tetromino: Tetromino, direction: string): void {
 		if (direction === "left") {
 			tetromino.left--;
 		}
@@ -188,6 +200,13 @@ export class Board {
 			tetromino.top++;
 		}
 		tetromino.updatePosition();
+	}
+
+	public moveTetromino(tetromino: Tetromino, direction: string): boolean {
+		if (!this._isValidMove(tetromino, this._getMovementDelta(direction), direction)) {
+			return false;
+		}
+		this._applyMovement(tetromino, direction);
 		return true;
 	}
 

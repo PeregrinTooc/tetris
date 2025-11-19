@@ -1,5 +1,4 @@
 echo "Running unit tests before commit..."
-npm run format
 npm run test:unit
 
 if [ $? -ne 0 ]; then
@@ -8,3 +7,16 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Unit tests passed. Proceeding with commit."
+
+# Get list of staged files before formatting
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+npm run format
+
+# Re-stage only the files that were originally staged
+if [ -n "$STAGED_FILES" ]; then
+	echo "Re-staging formatted files..."
+	echo "$STAGED_FILES" | xargs git add
+fi
+
+echo "Pre-commit checks complete."
