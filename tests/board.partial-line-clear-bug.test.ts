@@ -73,8 +73,8 @@ describe("Board - Partial Tetromino Line Clear Bug", () => {
 		// ASSERTIONS TO VERIFY THE FIX:
 
 		// 1. Blocks from row 8 should still be in occupiedPositions
-		const remainingBlocks = (board as any).occupiedPositions.filter(
-			(b: any) => [block1.id, block2.id, block3.id].includes(b.parent.id)
+		const remainingBlocks = (board as any).occupiedPositions.filter((b: any) =>
+			[block1.id, block2.id, block3.id].includes(b.parent.id)
 		);
 		expect(remainingBlocks.length).toBe(3);
 
