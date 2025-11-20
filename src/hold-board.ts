@@ -30,6 +30,27 @@ export class HoldBoard {
 			tetromino.element.parentNode.removeChild(tetromino.element);
 		}
 
+		// Ensure tetromino container is visible (may have been hidden in coordinate mode)
+		tetromino.element.style.display = "";
+
+		// Clear and re-render blocks in container mode (tetromino has no board now)
+		while (tetromino.element.firstChild) {
+			tetromino.element.removeChild(tetromino.element.firstChild);
+		}
+
+		// Re-render blocks as children of the tetromino element
+		tetromino.getBlocks().forEach(({ x, y }) => {
+			const block = document.createElement("div");
+			block.className = "block";
+			block.style.width = tetromino.size + "px";
+			block.style.height = tetromino.size + "px";
+			block.style.position = "absolute";
+			block.style.left = (x - tetromino.left) * tetromino.size + "px";
+			block.style.top = (y - tetromino.top) * tetromino.size + "px";
+			block.setAttribute("data-tetromino-id", tetromino.id);
+			tetromino.element.appendChild(block);
+		});
+
 		// Position the tetromino element in hold board
 		tetromino.element.style.position = "absolute";
 		const centerOffset = (this.element.clientWidth - tetromino.size * 2) / 2;

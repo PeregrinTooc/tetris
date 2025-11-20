@@ -17,6 +17,10 @@ export class PreviewBoardImpl {
 
 	showNextTetromino(tetromino: any): void {
 		this.previewContainer.innerHTML = "";
+
+		// Ensure tetromino container is visible (may have been hidden in coordinate mode)
+		tetromino.element.style.display = "";
+
 		tetromino.element.style.position = "absolute";
 		const centerOffset = (SizingConfig.PREVIEW_BOARD_WIDTH - tetromino.size * 2) / 2;
 		tetromino.element.style.left = centerOffset + "px";

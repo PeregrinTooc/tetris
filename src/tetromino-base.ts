@@ -29,7 +29,6 @@ export class Block {
 		this.parent.removeBlock(this);
 	}
 
-	// Log only x, y and tetromino id as requested
 	public log(): void {
 		console.log("  Block ->", { x: this.x, y: this.y, tetrominoId: this.parent?.id });
 	}
@@ -47,6 +46,9 @@ export abstract class Tetromino {
 	paused: boolean = false;
 	blocks: Block[] = [];
 
+	private static nextId = 1;
+	public readonly id: string;
+
 	constructor(left: number, board: Board | null) {
 		this.id = (Tetromino.nextId++).toString();
 		this.pivot = new Block({ x: left, y: 0, parent: this });
@@ -59,13 +61,24 @@ export abstract class Tetromino {
 		this.rotation = 0;
 		this.element = this._createElement();
 		this.blocks = this.getBlocks();
-		this._renderBlocks();
-		if (this.board) this.board.addTetromino(this);
+		if (this.board) {
+			this.board.addTetromino(this);
+		} else {
+			this._renderInitialBlocks();
+		}
+	}
+
+	private _renderInitialBlocks(): void {
+		this.blocks.forEach(({ x, y }) => {
+			const block = this._createDiv("block", x - this.left, y - this.top);
+			this.element.appendChild(block);
+		});
 	}
 
 	public pause() {
 		this.paused = !this.paused;
 	}
+
 	public collapseBlocks() {
 		const MAX_ITERATIONS = 100;
 		let iterations = 0;
@@ -93,36 +106,33 @@ export abstract class Tetromino {
 			);
 		}
 	}
+
 	public dropByOne() {
 		this.blocks.forEach((block) => block.drop());
 	}
 
-	private static nextId = 1;
-	public readonly id: string;
-
 	public get left(): number {
 		return this.pivot.x;
 	}
+
 	public set left(value: number) {
 		this.pivot.x = value;
 	}
+
 	public get top(): number {
 		return this.pivot.y;
 	}
+
 	public set top(value: number) {
 		this.pivot.y = value;
 	}
 
 	public reset(): void {
-		// Reset position
 		this.left = Math.floor((this.board?.width || 10) / 2);
 		this.top = 0;
-		// Reset rotation
 		this.rotation = 0;
-		// Reset state
 		this.locked = false;
 		this.paused = false;
-		// Update position first, then blocks
 		this.updatePosition();
 		this.updateBlocks();
 	}
@@ -138,15 +148,18 @@ export abstract class Tetromino {
 			this.board.removeTetromino(this);
 		}
 	}
+
 	private _createElement(): HTMLElement {
 		return this._createDiv(this.getClassName());
 	}
+
 	public collides(dx: number, dy: number, occupiedPositions: Block[]): boolean {
 		const movingBlocks = this.getBlocks().map(({ x, y }) => ({ x: x + dx, y: y + dy }));
 		return movingBlocks.some(({ x, y }) =>
 			occupiedPositions.some(({ x: bx, y: by }) => bx === x && by === y)
 		);
 	}
+
 	public abstract getClassName(): string;
 
 	private _createDiv(
@@ -162,10 +175,7 @@ export abstract class Tetromino {
 		div.style.position = "absolute";
 		div.style.left = left * size + "px";
 		div.style.top = top * size + "px";
-
-		// Add tetromino ID to both containers and blocks
 		div.setAttribute("data-tetromino-id", this.id);
-
 		return div;
 	}
 
@@ -175,7 +185,6 @@ export abstract class Tetromino {
 		const board = this.board as Board;
 		if (!board || this.locked) return;
 		const moved = board.moveTetromino(this, direction);
-		// Award 10 points for soft drop if tetromino actually moved down
 		if (moved && direction === "down") {
 			this._dispatchScoreEvent(10);
 		}
@@ -188,10 +197,8 @@ export abstract class Tetromino {
 			dropDistance++;
 		}
 
-		// Award 15 points per line for hard drop
 		if (dropDistance > 0) {
 			this._dispatchScoreEvent(dropDistance * 15);
-			// Dispatch hard drop event
 			const hardDropEvent = new Event("hardDrop");
 			this.element.dispatchEvent(hardDropEvent);
 		}
@@ -215,7 +222,6 @@ export abstract class Tetromino {
 		this.element.style.top = this.top * this.size + "px";
 		this.element.style.left = this.left * this.size + "px";
 
-		// Update rendering using BlockRenderer if board is available
 		if (this.board && typeof (this.board as any).getBlockRenderer === "function") {
 			(this.board as any).getBlockRenderer().updateTetromino(this);
 		}
@@ -224,10 +230,9 @@ export abstract class Tetromino {
 	public lock(): void {
 		if (this.locked) return;
 		this.stopListening();
-		this.blocks = this.getBlocks(); //make sure the blocks are up to date: from now on, their position will not be calculated again.
+		this.blocks = this.getBlocks();
 		this.locked = true;
 
-		// Award 5 points for locking a tetromino
 		this._dispatchScoreEvent(5);
 
 		const event = new CustomEvent("locked", { detail: this.getBlocks() });
@@ -295,7 +300,7 @@ export abstract class Tetromino {
 	}
 
 	public activateKeyboardControl(keyBindingManager: KeyBindingManager): void {
-		this._removeKeyboardListener(); // Remove any existing listener first
+		this._removeKeyboardListener();
 		this._setupKeyboardListener(keyBindingManager);
 	}
 
@@ -320,24 +325,11 @@ export abstract class Tetromino {
 	public updateBlocks(): void {
 		this.blocks = this.getBlocks();
 
-		// Use BlockRenderer if available, otherwise fall back to legacy rendering
 		if (this.board && typeof (this.board as any).getBlockRenderer === "function") {
 			(this.board as any).getBlockRenderer().updateTetromino(this);
-		} else {
-			// Legacy fallback
-			while (this.element.firstChild) this.element.removeChild(this.element.firstChild);
-			this._renderBlocks();
 		}
 	}
 
-	private _renderBlocks(): void {
-		this.blocks.forEach(({ x, y }) => {
-			const block = this._createDiv("block", x - this.left, y - this.top);
-			this.element.appendChild(block);
-		});
-	}
-
-	// Parent-level logging for tetrominoes. Children inherit this.
 	public log(): void {
 		console.log(" Tetromino ->", {
 			id: this.id,

@@ -112,6 +112,10 @@ export class Board {
 	private _swap(currentPiece: Tetromino, heldPiece: Tetromino) {
 		this.holdBoard.showHeldTetromino(currentPiece);
 		currentPiece.board = null;
+
+		// Clear any existing coordinate blocks for the held piece before adding it back
+		this.blockRenderer.clearTetromino(heldPiece);
+
 		this.addTetromino(heldPiece);
 		heldPiece.reset();
 		heldPiece.startFalling();
@@ -124,6 +128,9 @@ export class Board {
 		this.activeTetromino.stopListening();
 		const currentTetromino = this.activeTetromino;
 		const storedTetromino = this.holdBoard.getHeldTetromino();
+
+		// Clear coordinate blocks if in coordinate rendering mode
+		this.blockRenderer.clearTetromino(currentTetromino);
 
 		// Remove current piece from board
 		this.tetrominos.delete(currentTetromino);
@@ -387,7 +394,11 @@ export class Board {
 		const customEvent = event as CustomEvent;
 		customEvent.detail.forEach((block: Block) => {
 			this._assertInBounds(block.x, block.y, "when locking tetromino");
-			this.occupiedPositions.push(block);
+
+			// Check if this exact block instance is already in occupiedPositions
+			if (!this.occupiedPositions.includes(block)) {
+				this.occupiedPositions.push(block);
+			}
 		});
 		this.occupiedPositions.sort((a, b) => b.y - a.y);
 		this._checkForCompletedLines();
@@ -436,12 +447,6 @@ export class Board {
 				if (tetromino.element.parentNode) {
 					tetromino.element.parentNode.removeChild(tetromino.element);
 				}
-			} else {
-				tetromino.blocks.forEach((block) => {
-					if (!this.occupiedPositions.includes(block)) {
-						this.occupiedPositions.push(block);
-					}
-				});
 			}
 		}
 
@@ -574,23 +579,5 @@ export class Board {
 		this.addTetromino(tetromino);
 		tetromino.updatePosition();
 		return tetromino;
-	}
-
-	private isCoordinateRenderingEnabled(): boolean {
-		return (window as any).USE_COORDINATE_RENDERING === true;
-	}
-
-	/**
-	 * @deprecated Use BlockRenderer instead. Kept for backward compatibility.
-	 */
-	public renderTetrominoCoordinates(tetromino: Tetromino): void {
-		this.blockRenderer.updateTetromino(tetromino);
-	}
-
-	/**
-	 * @deprecated Use BlockRenderer instead. Kept for backward compatibility.
-	 */
-	public clearTetrominoCoordinates(tetromino: Tetromino): void {
-		this.blockRenderer.clearTetromino(tetromino);
 	}
 }
