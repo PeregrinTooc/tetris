@@ -10,6 +10,7 @@ import {
 	addTetrominoZ,
 	addTetrominoS,
 	pressHardDrop,
+	getBlocksByTetrominoId,
 } from "../support/testUtils";
 
 const tetrominoSeeds = [0, 1, 2, 3, 4, 5, 6]; // T, I, O, J, L, Z, S
@@ -50,16 +51,8 @@ describe("Tetromino Shapes with ID Selectors", () => {
 			cy.get(`#game-board .${tetrominoClasses[idx]}`).then(($tetromino) => {
 				const tetrominoId = $tetromino.attr("data-tetromino-id");
 
-				// Verify all blocks have the same tetromino ID
-				cy.get(`[data-tetromino-id="${tetrominoId}"].block`).should("have.length", 4);
-
-				// Verify container has the ID
-				cy.get(`[data-tetromino-id="${tetrominoId}"]`)
-					.not(".block")
-					.should("have.length", 1);
-
-				// Verify we can select both container and blocks by ID
-				cy.get(`[data-tetromino-id="${tetrominoId}"]`).should("have.length", 5); // 1 container + 4 blocks
+				// Verify all blocks have the same tetromino ID using rendering-agnostic helper
+				getBlocksByTetrominoId(tetrominoId).should("have.length", 4);
 			});
 		});
 	});
@@ -73,13 +66,10 @@ describe("Tetromino Shapes with ID Selectors", () => {
 
 		cy.get("#start-button").click();
 
-		// Traditional approach
-		cy.get("#game-board .tetromino-i .block").should("have.length", 4);
-
-		// ID-based approach
+		// ID-based approach using rendering-agnostic helper
 		cy.get("#game-board .tetromino-i").then(($tetromino) => {
 			const tetrominoId = $tetromino.attr("data-tetromino-id");
-			cy.get(`[data-tetromino-id="${tetrominoId}"].block`).should("have.length", 4);
+			getBlocksByTetrominoId(tetrominoId).should("have.length", 4);
 		});
 	});
 
@@ -102,8 +92,8 @@ describe("Tetromino Shapes with ID Selectors", () => {
 		cy.get("#game-board .tetromino-t").then(($tTetromino) => {
 			const tTetrominoId = $tTetromino.attr("data-tetromino-id");
 
-			// Verify we can select only this tetromino's blocks
-			cy.get(`[data-tetromino-id="${tTetrominoId}"].block`).should("have.length", 4);
+			// Verify we can select only this tetromino's blocks using rendering-agnostic helper
+			getBlocksByTetrominoId(tTetrominoId).should("have.length", 4);
 
 			// Drop it and check next tetromino
 			pressHardDrop();
@@ -115,8 +105,8 @@ describe("Tetromino Shapes with ID Selectors", () => {
 				// Should be different IDs
 				expect(iTetrominoId).to.not.equal(tTetrominoId);
 
-				// Should be able to select I-tetromino blocks by ID
-				cy.get(`[data-tetromino-id="${iTetrominoId}"].block`).should("have.length", 4);
+				// Should be able to select I-tetromino blocks by ID using rendering-agnostic helper
+				getBlocksByTetrominoId(iTetrominoId).should("have.length", 4);
 			});
 		});
 	});

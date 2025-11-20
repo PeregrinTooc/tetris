@@ -2,6 +2,7 @@ import {
 	addTetrominoBase,
 	pressHardDrop,
 	setTetrominoDropTimeInMiliseconds,
+	getBlocks,
 } from "../support/testUtils";
 import { BOTTOM_ROW_PIXEL, BOTTOM_ROW_INDEX } from "../support/constants";
 
@@ -29,7 +30,8 @@ describe("Board Bounds Guard", () => {
 	it("no block renders beyond bottom row", () => {
 		cy.get("#start-button").click();
 		pressHardDrop();
-		cy.get("#game-board .block").each(($block) => {
+		// Use rendering-agnostic helper to get blocks
+		getBlocks("#game-board").each(($block) => {
 			const styleTop = parseInt(($block[0] as HTMLElement).style.top || "0", 10);
 			// Blocks may have a 1px border; allow equality with bottom row pixel.
 			expect(styleTop).to.be.at.most(BOTTOM_ROW_PIXEL);

@@ -11,8 +11,6 @@ describe("Coordinate-Based Rendering", () => {
 		cy.visit("/index.html");
 		cy.window().then((win) => {
 			setTetrominoDropTimeInMiliseconds(win, 100);
-			// Enable coordinate-based rendering
-			(win as any).USE_COORDINATE_RENDERING = true;
 			addTetrominoBase(win);
 		});
 	});

@@ -13,7 +13,6 @@ describe("Coordinate-Based Rendering - Hold Functionality", () => {
 		cy.visit("/index.html");
 		cy.window().then((win) => {
 			setTetrominoDropTimeInMiliseconds(win, 100);
-			(win as any).USE_COORDINATE_RENDERING = true;
 		});
 	});
 
@@ -35,7 +34,7 @@ describe("Coordinate-Based Rendering - Hold Functionality", () => {
 
 		cy.get("#game-board .coordinate-block").should("have.length", 4);
 
-		cy.get(".hold-container .block").should("have.length", 4);
+		cy.get(".hold-container .coordinate-block").should("have.length", 4);
 	});
 
 	it("should not leave duplicate blocks when swapping held piece", () => {
@@ -63,7 +62,7 @@ describe("Coordinate-Based Rendering - Hold Functionality", () => {
 
 		cy.get("#game-board .coordinate-block").should("have.length", 4);
 
-		cy.get(".hold-container .block").should("have.length", 4);
+		cy.get(".hold-container .coordinate-block").should("have.length", 4);
 	});
 
 	it("should properly render held piece after hard drop and hold", () => {
@@ -89,7 +88,7 @@ describe("Coordinate-Based Rendering - Hold Functionality", () => {
 
 		cy.get("#game-board .coordinate-block").should("have.length", 8);
 
-		cy.get(".hold-container .block").should("have.length", 4);
+		cy.get(".hold-container .coordinate-block").should("have.length", 4);
 	});
 
 	it("should handle multiple hold swaps without leaving orphaned blocks", () => {
@@ -120,6 +119,6 @@ describe("Coordinate-Based Rendering - Hold Functionality", () => {
 
 		cy.get("#game-board .coordinate-block").should("have.length", 8);
 
-		cy.get(".hold-container .block").should("have.length", 4);
+		cy.get(".hold-container .coordinate-block").should("have.length", 4);
 	});
 });

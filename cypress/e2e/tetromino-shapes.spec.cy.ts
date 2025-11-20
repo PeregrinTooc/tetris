@@ -9,6 +9,7 @@ import {
 	addTetrominoS,
 	pressHardDrop,
 	doTimes,
+	getBlocksByTetrominoId,
 } from "../support/testUtils";
 
 const tetrominoSeeds = [0, 1, 2, 3, 4, 5, 6]; // T, I, O, J, L, Z, S
@@ -48,8 +49,8 @@ describe("All Tetromino Shapes", () => {
 			cy.get("#game-board " + tetrominoClasses[idx]).then(($tetromino) => {
 				const tetrominoId = $tetromino.attr("data-tetromino-id") as string;
 
-				// Verify all blocks have the same tetromino ID and correct count
-				cy.get(`[data-tetromino-id="${tetrominoId}"].block`).should("have.length", 4);
+				// Verify all blocks have the same tetromino ID and correct count using rendering-agnostic helper
+				getBlocksByTetrominoId(tetrominoId).should("have.length", 4);
 			});
 
 			// Drop and check next tetromino does not match previous

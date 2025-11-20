@@ -24,7 +24,8 @@ describe("PreviewBoard integration", () => {
 	test("should show the next tetromino in the preview", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 1337);
 		previewBoard.showNextTetromino(tetromino);
-		const previewTetromino = previewBoard.previewContainer.querySelector(".tetromino");
-		expect(previewTetromino).not.toBeNull();
+		const coordinateBlocks =
+			previewBoard.previewContainer.querySelectorAll(".coordinate-block");
+		expect(coordinateBlocks.length).toBeGreaterThan(0);
 	});
 });

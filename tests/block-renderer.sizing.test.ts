@@ -20,7 +20,6 @@ describe("BlockRenderer sizing", () => {
 
 	it("should use SizingConfig block size for coordinate blocks", () => {
 		const tetromino = createTetromino(board, 0, 5);
-		renderer.setRenderingMode("coordinate");
 		renderer.renderTetromino(tetromino);
 
 		const coordinateBlocks = boardElement.querySelectorAll(".coordinate-block");
@@ -33,24 +32,8 @@ describe("BlockRenderer sizing", () => {
 		});
 	});
 
-	it("should use tetromino size for container blocks", () => {
-		const tetromino = createTetromino(board, 0, 5);
-		renderer.setRenderingMode("container");
-		renderer.renderTetromino(tetromino);
-
-		const blocks = tetromino.element.querySelectorAll(".block");
-		expect(blocks.length).toBeGreaterThan(0);
-
-		blocks.forEach((block) => {
-			const htmlBlock = block as HTMLElement;
-			expect(htmlBlock.style.width).toBe(tetromino.size + "px");
-			expect(htmlBlock.style.height).toBe(tetromino.size + "px");
-		});
-	});
-
 	it("should position coordinate blocks using block size", () => {
 		const tetromino = createTetromino(board, 0, 5);
-		renderer.setRenderingMode("coordinate");
 		renderer.renderTetromino(tetromino);
 
 		const coordinateBlocks = boardElement.querySelectorAll(".coordinate-block");
@@ -62,5 +45,12 @@ describe("BlockRenderer sizing", () => {
 			expect(left % SizingConfig.BLOCK_SIZE).toBe(0);
 			expect(top % SizingConfig.BLOCK_SIZE).toBe(0);
 		});
+	});
+
+	it("should hide tetromino container in coordinate mode", () => {
+		const tetromino = createTetromino(board, 0, 5);
+		renderer.renderTetromino(tetromino);
+
+		expect(tetromino.element.style.display).toBe("none");
 	});
 });

@@ -33,7 +33,10 @@ describe("Tetris Game Setup", () => {
 		cy.get('#game-board [data-tetromino-id="1"]').then(($tetromino) => {
 			pressHardDrop();
 			// Count only tetromino containers, not individual blocks
-			cy.get("#game-board [data-tetromino-id]").not(".block").should("have.length", 2);
+			cy.get("#game-board [data-tetromino-id]")
+				.not(".block")
+				.not(".coordinate-block")
+				.should("have.length", 2);
 			cy.get('#game-board [data-tetromino-id="2"]').then(($newTetromino) => {});
 		});
 	});
@@ -80,10 +83,12 @@ describe("Tetris Game Setup", () => {
 		cy.get("#game-over", { timeout: 12000 }).should("be.visible");
 		cy.get("[data-tetromino-id]")
 			.not(".block")
+			.not(".coordinate-block")
 			.then(($tetrominoesBefore) => {
 				cy.wait(500);
 				cy.get("[data-tetromino-id]")
 					.not(".block")
+					.not(".coordinate-block")
 					.should("have.length", $tetrominoesBefore.length);
 			});
 	});

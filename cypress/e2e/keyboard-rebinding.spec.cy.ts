@@ -24,22 +24,36 @@ describe("Keyboard Rebinding", () => {
 
 		// Start game
 		cy.get("#start-button").click();
-		// Verify new binding works - press 'A' to move left
-		cy.get("[data-tetromino-id='1']").then(($tetromino) => {
-			const initialX = $tetromino.position().left;
-			cy.get("body").trigger("keydown", { key: "a" });
-			cy.get("[data-tetromino-id='1']").should(($movedTetromino) => {
-				expect($movedTetromino.position().left).to.be.lessThan(initialX);
+		// Verify new binding works - press 'A' to move left (use CSS left for hidden containers)
+		cy.get("[data-tetromino-id='1']")
+			.not(".block")
+			.not(".coordinate-block")
+			.then(($tetromino) => {
+				const initialX = parseInt($tetromino.css("left"), 10);
+				cy.get("body").trigger("keydown", { key: "a" });
+				cy.get("[data-tetromino-id='1']")
+					.not(".block")
+					.not(".coordinate-block")
+					.should(($movedTetromino) => {
+						const newX = parseInt($movedTetromino.css("left"), 10);
+						expect(newX).to.be.lessThan(initialX);
+					});
 			});
-		});
 
 		// Verify old binding (ArrowLeft) no longer works
-		cy.get("[data-tetromino-id='1']").then(($tetromino) => {
-			const initialX = $tetromino.position().left;
-			cy.get("body").trigger("keydown", { key: "ArrowLeft" });
-			cy.get("[data-tetromino-id='1']").should(($notMovedTetromino) => {
-				expect($notMovedTetromino.position().left).to.equal(initialX);
+		cy.get("[data-tetromino-id='1']")
+			.not(".block")
+			.not(".coordinate-block")
+			.then(($tetromino) => {
+				const initialX = parseInt($tetromino.css("left"), 10);
+				cy.get("body").trigger("keydown", { key: "ArrowLeft" });
+				cy.get("[data-tetromino-id='1']")
+					.not(".block")
+					.not(".coordinate-block")
+					.should(($notMovedTetromino) => {
+						const newX = parseInt($notMovedTetromino.css("left"), 10);
+						expect(newX).to.equal(initialX);
+					});
 			});
-		});
 	});
 });

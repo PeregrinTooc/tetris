@@ -12,7 +12,6 @@ describe("Coordinate-Based Rendering - Locked Tetrominoes", () => {
 		cy.visit("/index.html");
 		cy.window().then((win) => {
 			setTetrominoDropTimeInMiliseconds(win, 100);
-			(win as any).USE_COORDINATE_RENDERING = true;
 		});
 	});
 

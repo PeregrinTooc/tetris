@@ -34,6 +34,7 @@ describe("Tetris Game Movement", () => {
 				const tetrominoId = $tetromino.attr("data-tetromino-id") as string;
 				cy.get(`[data-tetromino-id="${tetrominoId}"]`)
 					.not(".block")
+					.not(".coordinate-block")
 					.should("have.css", "top")
 					.and("not.equal", "0px");
 
@@ -56,6 +57,7 @@ describe("Tetris Game Movement", () => {
 
 				cy.get(`[data-tetromino-id="${tetrominoId}"]`)
 					.not(".block")
+					.not(".coordinate-block")
 					.should(($el2) => {
 						const newLeft = parseInt($el2.css("left"), 10);
 						expect(newLeft).to.be.greaterThan(initialLeft);
@@ -71,15 +73,16 @@ describe("Tetris Game Movement", () => {
 			.first()
 			.then(($tetromino) => {
 				const tetrominoId = $tetromino.attr("data-tetromino-id") as string;
-				const initialRight = parseInt($tetromino.css("right"), 10);
+				const initialLeft = parseInt($tetromino.css("left"), 10);
 
 				pressLeft();
 
 				cy.get(`[data-tetromino-id="${tetrominoId}"]`)
 					.not(".block")
+					.not(".coordinate-block")
 					.should(($el2) => {
-						const newRight = parseInt($el2.css("right"), 10);
-						expect(newRight).to.be.greaterThan(initialRight);
+						const newLeft = parseInt($el2.css("left"), 10);
+						expect(newLeft).to.be.lessThan(initialLeft);
 					});
 			});
 	});
@@ -101,6 +104,7 @@ describe("Tetris Game Movement", () => {
 
 				cy.get(`[data-tetromino-id="${tetrominoId}"]`)
 					.not(".block")
+					.not(".coordinate-block")
 					.should(($el2) => {
 						const newTop = parseInt($el2.css("top"), 10);
 						expect(newTop).to.equal(BOTTOM_ROW_PIXEL);
@@ -125,6 +129,7 @@ describe("Tetris Game Movement", () => {
 
 				cy.get(`[data-tetromino-id="${tetrominoId}"]`)
 					.not(".block")
+					.not(".coordinate-block")
 					.should(($el2) => {
 						const newTop = parseInt($el2.css("top"), 10);
 						expect(newTop).to.be.greaterThan(initialTop);
@@ -137,11 +142,13 @@ describe("Tetris Game Movement", () => {
 function validateTetrominoDrop(tetrominoId: string) {
 	cy.get(`[data-tetromino-id="${tetrominoId}"]`)
 		.not(".block")
+		.not(".coordinate-block")
 		.then(($el) => {
 			const topAfterFirstMove = parseInt($el.css("top"), 10);
 			cy.wait(30);
 			cy.get(`[data-tetromino-id="${tetrominoId}"]`)
 				.not(".block")
+				.not(".coordinate-block")
 				.should(($el2) => {
 					const topAfterSecondMove = parseInt($el2.css("top"), 10);
 					expect(topAfterSecondMove).to.be.greaterThan(topAfterFirstMove);

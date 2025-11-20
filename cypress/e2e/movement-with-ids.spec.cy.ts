@@ -5,6 +5,8 @@ import {
 	addTetrominoBase,
 	pressLeft,
 	pressRight,
+	getBlocks,
+	getBlocksByTetrominoId,
 } from "../support/testUtils";
 
 describe("Movement with Tetromino ID Selectors", () => {
@@ -51,12 +53,9 @@ describe("Movement with Tetromino ID Selectors", () => {
 			.then(($tetromino) => {
 				const tetrominoId = $tetromino.attr("data-tetromino-id");
 
-				// All blocks should have the same tetromino ID
-				cy.get(`[data-tetromino-id="${tetrominoId}"].block`).should(
-					"have.length.greaterThan",
-					0
-				);
-				cy.get(`[data-tetromino-id="${tetrominoId}"].block`).each(($block) => {
+				// All blocks should have the same tetromino ID using rendering-agnostic helper
+				getBlocksByTetrominoId(tetrominoId).should("have.length.greaterThan", 0);
+				getBlocksByTetrominoId(tetrominoId).each(($block) => {
 					expect($block.attr("data-tetromino-id")).to.equal(tetrominoId);
 				});
 			});
@@ -73,39 +72,28 @@ describe("Movement with Tetromino ID Selectors", () => {
 				// Can select the tetromino container by ID
 				cy.get(`[data-tetromino-id="${tetrominoId}"]`)
 					.not(".block")
+					.not(".coordinate-block")
 					.should("have.length", 1);
 
-				// Can select all blocks of this tetromino by ID
-				cy.get(`[data-tetromino-id="${tetrominoId}"].block`).should(
-					"have.length.greaterThan",
-					0
-				);
-
-				// Total elements with this ID = container + blocks
-				cy.get(`[data-tetromino-id="${tetrominoId}"]`).should("have.length.greaterThan", 1);
+				// Can select all blocks of this tetromino by ID using rendering-agnostic helper
+				getBlocksByTetrominoId(tetrominoId).should("have.length.greaterThan", 0);
 			});
 	});
 
 	it("should work with both old and new selector approaches", () => {
 		cy.get("#start-button").click();
 
-		// Old approach: container-based
-		cy.get("#game-board .tetromino .block").should("exist");
+		// Rendering-agnostic approach
+		getBlocks("#game-board").should("exist");
 
-		// New approach: ID-based
-		cy.get("#game-board [data-tetromino-id].block").should("exist");
-
-		// Both should find blocks
+		// ID-based approach
 		cy.get("#game-board .tetromino")
 			.first()
 			.then(($tetromino) => {
 				const tetrominoId = $tetromino.attr("data-tetromino-id");
 
-				cy.get(".tetromino .block").should("have.length.greaterThan", 0);
-				cy.get(`[data-tetromino-id="${tetrominoId}"].block`).should(
-					"have.length.greaterThan",
-					0
-				);
+				getBlocks("#game-board").should("have.length.greaterThan", 0);
+				getBlocksByTetrominoId(tetrominoId).should("have.length.greaterThan", 0);
 			});
 	});
 });

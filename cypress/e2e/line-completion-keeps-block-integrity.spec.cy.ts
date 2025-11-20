@@ -10,6 +10,7 @@ import {
 	pressRotate,
 	pressHardDrop,
 	doTimes,
+	getBlocksByTetrominoId,
 } from "../support/testUtils";
 
 describe("Line completion", () => {
@@ -61,7 +62,7 @@ describe("Line completion", () => {
 		doTimes(4, pressLeft);
 		pressHardDrop(); // drop test piece
 
-		cy.get('#game-board [data-tetromino-id="6"] .block').should(($blocks) => {
+		getBlocksByTetrominoId("6", "#game-board").should(($blocks) => {
 			expect($blocks).to.have.length(3);
 		});
 	});

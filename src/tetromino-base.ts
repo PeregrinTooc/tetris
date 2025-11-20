@@ -63,16 +63,7 @@ export abstract class Tetromino {
 		this.blocks = this.getBlocks();
 		if (this.board) {
 			this.board.addTetromino(this);
-		} else {
-			this._renderInitialBlocks();
 		}
-	}
-
-	private _renderInitialBlocks(): void {
-		this.blocks.forEach(({ x, y }) => {
-			const block = this._createDiv("block", x - this.left, y - this.top);
-			this.element.appendChild(block);
-		});
 	}
 
 	public pause() {

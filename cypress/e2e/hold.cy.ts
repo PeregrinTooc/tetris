@@ -116,17 +116,18 @@ describe("Tetris Hold Functionality", () => {
 		pressHold();
 		pressHold();
 
-		// Store reference to piece after swap
+		// Store reference to piece after swap (use CSS left which works for hidden containers)
 		cy.get("#game-board .tetromino-t").as("swappedPiece");
 
 		cy.get("@swappedPiece").then(($initial) => {
-			const initialPos = $initial.position().left;
+			const initialPos = parseInt($initial.css("left"), 10);
 
 			pressLeft();
 
 			// Verify piece moved
 			cy.get("#game-board .tetromino-t").then(($afterMove) => {
-				expect($afterMove.position().left).to.be.lessThan(initialPos);
+				const newPos = parseInt($afterMove.css("left"), 10);
+				expect(newPos).to.be.lessThan(initialPos);
 			});
 		});
 	});
@@ -201,18 +202,19 @@ describe("Tetris Hold Functionality", () => {
 
 	it("should allow holding after piece lock", () => {
 		// Wait for first T piece and hold it
-		cy.get("#game-board .tetromino").should("have.class", "tetromino-t");
+		cy.get("#game-board .tetromino-t").should("exist");
 		pressHold();
 
 		// Wait for second T piece and drop it
-		cy.get("#game-board .tetromino").should("have.class", "tetromino-t");
+		cy.get("#game-board .tetromino-t").should("exist");
 		for (let i = 0; i < 20; i++) pressDown();
 
-		// Wait for third piece by presence of data-tetromino-id="3" or at least one tetromino existing
-		cy.get("#game-board .tetromino").should("have.class", "tetromino-t");
+		// Wait for third piece (after second locks)
+		cy.get("#game-board .tetromino-t").should("exist");
 
 		pressHold();
-		cy.get("#hold-board .tetromino").should("have.class", "tetromino-t");
+		// Verify a tetromino is in hold board by checking for blocks with data-tetromino-id
+		cy.get("#hold-board [data-tetromino-id]").should("exist");
 	});
 
 	it("should clear the hold board after reset", () => {

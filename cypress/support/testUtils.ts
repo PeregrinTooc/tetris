@@ -138,3 +138,174 @@ export function addTetrominoSeeds(win: Window, ...seeds: number[]) {
 	// Prefer one push to reduce log noise; cast to any to satisfy variadic signature defined at runtime
 	(win.pushTetrominoSeed as any)(...seeds);
 }
+
+/**
+ * Rendering-mode-agnostic helper: Gets blocks regardless of rendering mode.
+ * Works with both container-based (.block) and coordinate-based (.coordinate-block) rendering.
+ * @param selector Optional parent selector to scope the search
+ */
+export function getBlocks(selector: string = "#game-board") {
+	return cy.get(selector).then(($parent) => {
+		const coordBlocks = $parent.find(".coordinate-block");
+		if (coordBlocks.length > 0) {
+			return cy.wrap(coordBlocks);
+		}
+		return cy.wrap($parent.find(".block"));
+	});
+}
+
+/**
+ * Rendering-mode-agnostic helper: Gets blocks with a specific data-tetromino-id.
+ * Works with both rendering modes.
+ * @param tetrominoId The tetromino ID to filter by
+ * @param parentSelector Optional parent selector to scope the search
+ */
+export function getBlocksByTetrominoId(
+	tetrominoId: string,
+	parentSelector: string = "#game-board"
+) {
+	return cy.get(parentSelector).then(($parent) => {
+		const coordBlocks = $parent.find(`.coordinate-block[data-tetromino-id="${tetrominoId}"]`);
+		if (coordBlocks.length > 0) {
+			return cy.wrap(coordBlocks);
+		}
+		return cy.wrap($parent.find(`[data-tetromino-id="${tetrominoId}"].block`));
+	});
+}
+
+/**
+ * Rendering-mode-agnostic helper: Checks if blocks exist in either rendering mode.
+ * @param selector Parent selector to check within
+ */
+export function blocksExist(selector: string = "#game-board") {
+	return cy.get(selector).then(($parent) => {
+		const coordBlocks = $parent.find(".coordinate-block");
+		const containerBlocks = $parent.find(".block");
+		return coordBlocks.length > 0 || containerBlocks.length > 0;
+	});
+}
+
+/**
+ * Rendering-mode-agnostic helper: Counts blocks in either rendering mode.
+ * @param selector Parent selector to count within
+ */
+export function getBlockCount(selector: string = "#game-board") {
+	return cy.get(selector).then(($parent) => {
+		const coordBlocks = $parent.find(".coordinate-block");
+		if (coordBlocks.length > 0) {
+			return coordBlocks.length;
+		}
+		return $parent.find(".block").length;
+	});
+}
+
+/**
+ * Gets relative block positions (relative to their container or as-is for coordinate mode).
+ * In container mode: returns positions relative to container
+ * In coordinate mode: converts absolute positions to relative by finding the center block (0,0)
+ * @param tetrominoId The tetromino ID
+ * @returns Array of {left, top} positions
+ */
+export function getRelativeBlockPositions(
+	tetrominoId: string
+): Cypress.Chainable<{ left: number; top: number }[]> {
+	return cy.window().then((win) => {
+		const coordBlocks = Cypress.$(
+			`#game-board .coordinate-block[data-tetromino-id="${tetrominoId}"]`
+		);
+
+		if (coordBlocks.length > 0) {
+			// Coordinate mode: blocks have absolute positions, convert to relative
+			const positions = coordBlocks
+				.map((i: number, el: HTMLElement) => ({
+					left: parseInt(el.style.left, 10),
+					top: parseInt(el.style.top, 10),
+				}))
+				.get();
+
+			// Find the center block (the one with smallest top, then middle left)
+			// For T-piece: center is the middle of top row
+			const minTop = Math.min(...positions.map((p) => p.top));
+			const topRowBlocks = positions.filter((p) => p.top === minTop);
+			topRowBlocks.sort((a, b) => a.left - b.left);
+			const centerBlock = topRowBlocks[Math.floor(topRowBlocks.length / 2)];
+
+			// Make positions relative to center block
+			return positions.map((p) => ({
+				left: p.left - centerBlock.left,
+				top: p.top - centerBlock.top,
+			}));
+		}
+
+		// Container mode: blocks already have relative positions
+		const container = Cypress.$(`[data-tetromino-id="${tetrominoId}"]`).not(".block");
+		const blocks = container.find(".block");
+		return blocks
+			.map((i: number, el: HTMLElement) => ({
+				left: parseInt(el.style.left, 10),
+				top: parseInt(el.style.top, 10),
+			}))
+			.get();
+	});
+}
+
+/**
+ * Gets absolute block positions on the game board.
+ * In container mode: adds container position to block position
+ * In coordinate mode: returns block positions as-is (already absolute)
+ * @param tetrominoId The tetromino ID
+ * @returns Array of {left, top} absolute positions in pixels
+ */
+export function getAbsoluteBlockPositions(
+	tetrominoId: string
+): Cypress.Chainable<{ left: number; top: number }[]> {
+	return cy.window().then((win) => {
+		const coordBlocks = Cypress.$(
+			`#game-board .coordinate-block[data-tetromino-id="${tetrominoId}"]`
+		);
+
+		if (coordBlocks.length > 0) {
+			// Coordinate mode: positions are already absolute
+			return coordBlocks
+				.map((i: number, el: HTMLElement) => ({
+					left: parseInt(el.style.left, 10),
+					top: parseInt(el.style.top, 10),
+				}))
+				.get();
+		}
+
+		// Container mode: add container offset to block positions
+		const container = Cypress.$(`[data-tetromino-id="${tetrominoId}"]`)
+			.not(".block")
+			.not(".coordinate-block");
+		const containerLeft = parseInt(container.css("left") || "0", 10);
+		const containerTop = parseInt(container.css("top") || "0", 10);
+
+		const blocks = container.find(".block");
+		return blocks
+			.map((i: number, el: HTMLElement) => ({
+				left: parseInt(el.style.left, 10) + containerLeft,
+				top: parseInt(el.style.top, 10) + containerTop,
+			}))
+			.get();
+	});
+}
+
+/**
+ * Gets grid positions (row/col) for blocks.
+ * Converts pixel positions to grid coordinates (dividing by 24).
+ * @param tetrominoId The tetromino ID
+ * @param blockSize Block size in pixels (default 24)
+ * @returns Array of {row, col} grid positions
+ */
+export function getBlockGridPositions(
+	tetrominoId: string,
+	blockSize: number = 24
+): Cypress.Chainable<{ row: number; col: number }[]> {
+	return getAbsoluteBlockPositions(tetrominoId).then((positions) => {
+		return positions.map((p) => ({
+			row: Math.round(p.top / blockSize),
+			col: Math.round(p.left / blockSize),
+		}));
+	});
+}

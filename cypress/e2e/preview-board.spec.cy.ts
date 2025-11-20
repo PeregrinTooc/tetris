@@ -1,4 +1,9 @@
-import { setTetrominoDropTimeInMiliseconds, addTetrominoBase, doTimes } from "../support/testUtils";
+import {
+	setTetrominoDropTimeInMiliseconds,
+	addTetrominoBase,
+	doTimes,
+	getBlocks,
+} from "../support/testUtils";
 
 describe("Preview Board", () => {
 	beforeEach(() => {
@@ -11,6 +16,8 @@ describe("Preview Board", () => {
 	});
 
 	it("should show a tetromino in the preview area when the game starts", () => {
-		cy.get("#preview-container").find(".tetromino").should("exist");
+		// In coordinate mode, blocks are rendered directly in preview-container
+		// In container mode, there's a .tetromino container
+		getBlocks("#preview-container").should("exist");
 	});
 });

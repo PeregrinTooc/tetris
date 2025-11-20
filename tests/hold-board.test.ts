@@ -88,21 +88,22 @@ describe("Hold Feature", () => {
 	describe("Visual Display", () => {
 		test("should display held tetromino with correct number of blocks", () => {
 			board.hold(); // Hold T piece
-			// Should have 1 tetromino element containing 4 block children
-			expect(holdElement.children.length).toBe(1);
-			const tetrominoElement = holdElement.children[0];
-			expect(tetrominoElement.children.length).toBe(4); // T piece has 4 blocks
+			// With coordinate rendering, blocks are rendered directly in holdElement (or holdContainer)
+			const coordinateBlocks = holdElement.querySelectorAll(".coordinate-block");
+			expect(coordinateBlocks.length).toBe(4); // T piece has 4 blocks
 		});
 
 		test("should clear previous held tetromino when showing new one", () => {
 			board.hold(); // Hold first T piece
-			expect(holdElement.children.length).toBe(1);
+			const firstBlockCount = holdElement.querySelectorAll(".coordinate-block").length;
+			expect(firstBlockCount).toBe(4);
 
 			const activePiece = board.getActiveTetromino();
 			activePiece.lock(); // Lock the active piece
 			board.hold(); // Hold second T piece
 
-			expect(holdElement.children.length).toBe(1); // Should still be 1 tetromino element
+			const secondBlockCount = holdElement.querySelectorAll(".coordinate-block").length;
+			expect(secondBlockCount).toBe(4); // Should still be 4 blocks (old cleared, new rendered)
 		});
 
 		test("should maintain correct T piece shape in hold board", () => {

@@ -8,6 +8,8 @@ import {
 	pressRotate,
 	pressHardDrop,
 	doTimes,
+	getBlocksByTetrominoId,
+	getBlockGridPositions,
 } from "../support/testUtils";
 
 describe("Line completion with O and L pieces", () => {
@@ -48,40 +50,27 @@ describe("Line completion with O and L pieces", () => {
 		pressHardDrop();
 
 		//assert that the blocks of the I-piece (ID "5") have collapsed after line completion
-		cy.get('#game-board [data-tetromino-id="5"].block')
-			.should("exist")
-			.then(($blocks) => {
-				// Get absolute positions of all blocks for this I-tetromino
-				const positions = Array.from($blocks).map((block) => {
-					const blockTop = parseInt(block.style.top);
-					let absoluteTop = blockTop;
+		getBlocksByTetrominoId("5", "#game-board").should("exist");
 
-					// For container-based rendering, add the container's position
-					const container = block.closest(".tetromino") as HTMLElement;
-					if (container && container.style.display !== "none") {
-						const containerTop = parseInt(container.style.top || "0");
-						absoluteTop = containerTop + blockTop;
-					}
+		// Use grid position helper to get rows
+		getBlockGridPositions("5").then((positions) => {
+			const rows = positions.map((p) => p.row);
+			cy.log(`I-tetromino grid rows: ${rows.join(", ")}`);
 
-					return Math.round(absoluteTop / 24); // Convert to grid position
-				});
-
-				cy.log(`I-tetromino absolute grid positions: ${positions.join(", ")}`);
-
-				// Board rows are 0..19. After line completion the horizontal I segment should settle on
-				// or near the bottom. All remaining blocks should be within rows 17..19 and at least
-				// one must be on the bottom row (19). The I piece may be truncated by line clear logic
-				// leaving 3 blocks or remain with 4 depending on scenario; accept 3 or 4.
-				const lastThreeRows = positions.filter((y) => y >= 17);
-				const bottomRow = positions.filter((y) => y === 19);
-				expect(
-					lastThreeRows.length,
-					`I-tetromino blocks should reside within rows 17-19 after line completion, got positions: ${positions}`
-				).to.be.within(3, 4);
-				expect(
-					bottomRow.length,
-					`At least one I-tetromino block should rest on bottom row (19), got positions: ${positions}`
-				).to.be.greaterThan(0);
-			});
+			// Board rows are 0..19. After line completion the horizontal I segment should settle on
+			// or near the bottom. All remaining blocks should be within rows 17..19 and at least
+			// one must be on the bottom row (19). The I piece may be truncated by line clear logic
+			// leaving 3 blocks or remain with 4 depending on scenario; accept 3 or 4.
+			const lastThreeRows = rows.filter((y) => y >= 17);
+			const bottomRow = rows.filter((y) => y === 19);
+			expect(
+				lastThreeRows.length,
+				`I-tetromino blocks should reside within rows 17-19 after line completion, got rows: ${rows}`
+			).to.be.within(3, 4);
+			expect(
+				bottomRow.length,
+				`At least one I-tetromino block should rest on bottom row (19), got rows: ${rows}`
+			).to.be.greaterThan(0);
+		});
 	});
 });
