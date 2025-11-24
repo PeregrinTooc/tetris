@@ -1,7 +1,17 @@
-import { describe, expect } from "@jest/globals";
+import { describe, expect, jest, beforeEach, afterEach } from "@jest/globals";
 import { createTestBoard, createTetromino, moveTetromino } from "./testUtils.unit";
+import { LINE_CLEAR_ANIMATION_DURATION } from "../src/constants";
 
 describe("Board scoring", () => {
+	beforeEach(() => {
+		jest.useFakeTimers();
+	});
+
+	afterEach(() => {
+		jest.runOnlyPendingTimers();
+		jest.useRealTimers();
+	});
+
 	it("dispatches linesCompleted event with correct data for a double line clear", () => {
 		let linesCompletedCount = 0;
 		const element = document.createElement("div");
@@ -23,6 +33,8 @@ describe("Board scoring", () => {
 
 		const t2 = createTetromino(board, 2, 2);
 		t2.lock();
+
+		jest.advanceTimersByTime(LINE_CLEAR_ANIMATION_DURATION);
 
 		expect(linesCompletedCount).toBe(2);
 	});
@@ -47,6 +59,9 @@ describe("Board scoring", () => {
 			moveTetromino(t, "down");
 			t.lock();
 		}
+
+		jest.advanceTimersByTime(LINE_CLEAR_ANIMATION_DURATION);
+
 		expect(linesCompletedCount).toBe(1);
 	});
 });

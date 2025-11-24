@@ -3,6 +3,7 @@ import { describe, beforeEach, test, expect, jest } from "@jest/globals";
 import { Board } from "../src/board";
 import { TetrominoFactory } from "../src/tetrominoFactory";
 import { PreviewBoardImpl } from "../src/preview-board";
+import { HoldBoard } from "../src/hold-board";
 import { KeyBindingManager } from "../src/key-binding-manager";
 
 // Create a test board with stub queue and preview
@@ -13,6 +14,7 @@ interface CreateTestBoardOptions {
 	element?: HTMLElement;
 	preview?: boolean;
 	keyBindings?: boolean;
+	holdElement?: HTMLElement;
 }
 export function createTestBoard({
 	height = 20,
@@ -21,13 +23,15 @@ export function createTestBoard({
 	element,
 	preview = true,
 	keyBindings = true,
+	holdElement,
 }: CreateTestBoardOptions = {}): Board {
 	const el = element || document.createElement("div");
 	const previewBoard = preview ? new PreviewBoardImpl(document.createElement("div")) : null;
+	const holdBoard = holdElement ? new HoldBoard(holdElement) : null;
 	let i = 0;
 	const queue = { dequeue: () => seeds[i++] ?? 0 };
 	const keyBindingManager = keyBindings ? new KeyBindingManager() : null;
-	return new Board(height, width, el, previewBoard, queue, null, keyBindingManager);
+	return new Board(height, width, el, previewBoard, queue, holdBoard, keyBindingManager);
 }
 
 // Tetromino helpers

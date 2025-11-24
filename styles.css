@@ -725,3 +725,31 @@ input:checked + .slider:before {
 	border-color: #43a047;
 	transform: scale(1.1);
 }
+
+/* Line clearing animation classes */
+.line-clearing-flash {
+	animation: flash 200ms ease-in-out;
+}
+
+.line-clearing-fade {
+	animation: fadeOut 200ms ease-in-out forwards;
+}
+
+@keyframes flash {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.3;
+	}
+}
+
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}

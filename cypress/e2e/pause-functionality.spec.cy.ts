@@ -1,4 +1,16 @@
-import { pressPause } from "../support/testUtils";
+import {
+	pressPause,
+	addTetrominoO,
+	addTetrominoI,
+	addTetrominoT,
+	pressLeft,
+	pressRight,
+	pressDown,
+	pressRotate,
+	pressHardDrop,
+	doTimes,
+} from "../support/testUtils";
+import { LINE_CLEAR_ANIMATION_DURATION } from "../../src/constants";
 
 describe("Pause functionality", () => {
 	beforeEach(() => {
@@ -94,5 +106,52 @@ describe("Pause functionality", () => {
 						expect(resumedTop).to.be.greaterThan(initialTop);
 					});
 			});
+	});
+
+	it("should block pause during line clear animation", () => {
+		cy.visit("/index.html");
+		cy.window().then((win) => {
+			win.setTetrominoDropTime(1000);
+			// Sequence: O I T O (to complete line) then base piece
+			addTetrominoO(win);
+			addTetrominoI(win);
+			addTetrominoT(win);
+			addTetrominoO(win);
+			win.pushTetrominoSeed(1337);
+		});
+
+		cy.get("#start-button").click();
+
+		// Position O piece on bottom right
+		doTimes(5, pressRight);
+		pressHardDrop();
+
+		// Position I piece on bottom left
+		doTimes(4, pressLeft);
+		pressHardDrop();
+
+		// Position T piece in center
+		cy.wait(50);
+		doTimes(2, pressDown);
+		doTimes(2, pressRotate);
+		pressHardDrop();
+
+		// Complete the line with final O piece
+		doTimes(2, pressRight);
+		pressHardDrop();
+
+		// Immediately try to pause - should be blocked
+		cy.wait(50);
+		pressPause();
+
+		// Pause overlay should not appear
+		cy.get("#pause-overlay").should("not.be.visible");
+
+		// After animation, pause should work
+		cy.wait(LINE_CLEAR_ANIMATION_DURATION + 100);
+		pressPause();
+
+		// Now pause overlay should appear
+		cy.get("#pause-overlay").should("be.visible");
 	});
 });

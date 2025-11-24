@@ -281,6 +281,10 @@ function main() {
 	function togglePause() {
 		if (!state.gameRunning) return;
 
+		if (state.board && (state.board as any).isAnimating) {
+			return;
+		}
+
 		state.isPaused = !state.isPaused;
 		if (state.board) {
 			state.board.pauseGame();

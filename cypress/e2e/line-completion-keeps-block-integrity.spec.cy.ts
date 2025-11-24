@@ -12,6 +12,7 @@ import {
 	doTimes,
 	getBlocksByTetrominoId,
 } from "../support/testUtils";
+import { LINE_CLEAR_ANIMATION_DURATION } from "../../src/constants";
 
 describe("Line completion", () => {
 	beforeEach(() => {
@@ -56,7 +57,7 @@ describe("Line completion", () => {
 		pressHardDrop(); // drop in center
 
 		// By now bottom line should be complete and cleared
-		cy.wait(200); // wait for line clear animation/logic
+		cy.wait(LINE_CLEAR_ANIMATION_DURATION + 100);
 
 		// Final piece should fall only 1 space to validate line was cleared
 		doTimes(4, pressLeft);

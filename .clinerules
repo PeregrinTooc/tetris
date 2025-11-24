@@ -104,11 +104,25 @@ cy.window().then(win => {
 
 ## Test Reporting Rules (CRITICAL)
 
-**Always run tests directly in the terminal to see results:**
-1. Unit tests: `npm run test:unit` or `npx jest --verbose`
-2. E2E tests: `npm run test:e2e` or `npx cypress run`
-3. All tests: `npm test`
-4. Do NOT use the output file scripts as they may hang
+**For efficient test execution, prefer output scripts over direct terminal runs:**
+
+### Preferred Test Workflow (Fast Feedback)
+1. **E2E tests**: `npm run test:e2e:output` (writes to `test-output-e2e.txt`)
+   - Start the command in background
+   - Read `test-output-e2e.txt` while tests are running to identify failures early
+   - Much faster than waiting for terminal output
+2. **Unit tests**: `npm run test:unit:output` (writes to `test-output.txt`)
+   - Same approach: read output file while tests execute
+3. **All tests**: `npm test` (only when you need terminal output)
+
+### Reading Test Output Files While Running
+- After starting `npm run test:e2e:output`, immediately use `read_file` on `test-output-e2e.txt`
+- File updates as tests complete, allowing you to see failures without waiting for full suite
+- This approach saves significant time during iterative development
+
+### Fallback to Terminal (Only if needed)
+- Use `npm run test:unit` or `npm run test:e2e` if output scripts fail
+- Terminal output is slower but guaranteed to show results
 
 ## Development Commands
 

@@ -7,6 +7,11 @@ import { TetrominoSeedQueue } from "./TetrominoSeedQueue";
 import { PreviewBoard } from "./preview-board";
 import { BlockRenderer } from "./block-renderer";
 import { SizingConfig } from "./sizing-config";
+import {
+	LINE_CLEAR_ANIMATION_DURATION,
+	LINE_CLEAR_FLASH_DURATION,
+	LINE_CLEAR_FADE_DURATION,
+} from "./constants";
 
 export class Board {
 	// Height & bounds semantics:
@@ -30,6 +35,8 @@ export class Board {
 	private keyBindingManager: KeyBindingManager | null = null;
 	private audioManager: AudioManager | null = null;
 	private blockRenderer: BlockRenderer;
+	private isAnimating: boolean = false;
+	private animationTimeouts: number[] = [];
 
 	constructor(
 		height: number,
@@ -66,7 +73,8 @@ export class Board {
 	}
 
 	public reset(): void {
-		// Clear all game state
+		this._cancelAnimation();
+
 		this.tetrominos.clear();
 		this.occupiedPositions = [];
 		this.coordinateBlocks.clear();
@@ -76,7 +84,6 @@ export class Board {
 		}
 		this.activeTetromino = null as any;
 
-		// Clear the DOM
 		this.element.innerHTML = "";
 	}
 
@@ -84,20 +91,26 @@ export class Board {
 		this.element.addEventListener(eventName, callback);
 	}
 	public pauseGame() {
+		if (this.isAnimating) {
+			return;
+		}
 		this.activeTetromino.pause();
 		this._updateShadowBlocks();
 	}
 
 	public hold(): void {
-		if (!this.holdBoard || !this.canHoldPiece || this.activeTetromino.locked) {
+		if (
+			this.isAnimating ||
+			!this.holdBoard ||
+			!this.canHoldPiece ||
+			this.activeTetromino.locked
+		) {
 			return;
 		}
 
-		// Deactivate current piece's controls
 		const { storedTetromino, currentTetromino } = this._resetActiveTetromino();
 
 		if (storedTetromino) {
-			// Swap pieces
 			this._swap(currentTetromino, storedTetromino);
 		} else {
 			this._moveToHoldBoard(currentTetromino);
@@ -213,6 +226,9 @@ export class Board {
 	}
 
 	public moveTetromino(tetromino: Tetromino, direction: string): boolean {
+		if (this.isAnimating) {
+			return false;
+		}
 		if (!this._isValidMove(tetromino, this._getMovementDelta(direction), direction)) {
 			return false;
 		}
@@ -265,6 +281,9 @@ export class Board {
 	}
 
 	public spawnTetromino(): Tetromino {
+		if (this.isAnimating) {
+			return this.activeTetromino;
+		}
 		let tetromino: Tetromino;
 		const center = Math.floor(this.width / 2);
 		if (this.nextTetromino) {
@@ -292,7 +311,9 @@ export class Board {
 
 	private _configureTetrominoListeners(tetromino: Tetromino) {
 		tetromino.addEventListener("locked", () => {
-			this.spawnTetromino();
+			if (!this.isAnimating) {
+				this.spawnTetromino();
+			}
 			if (this.audioManager) {
 				this.audioManager.playSoundEffect("locked");
 			}
@@ -454,25 +475,12 @@ export class Board {
 		this.canHoldPiece = true;
 	}
 	private _checkForCompletedLines() {
-		const MAX_ITERATIONS = 100;
-		let iterations = 0;
-
-		while (iterations < MAX_ITERATIONS) {
-			const completedLines = this._findCompletedLines();
-			if (completedLines.length === 0) {
-				break;
-			}
-
-			this._removeCompletedLines(completedLines);
-			this._dropAllBlocks();
-			iterations++;
+		const completedLines = this._findCompletedLines();
+		if (completedLines.length === 0) {
+			return;
 		}
 
-		if (iterations >= MAX_ITERATIONS) {
-			console.warn(
-				"Line clearing exceeded maximum iterations. Possible infinite loop prevented."
-			);
-		}
+		this._animateLineClear(completedLines);
 	}
 
 	private _removeCompletedLines(completedLines: number[]) {
@@ -630,5 +638,74 @@ export class Board {
 		this.addTetromino(tetromino);
 		tetromino.updatePosition();
 		return tetromino;
+	}
+
+	private _cancelAnimation(): void {
+		this.animationTimeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+		this.animationTimeouts = [];
+		this.isAnimating = false;
+
+		const animatingBlocks = this.element.querySelectorAll(
+			".line-clearing-flash, .line-clearing-fade"
+		);
+		animatingBlocks.forEach((block) => {
+			block.classList.remove("line-clearing-flash", "line-clearing-fade");
+		});
+	}
+
+	private _animateLineClear(completedLines: number[]): void {
+		this.isAnimating = true;
+
+		const blocksToAnimate: HTMLElement[] = [];
+		completedLines.forEach((lineY) => {
+			const lineBlocks = this.occupiedPositions.filter((block) => block.y === lineY);
+			lineBlocks.forEach((block) => {
+				const blockElements = this.element.querySelectorAll(
+					`[data-tetromino-id="${block.parent.id}"]`
+				);
+				blockElements.forEach((el) => {
+					const htmlEl = el as HTMLElement;
+					const elTop = parseInt(htmlEl.style.top, 10);
+					const elY = Math.floor(elTop / this.blockSize);
+					if (elY === lineY) {
+						blocksToAnimate.push(htmlEl);
+					}
+				});
+			});
+		});
+
+		blocksToAnimate.forEach((block) => block.classList.add("line-clearing-flash"));
+
+		const fadeTimeout = window.setTimeout(() => {
+			blocksToAnimate.forEach((block) => {
+				block.classList.remove("line-clearing-flash");
+				block.classList.add("line-clearing-fade");
+			});
+		}, LINE_CLEAR_FLASH_DURATION);
+
+		this.animationTimeouts.push(fadeTimeout);
+
+		const completeTimeout = window.setTimeout(() => {
+			blocksToAnimate.forEach((block) => {
+				block.classList.remove("line-clearing-fade");
+			});
+
+			this._removeCompletedLines(completedLines);
+			this._dropAllBlocks();
+
+			this.animationTimeouts = this.animationTimeouts.filter(
+				(id) => id !== fadeTimeout && id !== completeTimeout
+			);
+			this.isAnimating = false;
+
+			const remainingLines = this._findCompletedLines();
+			if (remainingLines.length > 0) {
+				this._animateLineClear(remainingLines);
+			} else {
+				this.spawnTetromino();
+			}
+		}, LINE_CLEAR_ANIMATION_DURATION);
+
+		this.animationTimeouts.push(completeTimeout);
 	}
 }

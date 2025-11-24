@@ -4,7 +4,14 @@ import {
 	pressLeft,
 	pressDown,
 	addTetrominoSeeds,
+	addTetrominoO,
+	addTetrominoI,
+	addTetrominoT,
+	pressRight,
+	pressRotate,
+	doTimes,
 } from "../support/testUtils";
+import { LINE_CLEAR_ANIMATION_DURATION } from "../../src/constants";
 
 describe("Tetris Hold Functionality", () => {
 	beforeEach(() => {
@@ -239,5 +246,52 @@ describe("Tetris Hold Functionality", () => {
 		cy.get("#start-button").click();
 
 		cy.get('#hold-board .tetromino[data-tetromino-id="1"]').should("not.exist");
+	});
+
+	it("should block hold during line clear animation", () => {
+		cy.visit("/index.html");
+		cy.window().then((win) => {
+			win.setTetrominoDropTime(1000);
+			// Sequence: O I T O (to complete line) then T (to test hold blocking)
+			addTetrominoO(win);
+			addTetrominoI(win);
+			addTetrominoT(win);
+			addTetrominoO(win);
+			addTetrominoT(win);
+		});
+
+		cy.get("#start-button").click();
+
+		// Position O piece on bottom right
+		doTimes(5, pressRight);
+		pressHardDrop();
+
+		// Position I piece on bottom left
+		doTimes(4, pressLeft);
+		pressHardDrop();
+
+		// Position T piece in center
+		cy.wait(50);
+		doTimes(2, pressDown);
+		doTimes(2, pressRotate);
+		pressHardDrop();
+
+		// Complete the line with final O piece
+		doTimes(2, pressRight);
+		pressHardDrop();
+
+		// Immediately try to hold - should be blocked
+		cy.wait(50);
+		pressHold();
+
+		// Hold board should still be empty
+		cy.get("#hold-board .tetromino").should("not.exist");
+
+		// After animation, hold should work
+		cy.wait(LINE_CLEAR_ANIMATION_DURATION + 100);
+		pressHold();
+
+		// Now hold board should have the piece
+		cy.get("#hold-board .tetromino").should("exist");
 	});
 });

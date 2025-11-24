@@ -1,13 +1,20 @@
-import { describe, beforeEach, test, expect, jest } from "@jest/globals";
+import { describe, beforeEach, afterEach, test, expect, jest } from "@jest/globals";
 import { createTestBoard, createTetromino, lockTetromino } from "./testUtils.unit";
 import { Board } from "../src/board";
 import { Tetromino } from "../src/tetromino-base";
+import { LINE_CLEAR_ANIMATION_DURATION } from "../src/constants";
 
 describe("Board - Partial Tetromino Line Clear Bug", () => {
 	let board: Board;
 
 	beforeEach(() => {
 		document.body.innerHTML = "";
+		jest.useFakeTimers();
+	});
+
+	afterEach(() => {
+		jest.runOnlyPendingTimers();
+		jest.useRealTimers();
 	});
 
 	test("should keep remaining blocks in occupiedPositions when tetromino is partially cleared", () => {
@@ -66,9 +73,7 @@ describe("Board - Partial Tetromino Line Clear Bug", () => {
 		filler3.updatePosition();
 		lockTetromino(filler3);
 
-		// At this point, row 9 should be complete (4 blocks) and should trigger line clear
-		// block1, block2, block3 should remain at row 8
-		// block4 should be removed (was on row 9)
+		jest.advanceTimersByTime(LINE_CLEAR_ANIMATION_DURATION);
 
 		// ASSERTIONS TO VERIFY THE FIX:
 
@@ -131,6 +136,8 @@ describe("Board - Partial Tetromino Line Clear Bug", () => {
 		tetromino4.top = 6;
 		tetromino4.updatePosition();
 		lockTetromino(tetromino4);
+
+		jest.advanceTimersByTime(LINE_CLEAR_ANIMATION_DURATION);
 
 		// ASSERTIONS:
 
