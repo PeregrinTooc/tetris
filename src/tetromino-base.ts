@@ -224,6 +224,11 @@ export abstract class Tetromino {
 		this.blocks = this.getBlocks();
 		this.locked = true;
 
+		// Clear shadows before dispatching locked event (before new piece spawns)
+		if (this.board && typeof (this.board as any).getBlockRenderer === "function") {
+			(this.board as any).getBlockRenderer().clearShadowBlocks(this);
+		}
+
 		this._dispatchScoreEvent(5);
 
 		const event = new CustomEvent("locked", { detail: this.getBlocks() });
@@ -311,6 +316,13 @@ export abstract class Tetromino {
 		}
 		this.blocks = previewBlocks;
 		this.updateBlocks();
+
+		if (board && typeof (board as any).calculateDropDistance === "function") {
+			const blockRenderer = (board as any).getBlockRenderer();
+			blockRenderer.clearShadowBlocks(this);
+			const dropDistance = (board as any).calculateDropDistance(this);
+			blockRenderer.renderShadowBlocks(this, dropDistance);
+		}
 	}
 
 	public updateBlocks(): void {

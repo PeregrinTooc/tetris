@@ -318,6 +318,45 @@ h3 {
 	background-color: #888;
 }
 
+/* Shadow block styling */
+.shadow-block {
+	background: transparent !important;
+	border: 2px dashed rgba(255, 255, 255, 0.5);
+	box-sizing: border-box;
+}
+
+.tetromino-t-shadow-block {
+	border-color: rgba(128, 0, 128, 0.6);
+}
+
+.tetromino-i-shadow-block {
+	border-color: rgba(0, 255, 255, 0.6);
+}
+
+.tetromino-o-shadow-block {
+	border-color: rgba(255, 255, 0, 0.6);
+}
+
+.tetromino-j-shadow-block {
+	border-color: rgba(0, 0, 255, 0.6);
+}
+
+.tetromino-l-shadow-block {
+	border-color: rgba(255, 128, 0, 0.6);
+}
+
+.tetromino-s-shadow-block {
+	border-color: rgba(0, 255, 0, 0.6);
+}
+
+.tetromino-z-shadow-block {
+	border-color: rgba(255, 0, 0, 0.6);
+}
+
+.tetromino-base-shadow-block {
+	border-color: rgba(136, 136, 136, 0.6);
+}
+
 .controls-panel {
 	margin-top: 24px;
 	padding: 16px;

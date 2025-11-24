@@ -32,10 +32,11 @@ describe("Tetris Game Setup", () => {
 		cy.get("#start-button").click();
 		cy.get('#game-board [data-tetromino-id="1"]').then(($tetromino) => {
 			pressHardDrop();
-			// Count only tetromino containers, not individual blocks
+			// Count only tetromino containers, not individual blocks or shadows
 			cy.get("#game-board [data-tetromino-id]")
 				.not(".block")
 				.not(".coordinate-block")
+				.not(".shadow-block")
 				.should("have.length", 2);
 			cy.get('#game-board [data-tetromino-id="2"]').then(($newTetromino) => {});
 		});
@@ -84,11 +85,13 @@ describe("Tetris Game Setup", () => {
 		cy.get("[data-tetromino-id]")
 			.not(".block")
 			.not(".coordinate-block")
+			.not(".shadow-block")
 			.then(($tetrominoesBefore) => {
 				cy.wait(500);
 				cy.get("[data-tetromino-id]")
 					.not(".block")
 					.not(".coordinate-block")
+					.not(".shadow-block")
 					.should("have.length", $tetrominoesBefore.length);
 			});
 	});

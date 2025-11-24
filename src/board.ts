@@ -85,6 +85,7 @@ export class Board {
 	}
 	public pauseGame() {
 		this.activeTetromino.pause();
+		this._updateShadowBlocks();
 	}
 
 	public hold(): void {
@@ -129,8 +130,9 @@ export class Board {
 		const currentTetromino = this.activeTetromino;
 		const storedTetromino = this.holdBoard.getHeldTetromino();
 
-		// Clear coordinate blocks if in coordinate rendering mode
+		// Clear coordinate blocks and shadow blocks
 		this.blockRenderer.clearTetromino(currentTetromino);
+		this.blockRenderer.clearShadowBlocks(currentTetromino);
 
 		// Remove current piece from board
 		this.tetrominos.delete(currentTetromino);
@@ -148,6 +150,7 @@ export class Board {
 
 		// Use BlockRenderer for all rendering
 		this.blockRenderer.renderTetromino(tetromino);
+		this._updateShadowBlocks();
 	}
 
 	public removeTetromino(tetromino: Tetromino): void {
@@ -214,7 +217,51 @@ export class Board {
 			return false;
 		}
 		this._applyMovement(tetromino, direction);
+		this._updateShadowBlocks();
 		return true;
+	}
+
+	public calculateDropDistance(tetromino: Tetromino): number {
+		let dropDistance = 0;
+		const blocks = tetromino.getBlocks();
+
+		while (dropDistance < this.height) {
+			const testBlocks = blocks.map(({ x, y }) => ({
+				x,
+				y: y + dropDistance + 1,
+				parent: tetromino,
+			}));
+
+			const inBounds = testBlocks.every(
+				({ x, y }) => x >= 0 && x < this.width && y >= 0 && y < this.height
+			);
+
+			if (!inBounds) {
+				break;
+			}
+
+			const collision = this.occupiedPositions.some((occupied) =>
+				testBlocks.some((test) => occupied.x === test.x && occupied.y === test.y)
+			);
+
+			if (collision) {
+				break;
+			}
+
+			dropDistance++;
+		}
+
+		return dropDistance;
+	}
+
+	private _updateShadowBlocks(): void {
+		if (!this.activeTetromino || this.activeTetromino.locked || this.activeTetromino.paused) {
+			this.blockRenderer.clearShadowBlocks(this.activeTetromino);
+			return;
+		}
+
+		const dropDistance = this.calculateDropDistance(this.activeTetromino);
+		this.blockRenderer.renderShadowBlocks(this.activeTetromino, dropDistance);
 	}
 
 	public spawnTetromino(): Tetromino {
@@ -392,6 +439,8 @@ export class Board {
 
 	private _handleTetrominoLocked(event: Event): void {
 		const customEvent = event as CustomEvent;
+		const lockedTetromino = customEvent.target as any;
+
 		customEvent.detail.forEach((block: Block) => {
 			this._assertInBounds(block.x, block.y, "when locking tetromino");
 
@@ -441,6 +490,7 @@ export class Board {
 
 		for (const tetromino of affectedTetrominos) {
 			if (tetromino.blocks.length === 0) {
+				this.blockRenderer.clearTetromino(tetromino);
 				if (this.tetrominos.has(tetromino)) {
 					this.tetrominos.delete(tetromino);
 				}
@@ -471,6 +521,7 @@ export class Board {
 		const tetrominoDropInfo = this._calculateTetrominoDropInfo(tetrominoGroups);
 		this._dropTetrominosInOptimalOrder(tetrominoDropInfo);
 		this._renderAffectedTetrominoes();
+		this._updateShadowBlocks();
 	}
 
 	private _renderAffectedTetrominoes() {

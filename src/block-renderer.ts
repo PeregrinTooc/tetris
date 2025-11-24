@@ -7,6 +7,7 @@ import { Block, Tetromino } from "./tetromino-base";
 export class BlockRenderer {
 	private board: HTMLElement;
 	private coordinateBlocks: Map<string, HTMLElement> = new Map();
+	private shadowBlocks: Map<string, HTMLElement> = new Map();
 
 	constructor(board: HTMLElement) {
 		this.board = board;
@@ -82,5 +83,58 @@ export class BlockRenderer {
 	 */
 	public updateTetromino(tetromino: Tetromino): void {
 		this.renderTetromino(tetromino);
+	}
+
+	/**
+	 * Render shadow blocks showing where the tetromino will land
+	 */
+	public renderShadowBlocks(tetromino: Tetromino, dropDistance: number): void {
+		this.clearShadowBlocks(tetromino);
+
+		const blocks = tetromino.getBlocks();
+		blocks.forEach((block, index) => {
+			const shadowBlock = this.createShadowBlock(block, tetromino, dropDistance);
+			const key = `${tetromino.id}-shadow-${index}`;
+			this.shadowBlocks.set(key, shadowBlock);
+			this.board.appendChild(shadowBlock);
+		});
+	}
+
+	/**
+	 * Clear shadow blocks for a specific tetromino
+	 */
+	public clearShadowBlocks(tetromino: Tetromino): void {
+		if (!tetromino) return;
+
+		const tetrominoId = tetromino.id;
+		const keysToRemove: string[] = [];
+
+		this.shadowBlocks.forEach((element, key) => {
+			if (key.startsWith(`${tetrominoId}-shadow-`)) {
+				element.remove();
+				keysToRemove.push(key);
+			}
+		});
+
+		keysToRemove.forEach((key) => this.shadowBlocks.delete(key));
+	}
+
+	/**
+	 * Create a shadow block element positioned at the landing location
+	 */
+	private createShadowBlock(
+		block: Block,
+		tetromino: Tetromino,
+		dropDistance: number
+	): HTMLElement {
+		const shadowElement = document.createElement("div");
+		shadowElement.className = `shadow-block ${tetromino.getClassName()}-shadow-block`;
+		shadowElement.style.position = "absolute";
+		shadowElement.style.width = tetromino.size + "px";
+		shadowElement.style.height = tetromino.size + "px";
+		shadowElement.style.left = `${block.x * tetromino.size}px`;
+		shadowElement.style.top = `${(block.y + dropDistance) * tetromino.size}px`;
+		shadowElement.setAttribute("data-tetromino-id", tetromino.id);
+		return shadowElement;
 	}
 }

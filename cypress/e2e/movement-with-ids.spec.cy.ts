@@ -73,6 +73,7 @@ describe("Movement with Tetromino ID Selectors", () => {
 				cy.get(`[data-tetromino-id="${tetrominoId}"]`)
 					.not(".block")
 					.not(".coordinate-block")
+					.not(".shadow-block")
 					.should("have.length", 1);
 
 				// Can select all blocks of this tetromino by ID using rendering-agnostic helper

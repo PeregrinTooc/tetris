@@ -26,7 +26,9 @@ describe("Tetris Hold Functionality", () => {
 			pressHold();
 
 			// First piece should now be in hold board with same ID
-			cy.get("#hold-board").find(`[data-tetromino-id="${initialId}"]`).should("exist");
+			cy.get("#hold-board")
+				.find(`.tetromino[data-tetromino-id="${initialId}"]`)
+				.should("exist");
 
 			// Second piece should be active with different ID
 			cy.get("#game-board .tetromino").should(($newTetromino) => {
@@ -52,8 +54,12 @@ describe("Tetris Hold Functionality", () => {
 				cy.log(`Second piece ID: ${secondId}`);
 
 				// Verify first piece is held and second piece is active
-				cy.get("#hold-board").find(`[data-tetromino-id="${firstId}"]`).should("exist");
-				cy.get("#game-board").find(`[data-tetromino-id="${secondId}"]`).should("exist");
+				cy.get("#hold-board")
+					.find(`.tetromino[data-tetromino-id="${firstId}"]`)
+					.should("exist");
+				cy.get("#game-board")
+					.find(`.tetromino[data-tetromino-id="${secondId}"]`)
+					.should("exist");
 				cy.log("First hold completed successfully");
 
 				// Drop the current piece to lock it so we can hold again
@@ -81,8 +87,12 @@ describe("Tetris Hold Functionality", () => {
 						});
 
 					// After locking second piece and holding: first piece should be back in game board, third piece should be in hold
-					cy.get("#game-board").find(`[data-tetromino-id="${firstId}"]`).should("exist");
-					cy.get("#hold-board").find(`[data-tetromino-id="${thirdId}"]`).should("exist");
+					cy.get("#game-board")
+						.find(`.tetromino[data-tetromino-id="${firstId}"]`)
+						.should("exist");
+					cy.get("#hold-board")
+						.find(`.tetromino[data-tetromino-id="${thirdId}"]`)
+						.should("exist");
 				});
 			});
 		});
@@ -170,12 +180,16 @@ describe("Tetris Hold Functionality", () => {
 				pressHold();
 
 				// Same piece should still be active on game board
-				cy.get("#game-board").find(`[data-tetromino-id="${initialId}"]`).should("exist");
+				cy.get("#game-board")
+					.find(`.tetromino[data-tetromino-id="${initialId}"]`)
+					.should("exist");
 				cy.get("#hold-board .tetromino").should("not.exist");
 
 				// Try new key - should trigger hold and move piece to hold board
 				cy.get("body").type("x"); // custom rebind not wrapped; intentional
-				cy.get("#hold-board").find(`[data-tetromino-id="${initialId}"]`).should("exist");
+				cy.get("#hold-board")
+					.find(`.tetromino[data-tetromino-id="${initialId}"]`)
+					.should("exist");
 			});
 	});
 
