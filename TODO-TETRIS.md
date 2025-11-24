@@ -31,7 +31,7 @@
 
 - [x] Line clear detection and removal
 - [x] Multiple line clears (double, triple, Tetris)
-- [ ] Ghost piece (shows where tetromino will land)
+- [x] Ghost piece (shows where tetromino will land)
 - [ ] Wall kicks (rotation near walls)
 - [x] Lock delay (brief pause before locking)
 
@@ -43,9 +43,9 @@
 - [x] Display for score, level, and lines cleared
 - [ ] Responsive/mobile-friendly UI
 - [x] Pause/resume functionality
-- [ ] Settings (volume, controls, etc.)
-- [ ] Main menu music
-- [ ] Change the music based on the level
+- [x] Settings (volume, controls, etc.)
+- [x] Main menu music
+- [x] Change the music based on the level
 - [ ] Line Completion Visual Effect
 
 ### Accessibility
@@ -72,7 +72,7 @@
 - [x] Preview of next piece is shown
 - [x] Pause/resume works
 - [x] Music and Sound Effects
-- [ ] Ghost Piece
+- [x] Ghost Piece
 - [ ] Mobile/responsive controls
 
 ### Unit (Jest)
