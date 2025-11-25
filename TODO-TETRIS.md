@@ -46,7 +46,7 @@
 - [x] Settings (volume, controls, etc.)
 - [x] Main menu music
 - [x] Change the music based on the level
-- [ ] Line Completion Visual Effect
+- [x] Line Completion Visual Effect
 
 ### Accessibility
 
@@ -92,7 +92,7 @@
 - [x] Level Logic
 - [x] Hold/next piece logic
 - [ ] Ghost piece logic
-- [ ] Wall kick logic
+- [x] Wall kick logic
 
 ---
 

@@ -471,18 +471,15 @@ export class Board {
 			}
 		});
 		this.occupiedPositions.sort((a, b) => b.y - a.y);
-		this._checkForCompletedLines();
-		this.canHoldPiece = true;
-	}
-	private _checkForCompletedLines() {
+
 		const completedLines = this._findCompletedLines();
-		if (completedLines.length === 0) {
-			return;
+		if (completedLines.length > 0) {
+			this.isAnimating = true;
+			this._animateLineClear(completedLines);
 		}
 
-		this._animateLineClear(completedLines);
+		this.canHoldPiece = true;
 	}
-
 	private _removeCompletedLines(completedLines: number[]) {
 		const affectedTetrominos = new Set<Tetromino>();
 

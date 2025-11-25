@@ -224,4 +224,50 @@ describe("Board line clear animation", () => {
 		expect(movedAfter).toBe(true);
 		expect(board.getActiveTetromino().left).toBe(newPieceLeft - 1);
 	});
+
+	test("should start falling for new piece after animation completes", () => {
+		const board = createTestBoard({
+			height: 20,
+			width: 10,
+			seeds: [1337, 1337, 1337, 1337, 1337, 1337, 1337, 1337, 1337, 1337, 0],
+			preview: false,
+		});
+
+		board.spawnTetromino();
+
+		for (let i = 0; i < 9; i++) {
+			const t = board.getActiveTetromino();
+			t.left = i;
+			t.top = 19;
+			t.updatePosition();
+			t.lock();
+		}
+
+		const idBeforeLock = board.getActiveTetromino().id;
+
+		const lastTetromino = board.getActiveTetromino();
+		lastTetromino.left = 9;
+		lastTetromino.top = 19;
+		lastTetromino.updatePosition();
+		lastTetromino.lock();
+
+		expect((board as any).isAnimating).toBe(true);
+
+		const idAfterLock = board.getActiveTetromino().id;
+		expect(idAfterLock).toBe(idBeforeLock);
+
+		jest.advanceTimersByTime(LINE_CLEAR_ANIMATION_DURATION);
+
+		expect((board as any).isAnimating).toBe(false);
+
+		const newPiece = board.getActiveTetromino();
+		expect(newPiece.id).not.toBe(idBeforeLock);
+		expect(newPiece.locked).toBe(false);
+
+		const tickEvent = new Event("tick");
+		document.dispatchEvent(tickEvent);
+
+		const topAfterTick = newPiece.top;
+		expect(topAfterTick).toBeGreaterThan(0);
+	});
 });
