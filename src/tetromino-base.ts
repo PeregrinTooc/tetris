@@ -307,22 +307,70 @@ export abstract class Tetromino {
 	public rotate(direction: 1 | -1 = 1): void {
 		const board = this.board as Board;
 		const prevRotation = this.rotation;
+		const prevLeft = this.left;
+		const prevTop = this.top;
 		this.rotation += direction;
-		const previewBlocks = this.getBlocks();
 
-		if (!board.inBounds(previewBlocks) || board.collision(previewBlocks)) {
-			this.rotation = prevRotation;
-			return;
-		}
-		this.blocks = previewBlocks;
-		this.updateBlocks();
+		// Detect wall proximity to prioritize kick direction
+		const boardWidth = (board as any).width || 10;
+		const distanceToLeftWall = prevLeft;
+		const distanceToRightWall = boardWidth - 1 - prevLeft;
+		const preferLeftKick = distanceToRightWall < distanceToLeftWall;
 
-		if (board && typeof (board as any).calculateDropDistance === "function") {
-			const blockRenderer = (board as any).getBlockRenderer();
-			blockRenderer.clearShadowBlocks(this);
-			const dropDistance = (board as any).calculateDropDistance(this);
-			blockRenderer.renderShadowBlocks(this, dropDistance);
+		// Build kick table with smart ordering based on position
+		const kickOffsets = preferLeftKick
+			? [
+					{ dx: 0, dy: 0 },
+					{ dx: -1, dy: 0 },
+					{ dx: 1, dy: 0 },
+					{ dx: -2, dy: 0 },
+					{ dx: 2, dy: 0 },
+					{ dx: -1, dy: 1 },
+					{ dx: 1, dy: 1 },
+					{ dx: -2, dy: 1 },
+					{ dx: 2, dy: 1 },
+					{ dx: 0, dy: 1 },
+					{ dx: 0, dy: -1 },
+					{ dx: 0, dy: -2 },
+				]
+			: [
+					{ dx: 0, dy: 0 },
+					{ dx: 1, dy: 0 },
+					{ dx: -1, dy: 0 },
+					{ dx: 2, dy: 0 },
+					{ dx: -2, dy: 0 },
+					{ dx: 1, dy: 1 },
+					{ dx: -1, dy: 1 },
+					{ dx: 2, dy: 1 },
+					{ dx: -2, dy: 1 },
+					{ dx: 0, dy: 1 },
+					{ dx: 0, dy: -1 },
+					{ dx: 0, dy: -2 },
+				];
+
+		for (const offset of kickOffsets) {
+			this.left = prevLeft + offset.dx;
+			this.top = prevTop + offset.dy;
+			const previewBlocks = this.getBlocks();
+
+			if (board.inBounds(previewBlocks) && !board.collision(previewBlocks)) {
+				this.blocks = previewBlocks;
+				this.updateBlocks();
+
+				if (board && typeof (board as any).calculateDropDistance === "function") {
+					const blockRenderer = (board as any).getBlockRenderer();
+					blockRenderer.clearShadowBlocks(this);
+					const dropDistance = (board as any).calculateDropDistance(this);
+					blockRenderer.renderShadowBlocks(this, dropDistance);
+				}
+				return;
+			}
 		}
+
+		// All kicks failed, revert everything
+		this.rotation = prevRotation;
+		this.left = prevLeft;
+		this.top = prevTop;
 	}
 
 	public updateBlocks(): void {

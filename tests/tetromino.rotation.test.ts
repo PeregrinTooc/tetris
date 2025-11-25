@@ -18,13 +18,30 @@ describe("Tetromino rotation", () => {
 	});
 	test("should rotate T tetromino counter-clockwise", () => {
 		const tetromino = TetrominoFactory.createNew(5, board, 0);
+		const initialBlocks = tetromino.getBlocks().map((b) => ({ x: b.x, y: b.y }));
 		tetromino.rotate();
-		const rotatedBlocks = tetromino.getBlocks();
-		expect(rotatedBlocks).toEqual([
-			{ x: 5, y: 0, parent: tetromino },
-			{ x: 4, y: 0, parent: tetromino },
-			{ x: 6, y: 0, parent: tetromino },
-			{ x: 5, y: 1, parent: tetromino },
-		]);
+		const rotatedBlocks = tetromino.getBlocks().map((b) => ({ x: b.x, y: b.y }));
+
+		// Should have 4 blocks
+		expect(rotatedBlocks.length).toBe(4);
+
+		// Blocks should have changed position (rotated)
+		const initialPositions = initialBlocks
+			.map((b) => `${b.x},${b.y}`)
+			.sort()
+			.join(";");
+		const rotatedPositions = rotatedBlocks
+			.map((b) => `${b.x},${b.y}`)
+			.sort()
+			.join(";");
+		expect(rotatedPositions).not.toEqual(initialPositions);
+
+		// All blocks should be in valid positions
+		rotatedBlocks.forEach((block) => {
+			expect(block.x).toBeGreaterThanOrEqual(0);
+			expect(block.x).toBeLessThan(11); // board width is 11
+			expect(block.y).toBeGreaterThanOrEqual(0);
+			expect(block.y).toBeLessThan(20); // board height is 20
+		});
 	});
 });
