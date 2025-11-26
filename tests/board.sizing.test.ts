@@ -17,7 +17,7 @@ describe("Board sizing", () => {
 	});
 
 	it("should apply width and height to board element", () => {
-		board = new Board(20, 10, element, null, seedQueue);
+		board = new Board(20, 11, element, null, seedQueue);
 
 		expect(element.style.width).toBe(SizingConfig.BOARD_WIDTH_PX + "px");
 		expect(element.style.height).toBe(SizingConfig.BOARD_HEIGHT_PX + "px");

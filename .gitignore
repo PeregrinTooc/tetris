@@ -7,3 +7,4 @@ coverage
 test.coverage
 .devcontainer/devcontainer.json
 .gitignore
+specific-e2e-output.txt

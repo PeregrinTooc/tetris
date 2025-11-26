@@ -139,6 +139,13 @@ body {
 	background-color: #000;
 }
 
+.game-and-side {
+	display: flex;
+	flex-direction: row;
+	gap: 32px;
+	align-items: flex-start;
+}
+
 .side-panel {
 	display: flex;
 	flex-direction: column;

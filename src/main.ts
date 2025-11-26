@@ -6,6 +6,7 @@ import { AudioManager } from "./audio";
 import { TetrominoSeedQueueImpl } from "./TetrominoSeedQueue";
 import { KeyBindingManager } from "./key-binding-manager";
 import { TouchControlsManager } from "./touch-controls";
+import { SizingConfig } from "./sizing-config";
 
 const BASE_DROP_TIME = 750;
 const TICK_EVENT_NAME = "tick";
@@ -257,7 +258,8 @@ function main() {
 					state.tetrominoSeedQueue,
 					holdBoard,
 					keyBindingManager,
-					audioManager
+					audioManager,
+					SizingConfig.BLOCK_SIZE
 				);
 
 				state.board.registerEventListener("linesCompleted", handleCompleteLinesEvent);

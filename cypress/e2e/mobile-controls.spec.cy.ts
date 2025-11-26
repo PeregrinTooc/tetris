@@ -50,19 +50,22 @@ describe("Mobile Controls", () => {
 		it("should move tetromino left when left button is clicked", () => {
 			cy.get("[data-touch-left]").click();
 			cy.wait(50);
-			cy.get(".tetromino").should("have.css", "left", "96px");
+			// Mobile uses 16px blocks: initial center (5*16=80px) - 1 block (16px) = 64px
+			cy.get(".tetromino").should("have.css", "left", "64px");
 		});
 
 		it("should move tetromino right when right button is clicked", () => {
 			cy.get("[data-touch-right]").click();
 			cy.wait(50);
-			cy.get(".tetromino").should("have.css", "left", "144px");
+			// Mobile uses 16px blocks: initial center (5*16=80px) + 1 block (16px) = 96px
+			cy.get(".tetromino").should("have.css", "left", "96px");
 		});
 
 		it("should move tetromino down when down button is clicked", () => {
 			cy.get("[data-touch-down]").click();
 			cy.wait(50);
-			cy.get(".tetromino").should("have.css", "top", "24px");
+			// Mobile uses 16px blocks: 1 block down = 16px
+			cy.get(".tetromino").should("have.css", "top", "16px");
 		});
 
 		it("should rotate tetromino when rotate button is clicked", () => {
@@ -75,7 +78,8 @@ describe("Mobile Controls", () => {
 		it("should hard drop tetromino when hard drop button is clicked", () => {
 			cy.get("[data-touch-hard-drop]").click();
 			cy.wait(100);
-			cy.get(".tetromino").should("have.css", "top", "432px");
+			// Mobile uses 16px blocks: bottom row is at (20-1) * 16 = 304px
+			cy.get(".tetromino").should("have.css", "top", "288px");
 		});
 
 		it("should hold tetromino when hold button is clicked", () => {
@@ -100,8 +104,8 @@ describe("Mobile Controls", () => {
 			cy.get("#level-board").should("be.visible");
 		});
 
-		it("should display next and hold boards side by side on mobile", () => {
-			cy.get(".side-panel").should("have.css", "flex-direction", "row");
+		it("should display next and hold boards stacked vertically on mobile", () => {
+			cy.get(".side-panel").should("have.css", "flex-direction", "column");
 		});
 
 		it("should display controls below game board", () => {

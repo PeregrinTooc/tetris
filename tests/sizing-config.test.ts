@@ -6,13 +6,14 @@ describe("SizingConfig", () => {
 	});
 
 	it("should define board dimensions in blocks", () => {
-		expect(SizingConfig.BOARD_WIDTH_BLOCKS).toBe(10);
+		expect(SizingConfig.BOARD_WIDTH_BLOCKS).toBe(11);
 		expect(SizingConfig.BOARD_HEIGHT_BLOCKS).toBe(20);
 	});
 
 	it("should calculate board width in pixels including padding", () => {
-		// 10 blocks * 24px = 240px
-		expect(SizingConfig.BOARD_WIDTH_PX).toBe(240);
+		// 11 blocks * 24px = 264px (desktop), 11 blocks * 16px = 176px (mobile)
+		const expectedWidth = SizingConfig.isMobileViewport() ? 176 : 264;
+		expect(SizingConfig.BOARD_WIDTH_PX).toBe(expectedWidth);
 	});
 
 	it("should calculate board height in pixels including padding", () => {

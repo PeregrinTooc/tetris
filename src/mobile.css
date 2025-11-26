@@ -100,29 +100,53 @@
 
 	.game-layout {
 		flex-direction: column !important;
-		gap: 16px !important;
+		gap: 12px !important;
 		align-items: center !important;
+	}
+
+	#game-board {
+		width: 176px !important;
+		height: 320px !important;
+	}
+
+	#game-board canvas {
+		width: 176px !important;
+		height: 320px !important;
 	}
 
 	.score-column {
 		flex-direction: row !important;
 		width: 100% !important;
-		max-width: 400px !important;
+		max-width: 360px !important;
 		justify-content: space-around !important;
-		gap: 16px !important;
+		gap: 12px !important;
 	}
 
 	.side-panel {
+		flex-direction: column !important;
+		width: auto !important;
+		gap: 12px !important;
+		align-items: center !important;
+	}
+
+	.game-and-side {
+		display: flex !important;
 		flex-direction: row !important;
-		width: 100% !important;
-		max-width: 400px !important;
-		justify-content: space-around !important;
+		gap: 12px !important;
+		align-items: flex-start !important;
 	}
 
 	#next-board,
 	#hold-board {
-		flex: 1;
-		max-width: 180px;
+		width: 80px !important;
+		min-width: 80px !important;
+		flex: none !important;
+	}
+
+	#next-board canvas,
+	#hold-board canvas {
+		width: 64px !important;
+		height: 64px !important;
 	}
 
 	#next-board h3,
