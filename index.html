@@ -118,6 +118,13 @@
 							<button id="start-button" class="touch-btn touch-btn-game-control">
 								<span class="touch-label">Start</span>
 							</button>
+							<button
+								id="mobile-audio-settings-button"
+								class="touch-btn touch-btn-settings"
+								aria-label="Audio Settings"
+							>
+								<span class="touch-icon">⚙</span>
+							</button>
 						</div>
 					</div>
 				</div>
@@ -245,6 +252,71 @@
 
 		<div id="rebind-prompt" data-rebind-prompt class="rebind-prompt" style="display: none">
 			Press a key to bind...
+		</div>
+
+		<div id="mobile-audio-modal" class="mobile-audio-modal" style="display: none">
+			<div class="mobile-audio-content">
+				<h2>Audio Settings</h2>
+				<div class="mobile-audio-controls">
+					<div class="horizontal-slider-group">
+						<label>Music Volume</label>
+						<div class="slider-row">
+							<button
+								id="mobile-music-min"
+								class="volume-btn-mobile"
+								aria-label="Mute Music"
+							>
+								🔇
+							</button>
+							<input
+								type="range"
+								id="mobile-music-volume"
+								min="0"
+								max="100"
+								value="100"
+								step="1"
+								class="horizontal-slider"
+							/>
+							<button
+								id="mobile-music-max"
+								class="volume-btn-mobile"
+								aria-label="Max Music"
+							>
+								🔊
+							</button>
+						</div>
+					</div>
+					<div class="horizontal-slider-group">
+						<label>Sound FX Volume</label>
+						<div class="slider-row">
+							<button
+								id="mobile-sfx-min"
+								class="volume-btn-mobile"
+								aria-label="Mute SFX"
+							>
+								🔇
+							</button>
+							<input
+								type="range"
+								id="mobile-sfx-volume"
+								min="0"
+								max="100"
+								value="100"
+								step="1"
+								class="horizontal-slider"
+							/>
+							<button
+								id="mobile-sfx-max"
+								class="volume-btn-mobile"
+								aria-label="Max SFX"
+							>
+								🔊
+							</button>
+						</div>
+					</div>
+				</div>
+				<button id="mobile-audio-close" class="mobile-audio-close-btn">Close</button>
+			</div>
 		</div>
 
 		<script type="module" src="/src/main.js"></script>

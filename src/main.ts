@@ -46,6 +46,7 @@ function main() {
 	initializeGameOverHandler();
 	initializeStartButton();
 	initializeKeyBindingUI();
+	initializeMobileAudioModal();
 
 	function initializeTouchControls() {
 		const touchControlsContainer = document.getElementById("touch-controls");
@@ -141,6 +142,82 @@ function main() {
 				displayElement.textContent = binding.key;
 			}
 		});
+	}
+
+	function initializeMobileAudioModal() {
+		const settingsButton = document.getElementById("mobile-audio-settings-button");
+		const modal = document.getElementById("mobile-audio-modal");
+		const closeButton = document.getElementById("mobile-audio-close");
+		const mobileMusicVolume = document.getElementById(
+			"mobile-music-volume"
+		) as HTMLInputElement;
+		const mobileSfxVolume = document.getElementById("mobile-sfx-volume") as HTMLInputElement;
+		const desktopMusicVolume = document.getElementById("music-volume") as HTMLInputElement;
+		const desktopSfxVolume = document.getElementById("sfx-volume") as HTMLInputElement;
+
+		if (!settingsButton || !modal || !closeButton) return;
+
+		settingsButton.addEventListener("click", () => {
+			if (state.gameRunning && !state.isPaused) {
+				togglePause();
+			}
+			modal.style.display = "flex";
+		});
+
+		closeButton.addEventListener("click", () => {
+			modal.style.display = "none";
+		});
+
+		if (mobileMusicVolume && desktopMusicVolume) {
+			mobileMusicVolume.addEventListener("input", () => {
+				desktopMusicVolume.value = mobileMusicVolume.value;
+				desktopMusicVolume.dispatchEvent(new Event("input"));
+			});
+		}
+
+		if (mobileSfxVolume && desktopSfxVolume) {
+			mobileSfxVolume.addEventListener("input", () => {
+				desktopSfxVolume.value = mobileSfxVolume.value;
+				desktopSfxVolume.dispatchEvent(new Event("input"));
+			});
+		}
+
+		const mobileMusicMin = document.getElementById("mobile-music-min");
+		const mobileMusicMax = document.getElementById("mobile-music-max");
+		const mobileSfxMin = document.getElementById("mobile-sfx-min");
+		const mobileSfxMax = document.getElementById("mobile-sfx-max");
+
+		if (mobileMusicMin && mobileMusicVolume && desktopMusicVolume) {
+			mobileMusicMin.addEventListener("click", () => {
+				mobileMusicVolume.value = "0";
+				desktopMusicVolume.value = "0";
+				desktopMusicVolume.dispatchEvent(new Event("input"));
+			});
+		}
+
+		if (mobileMusicMax && mobileMusicVolume && desktopMusicVolume) {
+			mobileMusicMax.addEventListener("click", () => {
+				mobileMusicVolume.value = "100";
+				desktopMusicVolume.value = "100";
+				desktopMusicVolume.dispatchEvent(new Event("input"));
+			});
+		}
+
+		if (mobileSfxMin && mobileSfxVolume && desktopSfxVolume) {
+			mobileSfxMin.addEventListener("click", () => {
+				mobileSfxVolume.value = "0";
+				desktopSfxVolume.value = "0";
+				desktopSfxVolume.dispatchEvent(new Event("input"));
+			});
+		}
+
+		if (mobileSfxMax && mobileSfxVolume && desktopSfxVolume) {
+			mobileSfxMax.addEventListener("click", () => {
+				mobileSfxVolume.value = "100";
+				desktopSfxVolume.value = "100";
+				desktopSfxVolume.dispatchEvent(new Event("input"));
+			});
+		}
 	}
 
 	function initializeStartButton() {
