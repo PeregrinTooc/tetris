@@ -144,16 +144,22 @@ function main() {
 	}
 
 	function initializeStartButton() {
-		const startButton = document.getElementById("start-button");
-		if (startButton) {
-			startButton.addEventListener("click", () => {
-				if (state.gameRunning) {
-					resetGame();
-					// After reset, we want to wait for another click to start
-					return;
-				}
-				startGame();
-			});
+		const startButtonDesktop = document.getElementById("start-button-desktop");
+		const startButtonMobile = document.getElementById("start-button");
+
+		const handleStartClick = () => {
+			if (state.gameRunning) {
+				resetGame();
+				return;
+			}
+			startGame();
+		};
+
+		if (startButtonDesktop) {
+			startButtonDesktop.addEventListener("click", handleStartClick);
+		}
+		if (startButtonMobile) {
+			startButtonMobile.addEventListener("click", handleStartClick);
 		}
 	}
 
@@ -216,10 +222,15 @@ function main() {
 		startTicking();
 
 		function switchStartButtonToReset() {
-			const startBtn = document.getElementById("start-button");
-			if (startBtn) {
-				startBtn.textContent = "Reset Game";
-				startBtn.blur();
+			const startBtnMobile = document.getElementById("start-button");
+			const startBtnDesktop = document.getElementById("start-button-desktop");
+			if (startBtnMobile) {
+				startBtnMobile.textContent = "Reset";
+				startBtnMobile.blur();
+			}
+			if (startBtnDesktop) {
+				startBtnDesktop.textContent = "Reset Game";
+				startBtnDesktop.blur();
 			}
 		}
 
@@ -334,9 +345,13 @@ function main() {
 		}
 
 		// Reset button text
-		const startBtn = document.getElementById("start-button");
-		if (startBtn) {
-			startBtn.textContent = "Start Game";
+		const startBtnMobile = document.getElementById("start-button");
+		const startBtnDesktop = document.getElementById("start-button-desktop");
+		if (startBtnMobile) {
+			startBtnMobile.textContent = "Start";
+		}
+		if (startBtnDesktop) {
+			startBtnDesktop.textContent = "Start Game";
 		}
 
 		// Reset score display

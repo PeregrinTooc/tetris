@@ -69,6 +69,17 @@
 	height: 80px;
 }
 
+.touch-btn-game-control {
+	width: 120px;
+	height: 70px;
+	background: linear-gradient(145deg, #43a047, #2e7d32);
+	border-color: #66bb6a;
+}
+
+.touch-btn-game-control:active {
+	background: linear-gradient(145deg, #2e7d32, #1b5e20);
+}
+
 .touch-icon {
 	font-size: 36px;
 	line-height: 1;
@@ -81,11 +92,19 @@
 	letter-spacing: 1px;
 }
 
+.desktop-start-button {
+	display: block;
+}
+
 @media (max-width: 768px) {
 	body {
 		height: auto;
 		min-height: 100vh;
 		padding: 16px 0;
+	}
+
+	.desktop-start-button {
+		display: none !important;
 	}
 
 	h1 {

@@ -147,12 +147,20 @@ export class AudioManager {
 		// Music volume slider
 		if (musicVolumeSlider) {
 			musicVolumeSlider.addEventListener("input", () => {
-				musicVolume = parseInt(musicVolumeSlider.value, 10) / 100;
+				const newVolume = parseInt(musicVolumeSlider.value, 10) / 100;
+				const wasZero = musicVolume === 0;
+				musicVolume = newVolume;
 				if (this.currentMusic) {
 					this.currentMusic.volume = musicVolume;
+					// If slider moved from 0 to non-zero and music is paused, resume playback
+					if (wasZero && musicVolume > 0 && this.currentMusic.paused) {
+						this.currentMusic.play().catch((err) => console.log("Play failed:", err));
+					}
+					// If slider set to 0, pause the music
+					else if (musicVolume === 0 && !this.currentMusic.paused) {
+						this.currentMusic.pause();
+					}
 				}
-				// Don't call updateMusic() here - just update volume
-				// Let main.ts handle play/pause state based on game conditions
 			});
 		}
 		// SFX volume slider
@@ -168,8 +176,11 @@ export class AudioManager {
 				musicVolumeSlider.value = "0";
 				if (this.currentMusic) {
 					this.currentMusic.volume = 0;
+					// Pause music when muting
+					if (!this.currentMusic.paused) {
+						this.currentMusic.pause();
+					}
 				}
-				// Don't call updateMusic() - just set volume to 0
 			});
 		}
 		if (musicMaxBtn && musicVolumeSlider) {
@@ -178,8 +189,11 @@ export class AudioManager {
 				musicVolumeSlider.value = "100";
 				if (this.currentMusic) {
 					this.currentMusic.volume = 1;
+					// Resume music when unmuting
+					if (this.currentMusic.paused) {
+						this.currentMusic.play().catch((err) => console.log("Play failed:", err));
+					}
 				}
-				// Don't call updateMusic() - just set volume to 1
 			});
 		}
 		// Min/max buttons for SFX
