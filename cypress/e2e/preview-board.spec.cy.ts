@@ -12,7 +12,7 @@ describe("Preview Board", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			for (let i = 0; i < 5; i++) addTetrominoBase(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 	});
 
 	it("should show a tetromino in the preview area when the game starts", () => {

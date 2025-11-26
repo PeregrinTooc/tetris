@@ -16,7 +16,7 @@ describe("Coordinate-Based Rendering", () => {
 	});
 
 	it("should render blocks using coordinate positioning", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// In coordinate mode, blocks should be direct children of game-board with absolute positioning
 		cy.get("#game-board .coordinate-block").should("exist");
@@ -24,7 +24,7 @@ describe("Coordinate-Based Rendering", () => {
 	});
 
 	it("should move blocks when tetromino moves", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Get initial position of a block
 		cy.get("#game-board .coordinate-block")
@@ -46,7 +46,7 @@ describe("Coordinate-Based Rendering", () => {
 	});
 
 	it("should update block positions when tetromino falls", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Get initial position of a block
 		cy.get("#game-board .coordinate-block")

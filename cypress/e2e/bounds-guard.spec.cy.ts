@@ -17,7 +17,7 @@ describe("Board Bounds Guard", () => {
 	});
 
 	it("hard drop lands exactly on bottom row pixel", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 		cy.get('#game-board [data-tetromino-id="1"]').then(($el) => {
 			pressHardDrop();
 			cy.wrap($el).should(($final) => {
@@ -28,7 +28,7 @@ describe("Board Bounds Guard", () => {
 	});
 
 	it("no block renders beyond bottom row", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 		pressHardDrop();
 		// Use rendering-agnostic helper to get blocks
 		getBlocks("#game-board").each(($block) => {

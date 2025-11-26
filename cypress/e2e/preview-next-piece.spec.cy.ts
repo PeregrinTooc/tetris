@@ -14,7 +14,7 @@ describe("Preview of Next Piece", () => {
 			addTetrominoI(win);
 			addTetrominoO(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 	});
 
 	it("should update the preview when a new tetromino is spawned", () => {

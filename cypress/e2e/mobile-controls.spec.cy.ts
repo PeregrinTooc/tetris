@@ -34,7 +34,11 @@ describe("Mobile Controls", () => {
 			cy.get("[data-touch-rotate]").should("be.visible");
 			cy.get("[data-touch-hard-drop]").should("be.visible");
 			cy.get("[data-touch-hold]").should("be.visible");
-			cy.get("[data-touch-pause]").should("be.visible");
+			cy.get("#start-button").should("be.visible");
+		});
+
+		it("should not have separate pause button in touch controls", () => {
+			cy.get("[data-touch-pause]").should("not.exist");
 		});
 	});
 
@@ -88,9 +92,40 @@ describe("Mobile Controls", () => {
 			cy.get("#hold-board .hold-container .tetromino").should("exist");
 		});
 
-		it("should pause game when pause button is clicked", () => {
-			cy.get("[data-touch-pause]").click();
+		it("should change start button to pause after game starts", () => {
+			cy.get("#start-button").should("contain.text", "Pause");
+		});
+
+		it("should pause game when mobile start/pause button is clicked", () => {
+			cy.get("#start-button").click();
 			cy.get("#pause-overlay").should("be.visible");
+		});
+
+		it("should show reset button in pause overlay when paused", () => {
+			cy.get("#start-button").click();
+			cy.get("#pause-overlay").should("be.visible");
+			cy.get("#reset-button-overlay").should("be.visible");
+		});
+
+		it("should change button text to Resume when paused", () => {
+			cy.get("#start-button").click();
+			cy.get("#start-button").should("contain.text", "Resume");
+		});
+
+		it("should resume game when clicking Resume button", () => {
+			cy.get("#start-button").click();
+			cy.wait(50);
+			cy.get("#start-button").click();
+			cy.get("#pause-overlay").should("not.be.visible");
+			cy.get("#start-button").should("contain.text", "Pause");
+		});
+
+		it("should reset game when clicking reset button in overlay", () => {
+			cy.get("#start-button").click();
+			cy.get("#reset-button-overlay").click();
+			cy.wait(100);
+			cy.get("#start-button").should("contain.text", "Start");
+			cy.get("#score-board").should("contain", "Score: 0");
 		});
 	});
 

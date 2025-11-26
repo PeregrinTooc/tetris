@@ -42,7 +42,7 @@ describe("Tetromino Shapes with ID Selectors", () => {
 				addFns[idx](win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			// Verify tetromino spawned using class selector
 			cy.get(`#game-board .${tetrominoClasses[idx]}`).should("exist");
@@ -64,7 +64,7 @@ describe("Tetromino Shapes with ID Selectors", () => {
 			addTetrominoI(win);
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// ID-based approach using rendering-agnostic helper
 		cy.get("#game-board .tetromino-i").then(($tetromino) => {
@@ -83,7 +83,7 @@ describe("Tetromino Shapes with ID Selectors", () => {
 			addTetrominoO(win);
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Should have first tetromino (T)
 		cy.get("#game-board .tetromino-t").should("exist");

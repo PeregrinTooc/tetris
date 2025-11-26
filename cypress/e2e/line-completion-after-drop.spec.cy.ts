@@ -26,7 +26,7 @@ describe("Line Completion", () => {
 			doTimes(2, () => addTetrominoT(win));
 			doTimes(2, () => addTetrominoBase(win));
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 	});
 
 	it("blocks drop after line completion if there is a gap under them", () => {

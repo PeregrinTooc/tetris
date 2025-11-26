@@ -27,7 +27,7 @@ describe("Line completion with O and L pieces", () => {
 	});
 
 	it("should collapse tetrominos after line completion", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		doTimes(2, () => {
 			doTimes(4, pressRight);

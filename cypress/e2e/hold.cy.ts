@@ -20,7 +20,7 @@ describe("Tetris Hold Functionality", () => {
 			win.setTetrominoDropTime(10000); // Slow fall to remove timing races
 			addTetrominoSeeds(win, 0, 0, 0, 0); // deterministic sequence of T pieces
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 		cy.get("#game-board .tetromino").should("exist");
 	});
 
@@ -174,7 +174,7 @@ describe("Tetris Hold Functionality", () => {
 		cy.get("[data-settings-close]").click();
 
 		// Start game and wait for piece
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 		cy.get("#game-board .tetromino").should("have.class", "tetromino-t");
 
 		// Get a reference to the initial piece
@@ -243,7 +243,7 @@ describe("Tetris Hold Functionality", () => {
 		pressHold();
 
 		// Start game and wait for first piece
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		cy.get('#hold-board .tetromino[data-tetromino-id="1"]').should("not.exist");
 	});
@@ -260,7 +260,7 @@ describe("Tetris Hold Functionality", () => {
 			addTetrominoT(win);
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Position O piece on bottom right
 		doTimes(5, pressRight);

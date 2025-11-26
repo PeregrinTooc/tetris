@@ -26,7 +26,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 	});
 
 	afterEach(() => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 		cy.get("[data-tetromino-id]").should("not.exist");
 	});
 
@@ -36,7 +36,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoT(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -59,7 +59,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoT(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -91,7 +91,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoI(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -106,7 +106,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoO(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -121,7 +121,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoT(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -149,7 +149,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoT(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -179,7 +179,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoT(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -209,7 +209,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoT(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -242,7 +242,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoT(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -270,7 +270,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoI(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -291,7 +291,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoBase(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -311,7 +311,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoBase(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -343,7 +343,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoBase(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			pressHardDrop();
 			cy.wait(100);
@@ -369,7 +369,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoT(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -399,7 +399,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoBase(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -432,7 +432,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoI(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -467,7 +467,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoBase(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -505,7 +505,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoBase(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -530,7 +530,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoBase(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -551,7 +551,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoBase(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -572,7 +572,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoBase(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			cy.get("#game-board [data-tetromino-id]")
 				.first()
@@ -604,7 +604,7 @@ describe("Shadow Blocks (Ghost Piece)", () => {
 				addTetrominoO(win);
 			});
 
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			doTimes(4, () => pressLeft());
 			pressHardDrop();

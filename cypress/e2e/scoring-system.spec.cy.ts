@@ -19,7 +19,7 @@ describe("Scoring System", () => {
 			doTimes(5, () => addTetrominoO(win));
 			addTetrominoI(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 	});
 
 	it("should increase the score when a line is cleared", () => {

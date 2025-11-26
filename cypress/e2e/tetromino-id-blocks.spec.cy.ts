@@ -17,7 +17,7 @@ describe("Tetromino ID on Blocks", () => {
 	});
 
 	it("should add tetromino ID to all blocks in original rendering system", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Get the tetromino container ID
 		cy.get("#game-board .tetromino")
@@ -33,7 +33,7 @@ describe("Tetromino ID on Blocks", () => {
 	});
 
 	it("should allow selecting blocks by tetromino ID", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Get the first tetromino's ID
 		cy.get("#game-board .tetromino")
@@ -47,7 +47,7 @@ describe("Tetromino ID on Blocks", () => {
 	});
 
 	it("should work with both container and block selectors", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Rendering-agnostic block selector
 		getBlocks("#game-board").should("exist");

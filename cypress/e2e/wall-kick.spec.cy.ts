@@ -23,7 +23,7 @@ describe("Wall Kick - I-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoI(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// I-piece spawns horizontally at center
 		// Move to left wall
@@ -56,7 +56,7 @@ describe("Wall Kick - I-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoI(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to right wall
 		doTimes(3, pressRight);
@@ -88,7 +88,7 @@ describe("Wall Kick - I-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoI(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Rotate to vertical first
 		pressRotate();
@@ -130,7 +130,7 @@ describe("Wall Kick - J-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoJ(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to left wall
 		doTimes(4, pressLeft);
@@ -167,7 +167,7 @@ describe("Wall Kick - J-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoJ(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to right wall
 		doTimes(4, pressRight);
@@ -203,7 +203,7 @@ describe("Wall Kick - J-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoJ(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move down near floor
 		doTimes(17, pressDown);
@@ -241,7 +241,7 @@ describe("Wall Kick - T-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoT(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to left wall
 		doTimes(4, pressLeft);
@@ -275,7 +275,7 @@ describe("Wall Kick - T-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoT(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to right wall
 		doTimes(4, pressRight);
@@ -312,7 +312,7 @@ describe("Wall Kick - T-Piece", () => {
 			addTetrominoI(win); // Right wall (will spawn second)
 			addTetrominoT(win); // Active piece (will spawn third after walls are locked)
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Wait for first I-piece to spawn and position it as left wall
 		cy.get(".tetromino-i")
@@ -370,7 +370,7 @@ describe("Wall Kick - L-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoL(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to left wall
 		doTimes(4, pressLeft);
@@ -397,7 +397,7 @@ describe("Wall Kick - L-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoL(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to right wall
 		doTimes(4, pressRight);
@@ -426,7 +426,7 @@ describe("Wall Kick - Z-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoZ(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to left wall
 		doTimes(4, pressLeft);
@@ -453,7 +453,7 @@ describe("Wall Kick - Z-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoZ(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to right wall
 		doTimes(4, pressRight);
@@ -482,7 +482,7 @@ describe("Wall Kick - S-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoS(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to left wall
 		doTimes(4, pressLeft);
@@ -509,7 +509,7 @@ describe("Wall Kick - S-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoS(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to right wall
 		doTimes(4, pressRight);
@@ -538,7 +538,7 @@ describe("Wall Kick - O-Piece", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoO(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to left wall
 		doTimes(4, pressLeft);
@@ -577,7 +577,7 @@ describe("Wall Kick - Counter-Clockwise Rotation", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoI(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Move to left wall
 		doTimes(3, pressLeft);

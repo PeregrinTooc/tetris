@@ -29,7 +29,7 @@ describe("Line completion", () => {
 	});
 
 	it("should clear completed line and drop remaining blocks", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Position O piece on bottom right
 		doTimes(5, pressRight);
@@ -63,7 +63,7 @@ describe("Line completion", () => {
 	});
 
 	it("should block spawning during line clear animation", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Position O piece on bottom right
 		doTimes(5, pressRight);
@@ -103,7 +103,7 @@ describe("Line completion", () => {
 	});
 
 	it("should interrupt line clear animation on reset", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Position O piece on bottom right
 		doTimes(5, pressRight);
@@ -125,13 +125,13 @@ describe("Line completion", () => {
 
 		// Immediately reset during animation
 		cy.wait(100);
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Wait for reset to complete
 		cy.wait(200);
 
 		// Verify start button is ready for a new game
-		cy.get("#start-button").should("have.text", "Start Game");
+		cy.get("#start-button-desktop").should("have.text", "Start Game");
 
 		// Board should be cleared and ready for new game
 		cy.get("#game-board").find("[data-tetromino-id]").should("have.length", 0);

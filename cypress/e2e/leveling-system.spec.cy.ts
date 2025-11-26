@@ -16,7 +16,7 @@ describe("Leveling System", () => {
 	});
 
 	it("should display level 1 at game start", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 		cy.get("#level-board").should("contain.text", "Level: 1");
 	});
 
@@ -24,7 +24,7 @@ describe("Leveling System", () => {
 		cy.window().then((win) => {
 			doTimes(20, () => addTetrominoBase(win));
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Verify we start at level 1
 		cy.get("#level-board").should("contain.text", "Level: 1");
@@ -44,7 +44,7 @@ describe("Leveling System", () => {
 		cy.window().then((win) => {
 			doTimes(20, () => addTetrominoBase(win));
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 		cy.document().then((doc) => {
 			function tickListenerLevel1() {
 				tickTimesLevel1.push(Date.now());

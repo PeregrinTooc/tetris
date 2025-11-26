@@ -147,7 +147,7 @@ function main() {
 		const startButtonDesktop = document.getElementById("start-button-desktop");
 		const startButtonMobile = document.getElementById("start-button");
 
-		const handleStartClick = () => {
+		const handleDesktopStartClick = () => {
 			if (state.gameRunning) {
 				resetGame();
 				return;
@@ -155,11 +155,26 @@ function main() {
 			startGame();
 		};
 
+		const handleMobileStartClick = () => {
+			if (!state.gameRunning) {
+				startGame();
+				return;
+			}
+			togglePause();
+		};
+
 		if (startButtonDesktop) {
-			startButtonDesktop.addEventListener("click", handleStartClick);
+			startButtonDesktop.addEventListener("click", handleDesktopStartClick);
 		}
 		if (startButtonMobile) {
-			startButtonMobile.addEventListener("click", handleStartClick);
+			startButtonMobile.addEventListener("click", handleMobileStartClick);
+		}
+
+		const resetButtonOverlay = document.getElementById("reset-button-overlay");
+		if (resetButtonOverlay) {
+			resetButtonOverlay.addEventListener("click", () => {
+				resetGame();
+			});
 		}
 	}
 
@@ -225,7 +240,10 @@ function main() {
 			const startBtnMobile = document.getElementById("start-button");
 			const startBtnDesktop = document.getElementById("start-button-desktop");
 			if (startBtnMobile) {
-				startBtnMobile.textContent = "Reset";
+				const label = startBtnMobile.querySelector(".touch-label");
+				if (label) {
+					label.textContent = "Pause";
+				}
 				startBtnMobile.blur();
 			}
 			if (startBtnDesktop) {
@@ -322,7 +340,14 @@ function main() {
 		if (pauseOverlay) {
 			pauseOverlay.style.display = state.isPaused ? "block" : "none";
 		}
-		// audioManager.updateMusic removed: music is now managed by playMainMenuMusic, playGameMusic, and handleLevelChange
+
+		const startBtnMobile = document.getElementById("start-button");
+		if (startBtnMobile) {
+			const label = startBtnMobile.querySelector(".touch-label");
+			if (label) {
+				label.textContent = state.isPaused ? "Resume" : "Pause";
+			}
+		}
 	}
 
 	function resetGame(): void {
@@ -348,7 +373,10 @@ function main() {
 		const startBtnMobile = document.getElementById("start-button");
 		const startBtnDesktop = document.getElementById("start-button-desktop");
 		if (startBtnMobile) {
-			startBtnMobile.textContent = "Start";
+			const label = startBtnMobile.querySelector(".touch-label");
+			if (label) {
+				label.textContent = "Start";
+			}
 		}
 		if (startBtnDesktop) {
 			startBtnDesktop.textContent = "Start Game";

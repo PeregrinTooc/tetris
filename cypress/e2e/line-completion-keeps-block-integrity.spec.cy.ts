@@ -31,7 +31,7 @@ describe("Line completion", () => {
 	});
 
 	it("should not let blocks belonging to a tetromino that's being blocked fall", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Position O piece on bottom right
 		doTimes(4, pressRight);

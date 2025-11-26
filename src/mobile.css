@@ -107,6 +107,10 @@
 		display: none !important;
 	}
 
+	#start-button {
+		display: flex !important;
+	}
+
 	h1 {
 		font-size: 1.8em;
 		margin: 8px 0;
@@ -289,6 +293,23 @@
 	.audio-panel h3 {
 		font-size: 1em;
 	}
+}
+
+#reset-button-overlay {
+	transition: all 0.2s;
+	-webkit-tap-highlight-color: transparent;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+#reset-button-overlay:hover {
+	background: linear-gradient(145deg, #ff5252, #e53935);
+	transform: scale(1.05);
+}
+
+#reset-button-overlay:active {
+	background: linear-gradient(145deg, #c62828, #b71c1c);
+	transform: scale(0.95);
 }
 
 @media (min-width: 769px) {

@@ -40,7 +40,7 @@ describe("All Tetromino Shapes", () => {
 				];
 				addFns[idx](win);
 			});
-			cy.get("#start-button").click();
+			cy.get("#start-button-desktop").click();
 
 			// Verify tetromino spawned using class selector
 			cy.get("#game-board " + tetrominoClasses[idx]).should("exist");
@@ -66,7 +66,7 @@ describe("Hard Drop Action", () => {
 			setTetrominoDropTimeInMiliseconds(win, 2147483647);
 			addTetrominoI(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Get the I-tetromino using ID selector
 		cy.get(".tetromino-i").then(($tetromino) => {

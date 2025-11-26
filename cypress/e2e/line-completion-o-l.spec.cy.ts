@@ -27,7 +27,7 @@ describe("Line completion with O and L pieces", () => {
 	});
 
 	it("should fill 4 rows with O-pieces and complete 2 lines with an L-piece on the right", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Drop O-pieces from left to right
 		doTimes(5, pressLeft);

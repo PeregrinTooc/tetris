@@ -22,7 +22,7 @@ describe("Coordinate-Based Rendering - Hold Functionality", () => {
 			addTetrominoO(win);
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		cy.wait(200);
 
@@ -44,7 +44,7 @@ describe("Coordinate-Based Rendering - Hold Functionality", () => {
 			addTetrominoT(win);
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		cy.wait(200);
 
@@ -72,7 +72,7 @@ describe("Coordinate-Based Rendering - Hold Functionality", () => {
 			addTetrominoT(win);
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		cy.wait(100);
 
@@ -99,7 +99,7 @@ describe("Coordinate-Based Rendering - Hold Functionality", () => {
 			addTetrominoO(win);
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		cy.wait(200);
 

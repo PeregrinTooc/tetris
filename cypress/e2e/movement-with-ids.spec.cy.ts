@@ -19,12 +19,12 @@ describe("Movement with Tetromino ID Selectors", () => {
 	});
 
 	afterEach(() => {
-		cy.get("#start-button").click(); // Reset the game
+		cy.get("#start-button-desktop").click(); // Reset the game
 		cy.get(".tetromino").should("not.exist");
 	});
 
 	it("should move tetromino container using ID selectors", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Get the first tetromino using ID selector
 		cy.get("#game-board [data-tetromino-id]")
@@ -46,7 +46,7 @@ describe("Movement with Tetromino ID Selectors", () => {
 	});
 
 	it("should verify all blocks of a tetromino have the same ID", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		cy.get("#game-board .tetromino")
 			.first()
@@ -62,7 +62,7 @@ describe("Movement with Tetromino ID Selectors", () => {
 	});
 
 	it("should allow selecting tetromino and its blocks by ID", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		cy.get("#game-board .tetromino")
 			.first()
@@ -82,7 +82,7 @@ describe("Movement with Tetromino ID Selectors", () => {
 	});
 
 	it("should work with both old and new selector approaches", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Rendering-agnostic approach
 		getBlocks("#game-board").should("exist");

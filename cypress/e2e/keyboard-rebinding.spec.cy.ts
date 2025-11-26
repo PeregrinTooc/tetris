@@ -23,7 +23,7 @@ describe("Keyboard Rebinding", () => {
 		cy.get("[data-settings-close]").click();
 
 		// Start game
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 		// Verify new binding works - press 'A' to move left (use CSS left for hidden containers)
 		cy.get("[data-tetromino-id='1']")
 			.not(".block")

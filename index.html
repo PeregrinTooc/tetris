@@ -25,22 +25,24 @@
 				</div>
 				<div class="game-and-side">
 					<div id="game-board" style="position: relative">
-						<div
-							id="pause-overlay"
-							style="
-								display: none;
-								position: absolute;
-								top: 50%;
-								left: 50%;
-								transform: translate(-50%, -50%);
-								background: rgba(0, 0, 0, 0.8);
-								color: white;
-								padding: 20px;
-								z-index: 100;
-								font-size: 24px;
-							"
-						>
-							Paused
+						<div id="pause-overlay" style="display: none">
+							<div>Paused</div>
+							<button
+								id="reset-button-overlay"
+								style="
+									margin-top: 16px;
+									padding: 12px 24px;
+									font-size: 16px;
+									font-weight: bold;
+									background: linear-gradient(145deg, #e53935, #c62828);
+									color: white;
+									border: 2px solid #ff6659;
+									border-radius: 8px;
+									cursor: pointer;
+								"
+							>
+								Reset Game
+							</button>
 						</div>
 						<canvas id="tetris"></canvas>
 					</div>
@@ -115,13 +117,6 @@
 						<div class="touch-row">
 							<button id="start-button" class="touch-btn touch-btn-game-control">
 								<span class="touch-label">Start</span>
-							</button>
-							<button
-								data-touch-pause
-								class="touch-btn touch-btn-game-control"
-								aria-label="Pause"
-							>
-								<span class="touch-label">Pause</span>
 							</button>
 						</div>
 					</div>

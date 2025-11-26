@@ -19,12 +19,12 @@ describe("Tetris Game Movement", () => {
 	});
 
 	afterEach(() => {
-		cy.get("#start-button").click(); // Reset the game after each test
+		cy.get("#start-button-desktop").click(); // Reset the game after each test
 		cy.get("[data-tetromino-id]").should("not.exist");
 	});
 
 	it("should make the tetromino fall automatically", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 		cy.wait(10);
 
 		// Get the first tetromino using ID selector and verify it has moved down
@@ -44,7 +44,7 @@ describe("Tetris Game Movement", () => {
 	});
 
 	it("should allow the player to move the tetromino to the right", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Get the first tetromino using ID selector
 		cy.get("#game-board [data-tetromino-id]")
@@ -66,7 +66,7 @@ describe("Tetris Game Movement", () => {
 	});
 
 	it("should allow the player to move the tetromino to the left", () => {
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Get the first tetromino using ID selector
 		cy.get("#game-board [data-tetromino-id]")
@@ -91,7 +91,7 @@ describe("Tetris Game Movement", () => {
 		cy.window().then((win) => {
 			setTetrominoDropTimeInMiliseconds(win, 2147483647);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Get the first tetromino using ID selector
 		cy.get("#game-board [data-tetromino-id]")
@@ -116,7 +116,7 @@ describe("Tetris Game Movement", () => {
 		cy.window().then((win) => {
 			win.setTetrominoDropTime(2147483647);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Get the first tetromino using ID selector
 		cy.get("#game-board [data-tetromino-id]")

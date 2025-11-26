@@ -33,7 +33,7 @@ describe("Dual Spawn Bug Prevention", () => {
 			addTetrominoI(win); // 9
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// I-piece 1: left wall
 		doTimes(5, () => pressLeft());
@@ -121,7 +121,7 @@ describe("Dual Spawn Bug Prevention", () => {
 			addTetrominoT(win); // 10 - piece we'll try to hold during line clear
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// I-piece 1: left wall
 		doTimes(5, () => pressLeft());
@@ -201,7 +201,7 @@ describe("Dual Spawn Bug Prevention", () => {
 			addTetrominoI(win); // 11 - will drop and complete second line
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Build base with I-pieces (vertical stacks)
 		doTimes(5, () => pressLeft());

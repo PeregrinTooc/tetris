@@ -13,7 +13,7 @@ describe("T-shaped Tetromino", () => {
 			setTetrominoDropTimeInMiliseconds(win, 100000);
 			addTetrominoT(win);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 	});
 
 	it("should spawn a T-shaped tetromino and render it on the board", () => {

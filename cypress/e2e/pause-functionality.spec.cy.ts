@@ -19,7 +19,7 @@ describe("Pause functionality", () => {
 			win.setTetrominoDropTime(100);
 			win.pushTetrominoSeed(1337);
 		});
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 	});
 
 	it("should pause and resume game with P key", () => {
@@ -120,7 +120,7 @@ describe("Pause functionality", () => {
 			win.pushTetrominoSeed(1337);
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		// Position O piece on bottom right
 		doTimes(5, pressRight);

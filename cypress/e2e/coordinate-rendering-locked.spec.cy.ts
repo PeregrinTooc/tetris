@@ -20,7 +20,7 @@ describe("Coordinate-Based Rendering - Locked Tetrominoes", () => {
 			addTetrominoI(win);
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		pressHardDrop();
 
@@ -45,7 +45,7 @@ describe("Coordinate-Based Rendering - Locked Tetrominoes", () => {
 			}
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		const initialBlockCount = 4;
 		cy.get("#game-board .coordinate-block").should("have.length", initialBlockCount);
@@ -67,7 +67,7 @@ describe("Coordinate-Based Rendering - Locked Tetrominoes", () => {
 			}
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		for (let i = 0; i < 5; i++) {
 			pressHardDrop();
@@ -95,7 +95,7 @@ describe("Coordinate-Based Rendering - Locked Tetrominoes", () => {
 			}
 		});
 
-		cy.get("#start-button").click();
+		cy.get("#start-button-desktop").click();
 
 		for (let i = 0; i < 5; i++) {
 			pressHardDrop();
