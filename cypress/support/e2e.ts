@@ -50,16 +50,23 @@ Cypress.on("window:before:load", (win) => {
 		writable: true,
 		value: class MockAudioContext {
 			constructor() {
+				const destination = {};
 				return {
 					state: "suspended",
+					destination: destination,
 					resume: () => Promise.resolve(),
 					suspend: () => Promise.resolve(),
 					close: () => Promise.resolve(),
-					createMediaElementSource: () => ({}),
+					createMediaElementSource: () => ({
+						connect: () => {},
+					}),
 					createMediaStreamDestination: () => ({}),
 					createBuffer: () => ({}),
 					createBufferSource: () => ({}),
-					createGain: () => ({}),
+					createGain: () => ({
+						connect: () => {},
+						gain: { value: 1.0 },
+					}),
 					createOscillator: () => ({}),
 					baseLatency: 0,
 					outputLatency: 0,
