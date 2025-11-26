@@ -13,9 +13,25 @@ MockAudio.prototype.play = function () {
 MockAudio.prototype.pause = function () {
 	/* no-op */
 };
+class MockGainNode {
+	constructor() {
+		this.gain = { value: 1.0 };
+	}
+	connect = jest.fn();
+}
+
+class MockMediaElementAudioSourceNode {
+	connect = jest.fn();
+}
+
 class MockAudioContext {
-	state = "running";
+	constructor() {
+		this.state = "running";
+		this.destination = {};
+	}
 	resume = jest.fn();
+	createGain = jest.fn(() => new MockGainNode());
+	createMediaElementSource = jest.fn(() => new MockMediaElementAudioSourceNode());
 }
 global.Audio = MockAudio;
 global.window = Object.assign(global.window || {}, {

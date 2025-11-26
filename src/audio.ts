@@ -20,34 +20,61 @@ export const soundEffects = {
 	gameOver: new Audio("resources/sfx/gameOver.mp3"),
 	locked: new Audio("resources/sfx/locked.mp3"),
 };
-// Preload all sound effects
+
 Object.values(soundEffects).forEach((sound) => {
 	sound.preload = "auto";
 });
 
-// Audio context setup for handling browser autoplay restrictions
 const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
 const audioContext = new AudioContext();
-// Function to resume audio context after user interaction
 
-// Setup audio controls
-let musicVolume = 1.0; // 0.0 to 1.0
-let sfxVolume = 1.0; // 0.0 to 1.0
+const musicGainNode = audioContext.createGain();
+const sfxGainNode = audioContext.createGain();
+musicGainNode.connect(audioContext.destination);
+sfxGainNode.connect(audioContext.destination);
+
+musicGainNode.gain.value = 1.0;
+sfxGainNode.gain.value = 1.0;
+
+const musicSources = new Map<HTMLAudioElement, MediaElementAudioSourceNode>();
+const sfxSources = new Map<HTMLAudioElement, MediaElementAudioSourceNode>();
+
+function connectMusicToGainNode(audio: HTMLAudioElement) {
+	if (!musicSources.has(audio)) {
+		const source = audioContext.createMediaElementSource(audio);
+		source.connect(musicGainNode);
+		musicSources.set(audio, source);
+	}
+}
+
+function connectSfxToGainNode(audio: HTMLAudioElement) {
+	if (!sfxSources.has(audio)) {
+		const source = audioContext.createMediaElementSource(audio);
+		source.connect(sfxGainNode);
+		sfxSources.set(audio, source);
+	}
+}
+
+connectMusicToGainNode(mainMenuMusic);
+connectMusicToGainNode(bgMusicLevel1);
+connectMusicToGainNode(bgMusicLevel8);
+connectMusicToGainNode(bgMusicLevel15);
+
+Object.values(soundEffects).forEach((sound) => {
+	connectSfxToGainNode(sound);
+});
+
+let musicVolume = 1.0;
+let sfxVolume = 1.0;
 
 export class AudioManager {
 	private currentMusic: HTMLAudioElement | null = null;
 	private currentLevel: number = 1;
 
-	/**
-	 * Call this to play main menu music (when not in game)
-	 */
 	public playMainMenuMusic() {
 		this._switchMusic(mainMenuMusic);
 	}
 
-	/**
-	 * Call this to start game music for a given level (1+)
-	 */
 	public playGameMusic(level: number) {
 		let music: HTMLAudioElement;
 		if (level >= 15) {
@@ -61,11 +88,7 @@ export class AudioManager {
 		this._switchMusic(music);
 	}
 
-	/**
-	 * Call this when the level changes during the game
-	 */
 	public handleLevelChange(newLevel: number) {
-		// Only switch if the music track should change
 		if (
 			(this.currentLevel < 8 && newLevel >= 8) ||
 			(this.currentLevel < 15 && newLevel >= 15)
@@ -75,9 +98,6 @@ export class AudioManager {
 		this.currentLevel = newLevel;
 	}
 
-	/**
-	 * Call this to stop all music (e.g. on game over)
-	 */
 	public stopMusic() {
 		if (this.currentMusic) {
 			this.currentMusic.pause();
@@ -86,9 +106,6 @@ export class AudioManager {
 		this.currentMusic = null;
 	}
 
-	/**
-	 * Internal: switch to a new music track, pausing any previous
-	 */
 	private _switchMusic(music: HTMLAudioElement) {
 		if (this.currentMusic && this.currentMusic !== music) {
 			this.currentMusic.pause();
@@ -96,7 +113,6 @@ export class AudioManager {
 		}
 		this.currentMusic = music;
 		if (musicVolume > 0) {
-			music.volume = musicVolume;
 			this.startMusic();
 			music.play().catch((error) => {
 				console.log("Error playing music:", error);
@@ -108,7 +124,6 @@ export class AudioManager {
 		const sound = soundEffects[effect];
 		if (sfxVolume > 0) {
 			sound.currentTime = 0;
-			sound.volume = sfxVolume;
 			this.startMusic();
 			sound.play().catch((error) => {
 				console.log("Error playing sound:", error);
@@ -136,7 +151,6 @@ export class AudioManager {
 	}
 
 	public initializeControls() {
-		// Get audio controls dynamically
 		const musicVolumeSlider = document.getElementById("music-volume") as HTMLInputElement;
 		const sfxVolumeSlider = document.getElementById("sfx-volume") as HTMLInputElement;
 		const musicMinBtn = document.getElementById("music-min") as HTMLButtonElement;
@@ -144,71 +158,64 @@ export class AudioManager {
 		const sfxMinBtn = document.getElementById("sfx-min") as HTMLButtonElement;
 		const sfxMaxBtn = document.getElementById("sfx-max") as HTMLButtonElement;
 
-		// Music volume slider
 		if (musicVolumeSlider) {
 			musicVolumeSlider.addEventListener("input", () => {
 				const newVolume = parseInt(musicVolumeSlider.value, 10) / 100;
 				const wasZero = musicVolume === 0;
 				musicVolume = newVolume;
+				musicGainNode.gain.value = musicVolume;
 				if (this.currentMusic) {
-					this.currentMusic.volume = musicVolume;
-					// If slider moved from 0 to non-zero and music is paused, resume playback
 					if (wasZero && musicVolume > 0 && this.currentMusic.paused) {
 						this.currentMusic.play().catch((err) => console.log("Play failed:", err));
-					}
-					// If slider set to 0, pause the music
-					else if (musicVolume === 0 && !this.currentMusic.paused) {
+					} else if (musicVolume === 0 && !this.currentMusic.paused) {
 						this.currentMusic.pause();
 					}
 				}
 			});
 		}
-		// SFX volume slider
+
 		if (sfxVolumeSlider) {
 			sfxVolumeSlider.addEventListener("input", () => {
 				sfxVolume = parseInt(sfxVolumeSlider.value, 10) / 100;
+				sfxGainNode.gain.value = sfxVolume;
 			});
 		}
-		// Min/max buttons for music
+
 		if (musicMinBtn && musicVolumeSlider) {
 			musicMinBtn.addEventListener("click", () => {
 				musicVolume = 0;
+				musicGainNode.gain.value = 0;
 				musicVolumeSlider.value = "0";
-				if (this.currentMusic) {
-					this.currentMusic.volume = 0;
-					// Pause music when muting
-					if (!this.currentMusic.paused) {
-						this.currentMusic.pause();
-					}
+				if (this.currentMusic && !this.currentMusic.paused) {
+					this.currentMusic.pause();
 				}
 			});
 		}
+
 		if (musicMaxBtn && musicVolumeSlider) {
 			musicMaxBtn.addEventListener("click", () => {
 				musicVolume = 1;
+				musicGainNode.gain.value = 1;
 				musicVolumeSlider.value = "100";
-				if (this.currentMusic) {
-					this.currentMusic.volume = 1;
-					// Resume music when unmuting
-					if (this.currentMusic.paused) {
-						this.currentMusic.play().catch((err) => console.log("Play failed:", err));
-					}
+				if (this.currentMusic && this.currentMusic.paused) {
+					this.currentMusic.play().catch((err) => console.log("Play failed:", err));
 				}
 			});
 		}
-		// Min/max buttons for SFX
+
 		if (sfxMinBtn && sfxVolumeSlider) {
 			sfxMinBtn.addEventListener("click", () => {
 				sfxVolume = 0;
+				sfxGainNode.gain.value = 0;
 				sfxVolumeSlider.value = "0";
-				Object.values(soundEffects).forEach((s) => (s.volume = 0));
 			});
 		}
+
 		if (sfxMaxBtn && sfxVolumeSlider) {
 			sfxMaxBtn.addEventListener("click", () => {
 				sfxVolume = 1;
+				sfxGainNode.gain.value = 1;
 				sfxVolumeSlider.value = "100";
-				Object.values(soundEffects).forEach((s) => (s.volume = 1));
 			});
 		}
 	}
