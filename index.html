@@ -6,13 +6,20 @@
 		<title>Tetris</title>
 		<link rel="stylesheet" href="styles.css" />
 		<link rel="stylesheet" href="/src/key-bindings.css" />
+		<link rel="stylesheet" href="/src/mobile.css" />
 	</head>
 
 	<body>
-		<div style="display: flex; flex-direction: column; align-items: center">
+		<div
+			class="main-container"
+			style="display: flex; flex-direction: column; align-items: center"
+		>
 			<h1>Tetris</h1>
-			<div style="display: flex; flex-direction: row; gap: 32px; align-items: flex-start">
-				<div style="display: flex; flex-direction: column; gap: 16px">
+			<div
+				class="game-layout"
+				style="display: flex; flex-direction: row; gap: 32px; align-items: flex-start"
+			>
+				<div class="score-column" style="display: flex; flex-direction: column; gap: 16px">
 					<div id="score-board" class="score-box">Score: 0</div>
 					<div id="level-board" class="score-box">Level: 1</div>
 				</div>
@@ -51,6 +58,66 @@
 			</div>
 			<div class="controls-container">
 				<button id="start-button">Start Game</button>
+
+				<div id="touch-controls" class="touch-controls" style="display: none">
+					<div class="touch-controls-grid">
+						<div class="touch-row">
+							<button
+								data-touch-rotate
+								class="touch-btn touch-btn-rotate"
+								aria-label="Rotate"
+							>
+								<span class="touch-icon">↻</span>
+							</button>
+						</div>
+						<div class="touch-row">
+							<button
+								data-touch-left
+								class="touch-btn touch-btn-move"
+								aria-label="Move Left"
+							>
+								<span class="touch-icon">←</span>
+							</button>
+							<button
+								data-touch-down
+								class="touch-btn touch-btn-move"
+								aria-label="Soft Drop"
+							>
+								<span class="touch-icon">↓</span>
+							</button>
+							<button
+								data-touch-right
+								class="touch-btn touch-btn-move"
+								aria-label="Move Right"
+							>
+								<span class="touch-icon">→</span>
+							</button>
+						</div>
+						<div class="touch-row">
+							<button
+								data-touch-hold
+								class="touch-btn touch-btn-action"
+								aria-label="Hold"
+							>
+								<span class="touch-label">Hold</span>
+							</button>
+							<button
+								data-touch-hard-drop
+								class="touch-btn touch-btn-hard-drop"
+								aria-label="Hard Drop"
+							>
+								<span class="touch-icon">⬇</span>
+							</button>
+							<button
+								data-touch-pause
+								class="touch-btn touch-btn-action"
+								aria-label="Pause"
+							>
+								<span class="touch-label">Pause</span>
+							</button>
+						</div>
+					</div>
+				</div>
 
 				<div class="controls-row">
 					<div class="controls-panel">

@@ -26,10 +26,19 @@ TypeScript Tetris game built with strict TDD (Jest unit + Cypress E2E) and deter
 
 ### Test Commands
 - Unit tests: `npm run test:unit:output` → read `test-output.txt`
-- Single file: `npx jest tests/tetromino.t.test.ts --verbose > specific-test-output.txt 2>&1`
+- Single unit test file: `npx jest tests/tetromino.t.test.ts --verbose > specific-test-output.txt 2>&1`
 - E2E tests: `npm run test:e2e:output` → read `test-output-e2e.txt`
+- Single E2E test file: `npx cypress run --spec cypress/e2e/mobile-controls.spec.cy.ts --headless --browser electron > specific-e2e-output.txt 2>&1`
 - Parallel suite: `npm run test:parallel`
 - All tests: `npm test`
+
+### Targeted Test Execution (IMPORTANT)
+When fixing a specific failing test:
+1. **Run only the specific test file first** to get fast feedback
+   - E2E: `npx cypress run --spec cypress/e2e/[filename].spec.cy.ts --headless --browser electron > specific-e2e-output.txt 2>&1`
+   - Unit: `npx jest tests/[filename].test.ts --verbose > specific-test-output.txt 2>&1`
+2. Only run full test suite (`npm run test:e2e:output` or `npm test`) after specific test passes
+3. This saves significant time during iterative test fixing
 
 ### Deterministic Testing Hooks
 Global helpers exposed on `window`:

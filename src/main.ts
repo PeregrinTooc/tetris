@@ -5,6 +5,7 @@ import { HoldBoard } from "./hold-board";
 import { AudioManager } from "./audio";
 import { TetrominoSeedQueueImpl } from "./TetrominoSeedQueue";
 import { KeyBindingManager } from "./key-binding-manager";
+import { TouchControlsManager } from "./touch-controls";
 
 const BASE_DROP_TIME = 750;
 const TICK_EVENT_NAME = "tick";
@@ -37,12 +38,26 @@ function main() {
 		scoreBoard: null as ScoreBoard,
 	};
 	audioManager.initializeControls();
-	audioManager.playMainMenuMusic(); // Play main menu music on load
+	audioManager.playMainMenuMusic();
+	initializeTouchControls();
 	registerGlobalTetrominoFunctions();
 	initializePauseToggle();
 	initializeGameOverHandler();
 	initializeStartButton();
 	initializeKeyBindingUI();
+
+	function initializeTouchControls() {
+		const touchControlsContainer = document.getElementById("touch-controls");
+		if (!touchControlsContainer) return;
+
+		const touchControls = new TouchControlsManager(touchControlsContainer);
+
+		if (TouchControlsManager.isTouchDevice()) {
+			touchControls.show();
+		} else {
+			touchControls.hide();
+		}
+	}
 
 	function initializeKeyBindingUI() {
 		const settingsButton = document.querySelector("[data-settings-button]");

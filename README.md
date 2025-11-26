@@ -4,11 +4,15 @@ A browser-based Tetris implementation using JavaScript, developed with Test-Driv
 
 ## Features
 
-- Classic Tetris gameplay
+- Classic Tetris gameplay with smooth animations
 - Preview of next piece
-- Score tracking
+- Hold piece functionality
+- Score tracking and level progression
 - Game over detection
-- Keyboard controls
+- Keyboard controls with customizable key bindings
+- **Mobile-friendly responsive design with touch controls**
+- Audio support (music and sound effects)
+- Line clear animations
 
 ## Project Structure
 
@@ -82,9 +86,22 @@ The game automatically deploys to GitHub Pages when pushing to main:
 
 ## Controls
 
+### Desktop (Keyboard)
+
 - **←/→**: Move piece left/right
-- **↓**: Drop piece
-- **Space**: Start/Reset game
+- **↓**: Soft drop (move down one row)
+- **↑**: Rotate piece clockwise
+- **Space**: Hard drop (instant drop to bottom)
+- **H**: Hold current piece
+- **P/Esc**: Pause game
+- **Customize**: Click "Customize" button to rebind keys
+
+### Mobile (Touch)
+
+- On-screen touch controls automatically appear on mobile devices
+- Touch buttons for move, rotate, drop, hold, and pause
+- Responsive layout optimized for phones and tablets
+- See [docs/MOBILE.md](docs/MOBILE.md) for detailed mobile documentation
 
 ## License
 
