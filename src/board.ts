@@ -66,6 +66,9 @@ export class Board {
 	}
 
 	private _applyDimensions(): void {
+		if (SizingConfig.isMobileViewport()) {
+			return;
+		}
 		const widthPx = this.blockSize * this.width;
 		const heightPx = this.blockSize * this.height;
 		this.element.style.width = widthPx + "px";

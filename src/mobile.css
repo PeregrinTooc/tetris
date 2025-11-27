@@ -111,7 +111,7 @@
 	body {
 		height: auto;
 		min-height: 100vh;
-		padding: 16px 0;
+		padding: 2vh 0;
 	}
 
 	.desktop-start-button {
@@ -124,28 +124,28 @@
 
 	h1 {
 		font-size: 1.8em;
-		margin: 8px 0;
+		margin: 1vh 0;
 	}
 
 	.main-container {
 		width: 100% !important;
-		padding: 0 8px !important;
+		padding: 0 2vw !important;
 	}
 
 	.game-layout {
 		flex-direction: column !important;
-		gap: 12px !important;
+		gap: 1.5vh !important;
 		align-items: center !important;
 	}
 
 	#game-board {
-		width: 176px !important;
-		height: 320px !important;
+		width: 47vw !important;
+		height: calc(47vw * 20 / 11) !important;
 	}
 
 	#game-board canvas {
-		width: 176px !important;
-		height: 320px !important;
+		width: 47vw !important;
+		height: calc(47vw * 20 / 11) !important;
 	}
 
 	.score-column {

@@ -19,6 +19,7 @@ declare global {
 		setTetrominoDropTime: (ms: number) => void;
 		pushTetrominoSeed: (seed: number) => void;
 		logBoard?: () => void;
+		SizingConfig: typeof SizingConfig;
 	}
 }
 
@@ -42,6 +43,7 @@ function main() {
 	audioManager.playMainMenuMusic();
 	initializeTouchControls();
 	registerGlobalTetrominoFunctions();
+	window.SizingConfig = SizingConfig;
 	initializePauseToggle();
 	initializeGameOverHandler();
 	initializeStartButton();
