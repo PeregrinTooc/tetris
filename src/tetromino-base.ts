@@ -233,6 +233,12 @@ export abstract class Tetromino {
 
 		this._dispatchScoreEvent(5);
 
+		// CRITICAL: Let board set isAnimating flag BEFORE event dispatch
+		// This prevents the race condition where listener spawns during event dispatch
+		if (this.board && typeof (this.board as any).prepareForLock === "function") {
+			(this.board as any).prepareForLock(this.getBlocks());
+		}
+
 		const event = new CustomEvent("locked", { detail: this.getBlocks() });
 		this.element.dispatchEvent(event);
 	}

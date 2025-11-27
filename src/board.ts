@@ -315,16 +315,19 @@ export class Board {
 			this.tetrominoSeedQueue.dequeue()
 		);
 		this.nextTetromino.updatePosition();
-		if (this.previewBoard && this.previewBoard.showNextTetromino) {
+		if (
+			this.previewBoard &&
+			this.previewBoard.showNextTetromino &&
+			this.previewBoard.previewContainer
+		) {
 			this.previewBoard.showNextTetromino(this.nextTetromino);
 		}
 	}
 
 	private _configureTetrominoListeners(tetromino: Tetromino) {
 		tetromino.addEventListener("locked", () => {
-			if (!this.isAnimating) {
-				this.spawnTetromino();
-			}
+			// NOTE: Spawning is now handled in _handleTetrominoLocked to avoid race conditions
+			// Do NOT spawn here - the listener fires during event dispatch before prepareForLock completes
 			if (this.audioManager) {
 				this.audioManager.playSoundEffect("locked");
 			}
@@ -518,28 +521,46 @@ export class Board {
 		}
 	}
 
-	private _handleTetrominoLocked(event: Event): void {
-		const customEvent = event as CustomEvent;
-		const lockedTetromino = customEvent.target as any;
-
-		customEvent.detail.forEach((block: Block) => {
+	public prepareForLock(blocks: Block[]): void {
+		// Add blocks to occupied positions
+		blocks.forEach((block: Block) => {
 			this._assertInBounds(block.x, block.y, "when locking tetromino");
-
 			if (!this.occupiedPositions.includes(block)) {
 				this.occupiedPositions.push(block);
 			}
 		});
 		this.occupiedPositions.sort((a, b) => b.y - a.y);
 
+		// Check for completed lines and set isAnimating BEFORE locked event fires
 		const completedLines = this._findCompletedLines();
 		if (completedLines.length > 0) {
 			this.isAnimating = true;
 		}
+	}
+
+	private _handleTetrominoLocked(event: Event): void {
+		const customEvent = event as CustomEvent;
+		const lockedTetromino = customEvent.target as any;
+
+		// Blocks were already added in prepareForLock, but check for safety
+		customEvent.detail.forEach((block: Block) => {
+			if (!this.occupiedPositions.includes(block)) {
+				this._assertInBounds(block.x, block.y, "when locking tetromino");
+				this.occupiedPositions.push(block);
+			}
+		});
+		this.occupiedPositions.sort((a, b) => b.y - a.y);
 
 		this.takeSnapshot();
 
-		if (completedLines.length > 0) {
+		const completedLines = this._findCompletedLines();
+
+		// If isAnimating was set in prepareForLock, start animation
+		if (this.isAnimating && completedLines.length > 0) {
 			this._animateLineClear(completedLines);
+		} else if (completedLines.length === 0 && this.nextTetromino) {
+			// No lines to clear and no animation, spawn immediately if next piece exists
+			this.spawnTetromino();
 		}
 
 		this.canHoldPiece = true;
@@ -690,6 +711,7 @@ export class Board {
 	private _reuseNextTetromino() {
 		if (
 			this.previewBoard &&
+			this.previewBoard.previewContainer &&
 			this.previewBoard.previewContainer.contains(this.nextTetromino.element)
 		) {
 			this.previewBoard.previewContainer.removeChild(this.nextTetromino.element);
