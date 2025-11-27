@@ -130,6 +130,7 @@
 	.main-container {
 		width: 100% !important;
 		padding: 0 2vw !important;
+		flex-direction: column !important;
 	}
 
 	.game-layout {

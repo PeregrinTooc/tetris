@@ -7,6 +7,8 @@ import { TetrominoSeedQueue } from "./TetrominoSeedQueue";
 import { PreviewBoard } from "./preview-board";
 import { BlockRenderer } from "./block-renderer";
 import { SizingConfig } from "./sizing-config";
+import { BoardHistoryManager } from "./board-history-manager";
+import { BoardSnapshot } from "./board-snapshot";
 import {
 	LINE_CLEAR_ANIMATION_DURATION,
 	LINE_CLEAR_FLASH_DURATION,
@@ -37,6 +39,7 @@ export class Board {
 	private blockRenderer: BlockRenderer;
 	private isAnimating: boolean = false;
 	private animationTimeouts: number[] = [];
+	private historyManager: BoardHistoryManager | null = null;
 
 	constructor(
 		height: number,
@@ -47,7 +50,8 @@ export class Board {
 		holdBoard: HoldBoard | null = null,
 		keyBindingManager: KeyBindingManager | null = null,
 		audioManager: AudioManager | null = null,
-		blockSize: number = SizingConfig.BLOCK_SIZE
+		blockSize: number = SizingConfig.BLOCK_SIZE,
+		historyManager: BoardHistoryManager | null = null
 	) {
 		this.height = height;
 		this.width = width;
@@ -61,6 +65,7 @@ export class Board {
 		this.keyBindingManager = keyBindingManager;
 		this.audioManager = audioManager;
 		this.blockRenderer = new BlockRenderer(element);
+		this.historyManager = historyManager;
 
 		this._applyDimensions();
 	}
@@ -118,6 +123,8 @@ export class Board {
 		} else {
 			this._moveToHoldBoard(currentTetromino);
 		}
+
+		this.takeSnapshot();
 	}
 
 	private _moveToHoldBoard(currentPiece: Tetromino) {
@@ -297,6 +304,7 @@ export class Board {
 		this._configureTetrominoListeners(tetromino);
 		tetromino.startFalling();
 		this._prepareNextTetromino(center);
+		this.takeSnapshot();
 		return tetromino;
 	}
 
@@ -357,6 +365,55 @@ export class Board {
 
 	public getBlockSize(): number {
 		return this.blockSize;
+	}
+
+	public takeSnapshot(): void {
+		if (this.historyManager) {
+			this.historyManager.takeSnapshot(this);
+		}
+	}
+
+	public getHistoryManager(): BoardHistoryManager | null {
+		return this.historyManager;
+	}
+
+	public restoreFromSnapshot(snapshot: BoardSnapshot): void {
+		this._cancelAnimation();
+
+		if (this.activeTetromino) {
+			this.activeTetromino.stopListening();
+		}
+
+		this.element.innerHTML = "";
+
+		const state = snapshot.getRestoredState(this);
+
+		this.occupiedPositions = state.occupiedPositions;
+		this.canHoldPiece = state.canHoldPiece;
+
+		this.tetrominos.clear();
+		for (const tetromino of state.lockedTetrominos) {
+			this.tetrominos.add(tetromino);
+			this.element.appendChild(tetromino.element);
+			this.blockRenderer.updateTetromino(tetromino);
+		}
+
+		this.activeTetromino = state.activeTetromino;
+		this.activeTetromino.board = this;
+		this.element.appendChild(this.activeTetromino.element);
+		this.blockRenderer.renderTetromino(this.activeTetromino);
+
+		this.nextTetromino = state.nextTetromino;
+		if (this.previewBoard && this.nextTetromino) {
+			this.previewBoard.showNextTetromino(this.nextTetromino);
+		}
+
+		this._configureTetrominoListeners(this.activeTetromino);
+		if (this.keyBindingManager) {
+			this.activeTetromino.activateKeyboardControl(this.keyBindingManager);
+		}
+
+		this._updateShadowBlocks();
 	}
 
 	private _assertInBounds(x: number, y: number, context: string = ""): void {
@@ -468,7 +525,6 @@ export class Board {
 		customEvent.detail.forEach((block: Block) => {
 			this._assertInBounds(block.x, block.y, "when locking tetromino");
 
-			// Check if this exact block instance is already in occupiedPositions
 			if (!this.occupiedPositions.includes(block)) {
 				this.occupiedPositions.push(block);
 			}
@@ -478,6 +534,11 @@ export class Board {
 		const completedLines = this._findCompletedLines();
 		if (completedLines.length > 0) {
 			this.isAnimating = true;
+		}
+
+		this.takeSnapshot();
+
+		if (completedLines.length > 0) {
 			this._animateLineClear(completedLines);
 		}
 
@@ -697,6 +758,8 @@ export class Board {
 				(id) => id !== fadeTimeout && id !== completeTimeout
 			);
 			this.isAnimating = false;
+
+			this.takeSnapshot();
 
 			const remainingLines = this._findCompletedLines();
 			if (remainingLines.length > 0) {

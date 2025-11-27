@@ -45,12 +45,14 @@ export abstract class Tetromino {
 	protected pivot: Block;
 	paused: boolean = false;
 	blocks: Block[] = [];
+	public seed?: number;
 
 	private static nextId = 1;
 	public readonly id: string;
 
-	constructor(left: number, board: Board | null) {
+	constructor(left: number, board: Board | null, seed?: number) {
 		this.id = (Tetromino.nextId++).toString();
+		this.seed = seed;
 		this.pivot = new Block({ x: left, y: 0, parent: this });
 		this.size =
 			board && typeof (board as any).getBlockSize === "function"

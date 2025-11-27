@@ -7,6 +7,8 @@ import { TetrominoSeedQueueImpl } from "./TetrominoSeedQueue";
 import { KeyBindingManager } from "./key-binding-manager";
 import { TouchControlsManager } from "./touch-controls";
 import { SizingConfig } from "./sizing-config";
+import { BoardHistoryManager } from "./board-history-manager";
+import { BoardSnapshot } from "./board-snapshot";
 
 const BASE_DROP_TIME = 750;
 const TICK_EVENT_NAME = "tick";
@@ -20,8 +22,13 @@ declare global {
 		pushTetrominoSeed: (seed: number) => void;
 		logBoard?: () => void;
 		SizingConfig: typeof SizingConfig;
+		getBoardHistory?: () => BoardSnapshot[];
+		restoreSnapshot?: (index: number) => void;
+		exportBoardHistory?: () => string;
 	}
 }
+
+const DEBUG_MODE = (import.meta as any).env?.VITE_DEBUG === "true";
 
 main();
 
@@ -61,6 +68,63 @@ function main() {
 		} else {
 			touchControls.hide();
 		}
+	}
+
+	if (DEBUG_MODE) {
+		console.log("[DEBUG MODE] Board history tracking enabled");
+		const debugIndicator = document.getElementById("debug-indicator");
+		if (debugIndicator) {
+			debugIndicator.style.display = "block";
+		}
+		initializeDebugHelpers();
+	}
+
+	function initializeDebugHelpers() {
+		window.getBoardHistory = function (): BoardSnapshot[] {
+			if (!state.board) {
+				console.log("No board available");
+				return [];
+			}
+			const historyManager = state.board.getHistoryManager();
+			if (!historyManager) {
+				console.log("History manager not initialized");
+				return [];
+			}
+			const snapshots = historyManager.getAllSnapshots();
+			console.log(`Found ${snapshots.length} snapshots in history`);
+			return snapshots;
+		};
+
+		window.restoreSnapshot = function (index: number): void {
+			if (!state.board) {
+				console.log("No board available");
+				return;
+			}
+			const historyManager = state.board.getHistoryManager();
+			if (!historyManager) {
+				console.log("History manager not initialized");
+				return;
+			}
+			const snapshot = historyManager.getSnapshot(index);
+			if (!snapshot) {
+				console.log(`No snapshot found at index ${index}`);
+				return;
+			}
+			console.log(`Restoring snapshot ${index} from ${snapshot.getMetadata().formattedTime}`);
+			state.board.restoreFromSnapshot(snapshot);
+			console.log("Snapshot restored successfully");
+		};
+
+		window.exportBoardHistory = function (): string {
+			if (!state.board) {
+				return JSON.stringify({ error: "No board available" });
+			}
+			const historyManager = state.board.getHistoryManager();
+			if (!historyManager) {
+				return JSON.stringify({ error: "History manager not initialized" });
+			}
+			return historyManager.exportHistory();
+		};
 	}
 
 	function initializeKeyBindingUI() {
@@ -358,6 +422,8 @@ function main() {
 				) as HTMLElement;
 				const holdBoard = new HoldBoard(holdContainer);
 
+				const historyManager = DEBUG_MODE ? new BoardHistoryManager(50) : null;
+
 				state.board = new Board(
 					20,
 					11,
@@ -367,7 +433,8 @@ function main() {
 					holdBoard,
 					keyBindingManager,
 					audioManager,
-					SizingConfig.BLOCK_SIZE
+					SizingConfig.BLOCK_SIZE,
+					historyManager
 				);
 
 				state.board.registerEventListener("linesCompleted", handleCompleteLinesEvent);

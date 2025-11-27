@@ -11,25 +11,36 @@ import { Board } from "./board";
 
 export class TetrominoFactory {
 	static createNew(left: number, board: Board | null, seed: number): Tetromino {
+		let tetromino: Tetromino;
 		switch (seed) {
 			case 0:
-				return new TetrominoT(left, board);
+				tetromino = new TetrominoT(left, board);
+				break;
 			case 1:
-				return new TetrominoI(left, board);
+				tetromino = new TetrominoI(left, board);
+				break;
 			case 2:
-				return new TetrominoO(left, board);
+				tetromino = new TetrominoO(left, board);
+				break;
 			case 3:
-				return new TetrominoJ(left, board);
+				tetromino = new TetrominoJ(left, board);
+				break;
 			case 4:
-				return new TetrominoL(left, board);
+				tetromino = new TetrominoL(left, board);
+				break;
 			case 5:
-				return new TetrominoZ(left, board);
+				tetromino = new TetrominoZ(left, board);
+				break;
 			case 6:
-				return new TetrominoS(left, board);
+				tetromino = new TetrominoS(left, board);
+				break;
 			case 1337:
-				return new TetrominoSingle(left, board);
+				tetromino = new TetrominoSingle(left, board);
+				break;
 			default:
-				return new TetrominoSingle(left, board);
+				tetromino = new TetrominoSingle(left, board);
 		}
+		tetromino.seed = seed;
+		return tetromino;
 	}
 }
