@@ -21,13 +21,20 @@ describe("Audio Mocking", () => {
 
 	it("should show music and sfx volume sliders with min/max buttons", () => {
 		cy.visit("/");
-		// Music controls
-		cy.get("#music-volume").should("exist");
-		cy.get("#music-min").should("exist");
-		cy.get("#music-max").should("exist");
-		// SFX controls
-		cy.get("#sfx-volume").should("exist");
-		cy.get("#sfx-min").should("exist");
-		cy.get("#sfx-max").should("exist");
+
+		cy.viewport(1024, 768);
+		cy.get("#music-volume").should("be.visible");
+		cy.get("#music-min").should("be.visible");
+		cy.get("#music-max").should("be.visible");
+		cy.get("#sfx-volume").should("be.visible");
+		cy.get("#sfx-min").should("be.visible");
+		cy.get("#sfx-max").should("be.visible");
+	});
+
+	it("should hide desktop audio panel on mobile viewport", () => {
+		cy.visit("/");
+		cy.viewport(375, 667);
+
+		cy.get(".audio-panel").should("not.be.visible");
 	});
 });

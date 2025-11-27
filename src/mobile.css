@@ -215,10 +215,7 @@
 	}
 
 	.audio-panel {
-		width: 100%;
-		max-width: 400px;
-		min-height: auto;
-		padding: 16px;
+		display: none !important;
 	}
 
 	.audio-controls {
