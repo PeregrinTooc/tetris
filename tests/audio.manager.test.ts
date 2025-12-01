@@ -13,9 +13,11 @@ describe("AudioManager", () => {
 	let pauseSpy;
 
 	beforeEach(() => {
+		localStorage.clear();
 		playSpy = jest.spyOn(Audio.prototype, "play").mockImplementation(() => Promise.resolve());
 		pauseSpy = jest.spyOn(Audio.prototype, "pause").mockImplementation(() => {});
 		audioManager = new AudioManager();
+		audioManager.toggleMute();
 	});
 
 	test("plays main menu music", () => {
@@ -54,6 +56,10 @@ describe("AudioManager", () => {
 		audioManager.playSoundEffect(effect);
 		// @ts-expect-error
 		expect(playSpy).toHaveBeenCalled();
+	});
+
+	afterEach(() => {
+		localStorage.clear();
 	});
 
 	test("handleLevelChange switches music at thresholds", () => {

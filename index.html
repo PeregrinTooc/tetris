@@ -119,6 +119,14 @@
 								<span class="touch-label">Start</span>
 							</button>
 							<button
+								id="mute-toggle-mobile"
+								class="touch-btn touch-btn-mute"
+								aria-label="Toggle Mute"
+								data-muted="true"
+							>
+								<span class="touch-icon mute-icon">🔇</span>
+							</button>
+							<button
 								id="mobile-audio-settings-button"
 								class="touch-btn touch-btn-settings"
 								aria-label="Audio Settings"
@@ -146,6 +154,15 @@
 
 					<div class="audio-panel">
 						<h3>Audio</h3>
+						<button
+							id="mute-toggle-desktop"
+							class="mute-toggle-btn"
+							aria-label="Toggle Mute"
+							data-muted="true"
+						>
+							<span class="mute-icon">🔇</span>
+							<span class="mute-label">Unmute All</span>
+						</button>
 						<div class="audio-controls">
 							<div class="vertical-slider-group">
 								<label>Music</label>

@@ -47,6 +47,7 @@ function main() {
 		scoreBoard: null as ScoreBoard,
 	};
 	audioManager.initializeControls();
+	initializeMuteToggle();
 	audioManager.playMainMenuMusic();
 	initializeTouchControls();
 	registerGlobalTetrominoFunctions();
@@ -208,6 +209,46 @@ function main() {
 				displayElement.textContent = binding.key;
 			}
 		});
+	}
+
+	function initializeMuteToggle() {
+		const desktopMuteBtn = document.getElementById("mute-toggle-desktop");
+		const mobileMuteBtn = document.getElementById("mute-toggle-mobile");
+
+		const updateMuteButtonState = (button: HTMLElement) => {
+			const isMuted = audioManager.isMuted();
+			button.setAttribute("data-muted", String(isMuted));
+
+			const icon = button.querySelector(".mute-icon");
+			if (icon) {
+				icon.textContent = isMuted ? "🔇" : "🔊";
+			}
+
+			const label = button.querySelector(".mute-label");
+			if (label) {
+				label.textContent = isMuted ? "Unmute All" : "Mute All";
+			}
+		};
+
+		const updateAllMuteButtons = () => {
+			if (desktopMuteBtn) updateMuteButtonState(desktopMuteBtn);
+			if (mobileMuteBtn) updateMuteButtonState(mobileMuteBtn);
+		};
+
+		const handleMuteToggle = () => {
+			audioManager.toggleMute();
+			updateAllMuteButtons();
+		};
+
+		if (desktopMuteBtn) {
+			updateMuteButtonState(desktopMuteBtn);
+			desktopMuteBtn.addEventListener("click", handleMuteToggle);
+		}
+
+		if (mobileMuteBtn) {
+			updateMuteButtonState(mobileMuteBtn);
+			mobileMuteBtn.addEventListener("click", handleMuteToggle);
+		}
 	}
 
 	function initializeMobileAudioModal() {

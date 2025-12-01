@@ -67,9 +67,60 @@ Object.values(soundEffects).forEach((sound) => {
 let musicVolume = 1.0;
 let sfxVolume = 1.0;
 
+const MUTE_STORAGE_KEY = "tetris-muted";
+
+function loadMuteState(): boolean {
+	const stored = localStorage.getItem(MUTE_STORAGE_KEY);
+	if (stored === null) {
+		return true;
+	}
+	return stored === "true";
+}
+
+function saveMuteState(muted: boolean): void {
+	localStorage.setItem(MUTE_STORAGE_KEY, String(muted));
+}
+
 export class AudioManager {
 	private currentMusic: HTMLAudioElement | null = null;
 	private currentLevel: number = 1;
+	private muted: boolean;
+	private savedMusicVolume: number = 1.0;
+	private savedSfxVolume: number = 1.0;
+
+	constructor() {
+		this.muted = loadMuteState();
+		if (this.muted) {
+			musicGainNode.gain.value = 0;
+			sfxGainNode.gain.value = 0;
+		} else {
+			this.savedMusicVolume = musicVolume;
+			this.savedSfxVolume = sfxVolume;
+		}
+	}
+
+	public isMuted(): boolean {
+		return this.muted;
+	}
+
+	public toggleMute(): void {
+		this.muted = !this.muted;
+		saveMuteState(this.muted);
+
+		if (this.muted) {
+			musicGainNode.gain.value = 0;
+			sfxGainNode.gain.value = 0;
+		} else {
+			musicGainNode.gain.value = musicVolume;
+			sfxGainNode.gain.value = sfxVolume;
+		}
+	}
+
+	public setMuted(muted: boolean): void {
+		if (this.muted !== muted) {
+			this.toggleMute();
+		}
+	}
 
 	public playMainMenuMusic() {
 		this._switchMusic(mainMenuMusic);
@@ -112,7 +163,7 @@ export class AudioManager {
 			this.currentMusic.currentTime = 0;
 		}
 		this.currentMusic = music;
-		if (musicVolume > 0) {
+		if (!this.muted && musicVolume > 0) {
 			this.startMusic();
 			music.play().catch((error) => {
 				console.log("Error playing music:", error);
@@ -122,7 +173,7 @@ export class AudioManager {
 
 	public playSoundEffect(effect: keyof typeof soundEffects) {
 		const sound = soundEffects[effect];
-		if (sfxVolume > 0) {
+		if (!this.muted && sfxVolume > 0) {
 			sound.currentTime = 0;
 			this.startMusic();
 			sound.play().catch((error) => {
@@ -183,39 +234,29 @@ export class AudioManager {
 
 		if (musicMinBtn && musicVolumeSlider) {
 			musicMinBtn.addEventListener("click", () => {
-				musicVolume = 0;
-				musicGainNode.gain.value = 0;
 				musicVolumeSlider.value = "0";
-				if (this.currentMusic && !this.currentMusic.paused) {
-					this.currentMusic.pause();
-				}
+				musicVolumeSlider.dispatchEvent(new Event("input", { bubbles: true }));
 			});
 		}
 
 		if (musicMaxBtn && musicVolumeSlider) {
 			musicMaxBtn.addEventListener("click", () => {
-				musicVolume = 1;
-				musicGainNode.gain.value = 1;
 				musicVolumeSlider.value = "100";
-				if (this.currentMusic && this.currentMusic.paused) {
-					this.currentMusic.play().catch((err) => console.log("Play failed:", err));
-				}
+				musicVolumeSlider.dispatchEvent(new Event("input", { bubbles: true }));
 			});
 		}
 
 		if (sfxMinBtn && sfxVolumeSlider) {
 			sfxMinBtn.addEventListener("click", () => {
-				sfxVolume = 0;
-				sfxGainNode.gain.value = 0;
 				sfxVolumeSlider.value = "0";
+				sfxVolumeSlider.dispatchEvent(new Event("input", { bubbles: true }));
 			});
 		}
 
 		if (sfxMaxBtn && sfxVolumeSlider) {
 			sfxMaxBtn.addEventListener("click", () => {
-				sfxVolume = 1;
-				sfxGainNode.gain.value = 1;
 				sfxVolumeSlider.value = "100";
+				sfxVolumeSlider.dispatchEvent(new Event("input", { bubbles: true }));
 			});
 		}
 	}

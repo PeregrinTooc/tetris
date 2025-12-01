@@ -753,6 +753,53 @@ input:checked + .slider:before {
 	transform: scale(1.1);
 }
 
+/* Mute toggle button styling */
+.mute-toggle-btn {
+	background: linear-gradient(145deg, #e53935, #c62828);
+	color: white;
+	border: 2px solid #ff6659;
+	border-radius: 8px;
+	padding: 12px 20px;
+	font-size: 1.1em;
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.2s;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	justify-content: center;
+	margin-bottom: 16px;
+	box-shadow: 0 2px 8px rgba(229, 57, 53, 0.4);
+	min-width: 180px;
+}
+
+.mute-toggle-btn:hover {
+	background: linear-gradient(145deg, #d32f2f, #b71c1c);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(229, 57, 53, 0.6);
+}
+
+.mute-toggle-btn[data-muted="false"] {
+	background: linear-gradient(145deg, #43a047, #2e7d32);
+	border-color: #66bb6a;
+	box-shadow: 0 2px 8px rgba(67, 160, 71, 0.4);
+}
+
+.mute-toggle-btn[data-muted="false"]:hover {
+	background: linear-gradient(145deg, #388e3c, #1b5e20);
+	box-shadow: 0 4px 12px rgba(67, 160, 71, 0.6);
+}
+
+.mute-toggle-btn .mute-icon {
+	font-size: 1.2em;
+}
+
+.mute-toggle-btn .mute-label {
+	font-size: 0.9em;
+}
+
 /* Line clearing animation classes */
 .line-clearing-flash {
 	animation: flash 200ms ease-in-out;
