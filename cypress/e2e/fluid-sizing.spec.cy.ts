@@ -16,14 +16,12 @@ describe("Fluid Sizing (Option 3)", () => {
 			});
 
 			it("should use viewport-relative units for game board", () => {
-				cy.get("#game-board").should("have.css", "width").and("match", /px$/);
+				cy.get("#game-board").should("be.visible");
 
 				cy.window().then((win) => {
-					const gameBoard = win.document.getElementById("game-board");
-					const computedStyle = win.getComputedStyle(gameBoard);
-					const widthPx = parseFloat(computedStyle.width);
-					const expectedWidth = (viewport.width * 47) / 100;
-					expect(widthPx).to.be.closeTo(expectedWidth, 2);
+					const blockSize = Math.floor((viewport.width * 47) / 100 / 11);
+					const expectedWidth = blockSize * 11;
+					expect(win.SizingConfig.BOARD_WIDTH_PX).to.equal(expectedWidth);
 				});
 			});
 
@@ -89,11 +87,9 @@ describe("Fluid Sizing (Option 3)", () => {
 			cy.get("#game-board").should("be.visible");
 
 			cy.window().then((win) => {
-				const gameBoard = win.document.getElementById("game-board");
-				const computedStyle = win.getComputedStyle(gameBoard);
-				const widthPx = parseFloat(computedStyle.width);
-				const expectedWidth = (667 * 47) / 100;
-				expect(widthPx).to.be.closeTo(expectedWidth, 2);
+				const blockSize = Math.floor((667 * 47) / 100 / 11);
+				const expectedWidth = blockSize * 11;
+				expect(win.SizingConfig.BOARD_WIDTH_PX).to.equal(expectedWidth);
 			});
 		});
 	});

@@ -1,5 +1,7 @@
+import { describe, it, expect, beforeEach } from "@jest/globals";
 import { createTestBoard, createTetromino } from "./testUtils.unit";
 import { SizingConfig } from "../src/sizing-config";
+import { Board } from "../src/board";
 
 describe("Tetromino sizing", () => {
 	let board: any;
@@ -25,11 +27,11 @@ describe("Tetromino sizing", () => {
 		expect(tetromino.element.style.top).toBe(expectedTop + "px");
 	});
 
-	it("should inherit block size from board", () => {
+	it("should always use current SizingConfig block size", () => {
 		const customBlockSize = 30;
 		const element = document.createElement("div");
 		const seedQueue = { dequeue: () => 0 };
-		const customBoard = new (require("../src/board").Board)(
+		const customBoard = new Board(
 			19,
 			10,
 			element,
@@ -43,6 +45,6 @@ describe("Tetromino sizing", () => {
 
 		const tetromino = createTetromino(customBoard, 0);
 
-		expect(tetromino.size).toBe(customBlockSize);
+		expect(tetromino.size).toBe(SizingConfig.BLOCK_SIZE);
 	});
 });

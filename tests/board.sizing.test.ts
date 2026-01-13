@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterEach } from "@jest/globals";
 import { Board } from "../src/board";
 import { SizingConfig } from "../src/sizing-config";
 
@@ -29,15 +30,13 @@ describe("Board sizing", () => {
 		expect(board.getBlockSize()).toBe(SizingConfig.BLOCK_SIZE);
 	});
 
-	it("should calculate dimensions based on constructor parameters", () => {
+	it("should always use SizingConfig dimensions regardless of constructor parameters", () => {
 		const customHeight = 15;
 		const customWidth = 8;
 		board = new Board(customHeight, customWidth, element, null, seedQueue);
 
-		const expectedWidth = SizingConfig.BLOCK_SIZE * customWidth;
-		const expectedHeight = SizingConfig.BLOCK_SIZE * customHeight;
-
-		expect(element.style.width).toBe(expectedWidth + "px");
-		expect(element.style.height).toBe(expectedHeight + "px");
+		// Board always uses SizingConfig dimensions for consistency
+		expect(element.style.width).toBe(SizingConfig.BOARD_WIDTH_PX + "px");
+		expect(element.style.height).toBe(SizingConfig.BOARD_HEIGHT_PX + "px");
 	});
 });

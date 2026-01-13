@@ -26,7 +26,7 @@ export class PreviewBoardImpl {
 		const tempBoard = tetromino.board;
 		tetromino.board = {
 			getBlockRenderer: () => this.blockRenderer,
-			getBlockSize: () => tetromino.size,
+			getBlockSize: () => SizingConfig.BLOCK_SIZE,
 		};
 
 		const tempLeft = tetromino.left;

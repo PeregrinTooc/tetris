@@ -35,7 +35,6 @@ export class Block {
 }
 
 export abstract class Tetromino {
-	size: number;
 	board: any;
 	locked: boolean;
 	rotation: number;
@@ -50,14 +49,17 @@ export abstract class Tetromino {
 	private static nextId = 1;
 	public readonly id: string;
 
+	get size(): number {
+		if (this.board && typeof (this.board as any).getBlockSize === "function") {
+			return (this.board as any).getBlockSize();
+		}
+		return SizingConfig.BLOCK_SIZE;
+	}
+
 	constructor(left: number, board: Board | null, seed?: number) {
 		this.id = (Tetromino.nextId++).toString();
 		this.seed = seed;
 		this.pivot = new Block({ x: left, y: 0, parent: this });
-		this.size =
-			board && typeof (board as any).getBlockSize === "function"
-				? (board as any).getBlockSize()
-				: SizingConfig.BLOCK_SIZE;
 		this.board = board;
 		this.locked = false;
 		this.rotation = 0;

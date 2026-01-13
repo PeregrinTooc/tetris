@@ -72,11 +72,8 @@ export class Board {
 	}
 
 	private _applyDimensions(): void {
-		if (SizingConfig.isMobileViewport()) {
-			return;
-		}
-		const widthPx = this.blockSize * this.width;
-		const heightPx = this.blockSize * this.height;
+		const widthPx = SizingConfig.BOARD_WIDTH_PX;
+		const heightPx = SizingConfig.BOARD_HEIGHT_PX;
 		this.element.style.width = widthPx + "px";
 		this.element.style.height = heightPx + "px";
 	}
@@ -381,7 +378,7 @@ export class Board {
 	}
 
 	public getBlockSize(): number {
-		return this.blockSize;
+		return SizingConfig.BLOCK_SIZE;
 	}
 
 	public takeSnapshot(): void {

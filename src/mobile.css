@@ -128,6 +128,11 @@
 }
 
 @media (max-width: 768px) {
+	#game-board {
+		max-width: calc(100vw - 32px);
+		margin: 0 auto;
+	}
+
 	body {
 		height: auto;
 		min-height: 100vh;
@@ -157,11 +162,6 @@
 		flex-direction: column !important;
 		gap: 1.5vh !important;
 		align-items: center !important;
-	}
-
-	#game-board {
-		width: 47vw !important;
-		height: calc(47vw * 20 / 11) !important;
 	}
 
 	.score-column {

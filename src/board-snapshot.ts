@@ -185,7 +185,7 @@ export class BoardSnapshot {
 			let tetromino = tetrominoMap.get(parentId);
 
 			if (!tetromino) {
-				const lockedState = {
+				const lockedState: TetrominoState = {
 					seed: 0,
 					left: 0,
 					top: 0,

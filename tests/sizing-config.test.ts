@@ -1,3 +1,4 @@
+import { describe, it, expect } from "@jest/globals";
 import { SizingConfig } from "../src/sizing-config";
 
 describe("SizingConfig", () => {

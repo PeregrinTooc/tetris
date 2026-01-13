@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterEach, jest } from "@jest/globals";
 import { TouchControlsManager } from "../src/touch-controls";
 
 describe("TouchControlsManager", () => {
