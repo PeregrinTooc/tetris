@@ -32,7 +32,7 @@
 - [x] Line clear detection and removal
 - [x] Multiple line clears (double, triple, Tetris)
 - [x] Ghost piece (shows where tetromino will land)
-- [ ] Wall kicks (rotation near walls)
+- [x] Wall kicks (rotation near walls)
 - [x] Lock delay (brief pause before locking)
 
 ### UI/UX
@@ -41,7 +41,7 @@
 - [x] Game over message
 - [x] Preview of next piece
 - [x] Display for score, level, and lines cleared
-- [ ] Responsive/mobile-friendly UI
+- [x] Responsive/mobile-friendly UI
 - [x] Pause/resume functionality
 - [x] Settings (volume, controls, etc.)
 - [x] Main menu music
@@ -91,7 +91,7 @@
 - [x] Scoring system logic (soft drop, hard drop, piece locking)
 - [x] Level Logic
 - [x] Hold/next piece logic
-- [ ] Ghost piece logic
+- [x] Ghost piece logic
 - [x] Wall kick logic
 
 ---
