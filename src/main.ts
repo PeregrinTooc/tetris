@@ -25,6 +25,7 @@ declare global {
 		getBoardHistory?: () => BoardSnapshot[];
 		restoreSnapshot?: (index: number) => void;
 		exportBoardHistory?: () => string;
+		BUILD_VERSION?: string;
 	}
 }
 
@@ -52,6 +53,7 @@ function main() {
 	initializeTouchControls();
 	registerGlobalTetrominoFunctions();
 	window.SizingConfig = SizingConfig;
+	window.BUILD_VERSION = "2026.01.13.001";
 	initializePauseToggle();
 	initializeGameOverHandler();
 	initializeStartButton();
