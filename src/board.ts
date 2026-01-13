@@ -68,6 +68,7 @@ export class Board {
 		this.historyManager = historyManager;
 
 		this._applyDimensions();
+		this._initializeCanvas();
 	}
 
 	private _applyDimensions(): void {
@@ -78,6 +79,19 @@ export class Board {
 		const heightPx = this.blockSize * this.height;
 		this.element.style.width = widthPx + "px";
 		this.element.style.height = heightPx + "px";
+	}
+
+	private _initializeCanvas(): void {
+		const canvas = this.element.querySelector("canvas") as HTMLCanvasElement;
+		if (!canvas) {
+			return;
+		}
+
+		const widthPx = SizingConfig.BOARD_WIDTH_PX;
+		const heightPx = SizingConfig.BOARD_HEIGHT_PX;
+
+		canvas.width = widthPx;
+		canvas.height = heightPx;
 	}
 
 	public reset(): void {

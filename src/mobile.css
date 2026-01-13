@@ -164,11 +164,6 @@
 		height: calc(47vw * 20 / 11) !important;
 	}
 
-	#game-board canvas {
-		width: 47vw !important;
-		height: calc(47vw * 20 / 11) !important;
-	}
-
 	.score-column {
 		flex-direction: row !important;
 		width: 100% !important;
