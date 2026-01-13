@@ -8,6 +8,7 @@
 		"start": "vite build && vite preview --open true",
 		"dev": "vite",
 		"build": "vite build",
+		"build:version": "bash scripts/generate-build-version.sh",
 		"test": "jest --maxWorkers=100% --silent && cypress run --quiet",
 		"test:unit": "jest --maxWorkers=100% --silent",
 		"test:unit:coverage": "jest --maxWorkers=100% --coverage >test.coverage 2>&1",

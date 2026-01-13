@@ -53,12 +53,14 @@ function main() {
 	initializeTouchControls();
 	registerGlobalTetrominoFunctions();
 	window.SizingConfig = SizingConfig;
-	window.BUILD_VERSION = "2026.01.13.001";
+	window.BUILD_VERSION = import.meta.env.VITE_BUILD_VERSION;
 	initializePauseToggle();
 	initializeGameOverHandler();
 	initializeStartButton();
 	initializeKeyBindingUI();
 	initializeMobileAudioModal();
+
+	console.log(`Build Version: ${window.BUILD_VERSION}`);
 
 	function initializeTouchControls() {
 		const touchControlsContainer = document.getElementById("touch-controls");
