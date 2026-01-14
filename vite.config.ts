@@ -3,6 +3,10 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
 	base: "/tetris/",
+	server: {
+		host: true,
+		port: 5173,
+	},
 	build: {
 		outDir: "dist",
 		assetsDir: "assets",
