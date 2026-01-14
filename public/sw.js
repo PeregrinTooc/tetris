@@ -20,12 +20,35 @@ const ASSETS_TO_CACHE = [
 self.addEventListener("install", (event) => {
 	console.log(`[SW] Installing service worker for ${CACHE_VERSION}`);
 	event.waitUntil(
-		caches.open(CACHE_NAME).then((cache) => {
-			console.log(`[SW] Caching assets for ${CACHE_NAME}`);
-			return cache.addAll(ASSETS_TO_CACHE);
-		})
+		caches
+			.open(CACHE_NAME)
+			.then((cache) => {
+				console.log(`[SW] Caching assets for ${CACHE_NAME}`);
+				// Cache files individually to avoid complete failure if one fails
+				return Promise.allSettled(
+					ASSETS_TO_CACHE.map((url) => {
+						return cache
+							.add(url)
+							.then(() => {
+								console.log(`[SW] Cached: ${url}`);
+							})
+							.catch((error) => {
+								console.warn(`[SW] Failed to cache ${url}:`, error);
+								// Don't fail the entire installation if one asset fails
+								return Promise.resolve();
+							});
+					})
+				);
+			})
+			.then(() => {
+				console.log(`[SW] Installation complete for ${CACHE_VERSION}`);
+			})
+			.catch((error) => {
+				console.error(`[SW] Installation failed:`, error);
+				throw error;
+			})
 	);
-	// Don't call skipWaiting() here - let the client control it
+	// Don't call skipWaiting() - let the client control it
 });
 
 self.addEventListener("activate", (event) => {
