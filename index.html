@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="Cache-Control" content="no-cache, max-age=0, must-revalidate" />
+		<title>Tetris</title>
+		<script type="module" crossorigin src="/tetris/assets/index-BQMD7buQ.js"></script>
+		<link rel="stylesheet" crossorigin href="/tetris/assets/index-CnZWqgSN.css">
+	</head>
+
+	<body>
+		<div
+			class="main-container"
+			style="display: flex; flex-direction: column; align-items: center"
+		>
+			<h1>Let's play Tetris</h1>
+			<div
+				class="game-layout"
+				style="display: flex; flex-direction: row; gap: 32px; align-items: flex-start"
+			>
+				<div class="score-column" style="display: flex; flex-direction: column; gap: 16px">
+					<div id="score-board" class="score-box">Score: 0</div>
+					<div id="level-board" class="score-box">Level: 1</div>
+				</div>
+				<div class="game-and-side">
+					<div id="game-board" style="position: relative">
+						<div id="pause-overlay" style="display: none">
+							<div>Paused</div>
+							<button
+								id="reset-button-overlay"
+								style="
+									margin-top: 16px;
+									padding: 12px 24px;
+									font-size: 16px;
+									font-weight: bold;
+									background: linear-gradient(145deg, #e53935, #c62828);
+									color: white;
+									border: 2px solid #ff6659;
+									border-radius: 8px;
+									cursor: pointer;
+								"
+							>
+								Reset Game
+							</button>
+						</div>
+						<canvas id="tetris"></canvas>
+					</div>
+					<div class="side-panel">
+						<div id="next-board">
+							<h3>Next</h3>
+							<div id="preview-container" style="position: relative; height: 96px">
+								<canvas id="next-piece" width="96" height="96"></canvas>
+							</div>
+						</div>
+						<div id="hold-board">
+							<h3>Hold (H)</h3>
+							<div
+								class="hold-container"
+								style="position: relative; height: 96px"
+							></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="controls-container">
+				<button id="start-button-desktop" class="desktop-start-button">Start Game</button>
+
+				<div id="touch-controls" class="touch-controls" style="display: none">
+					<div class="touch-controls-grid">
+						<div class="touch-row">
+							<button
+								data-touch-hold
+								class="touch-btn touch-btn-action"
+								aria-label="Hold"
+							>
+								<span class="touch-label">Hold</span>
+							</button>
+							<button
+								data-touch-rotate
+								class="touch-btn touch-btn-rotate"
+								aria-label="Rotate"
+							>
+								<span class="touch-icon">↻</span>
+							</button>
+							<button
+								data-touch-hard-drop
+								class="touch-btn touch-btn-hard-drop"
+								aria-label="Hard Drop"
+							>
+								<span class="touch-icon">⬇</span>
+							</button>
+						</div>
+						<div class="touch-row">
+							<button
+								data-touch-left
+								class="touch-btn touch-btn-move"
+								aria-label="Move Left"
+							>
+								<span class="touch-icon">←</span>
+							</button>
+							<button
+								data-touch-down
+								class="touch-btn touch-btn-move"
+								aria-label="Soft Drop"
+							>
+								<span class="touch-icon">↓</span>
+							</button>
+							<button
+								data-touch-right
+								class="touch-btn touch-btn-move"
+								aria-label="Move Right"
+							>
+								<span class="touch-icon">→</span>
+							</button>
+						</div>
+						<div class="touch-row">
+							<button id="start-button" class="touch-btn touch-btn-game-control">
+								<span class="touch-label">Start</span>
+							</button>
+							<button
+								id="mute-toggle-mobile"
+								class="touch-btn touch-btn-mute"
+								aria-label="Toggle Mute"
+								data-muted="true"
+							>
+								<span class="touch-icon mute-icon">🔇</span>
+							</button>
+							<button
+								id="mobile-audio-settings-button"
+								class="touch-btn touch-btn-settings"
+								aria-label="Audio Settings"
+							>
+								<span class="touch-icon">⚙</span>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="controls-row">
+					<div class="controls-panel">
+						<h3>Controls <button data-settings-button>Customize</button></h3>
+						<div class="key-grid">
+							<div class="key-item"><span class="key">←</span> Move Left</div>
+							<div class="key-item"><span class="key">→</span> Move Right</div>
+							<div class="key-item"><span class="key">↓</span> Soft Drop</div>
+							<div class="key-item"><span class="key">↑</span> Rotate</div>
+							<div class="key-item"><span class="key">Space</span> Hard Drop</div>
+							<div class="key-item">
+								<span class="key">P</span> or <span class="key">Esc</span> Pause
+							</div>
+						</div>
+					</div>
+
+					<div class="audio-panel">
+						<h3>Audio</h3>
+						<button
+							id="mute-toggle-desktop"
+							class="mute-toggle-btn"
+							aria-label="Toggle Mute"
+							data-muted="true"
+						>
+							<span class="mute-icon">🔇</span>
+							<span class="mute-label">Unmute All</span>
+						</button>
+						<div class="audio-controls">
+							<div class="vertical-slider-group">
+								<label>Music</label>
+								<button
+									id="music-max"
+									class="volume-btn-small"
+									aria-label="Max Music"
+								>
+									🔊
+								</button>
+								<input
+									type="range"
+									id="music-volume"
+									min="0"
+									max="100"
+									value="100"
+									step="1"
+									class="vertical-slider"
+									orient="vertical"
+								/>
+								<button
+									id="music-min"
+									class="volume-btn-small"
+									aria-label="Mute Music"
+								>
+									🔇
+								</button>
+							</div>
+							<div class="vertical-slider-group">
+								<label>Sound FX</label>
+								<button id="sfx-max" class="volume-btn-small" aria-label="Max SFX">
+									🔊
+								</button>
+								<input
+									type="range"
+									id="sfx-volume"
+									min="0"
+									max="100"
+									value="100"
+									step="1"
+									class="vertical-slider"
+									orient="vertical"
+								/>
+								<button id="sfx-min" class="volume-btn-small" aria-label="Mute SFX">
+									🔇
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="settings-modal" data-key-rebind-menu class="settings-modal" style="display: none">
+			<div class="settings-content">
+				<h2>Control Settings</h2>
+				<div class="key-bind-list">
+					<div class="key-bind-row">
+						<span>Move Left:</span>
+						<button data-rebind-left data-action="moveLeft">
+							<span data-current-left-bind>ArrowLeft</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Move Right:</span>
+						<button data-action="moveRight">
+							<span data-current-right-bind>ArrowRight</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Rotate Clockwise:</span>
+						<button data-action="rotateClockwise">
+							<span data-current-rotate-bind>ArrowUp</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Rotate Counter-clockwise:</span>
+						<button data-action="rotateCounterClockwise">
+							<span data-current-counter-rotate-bind>Z</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Soft Drop:</span>
+						<button data-action="softDrop">
+							<span data-current-soft-drop-bind>ArrowDown</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Hold Piece:</span>
+						<button data-action="hold">
+							<span data-current-hold-bind>H</span>
+						</button>
+					</div>
+					<div class="key-bind-row">
+						<span>Hard Drop:</span>
+						<button data-action="hardDrop">
+							<span data-current-hard-drop-bind>Space</span>
+						</button>
+					</div>
+				</div>
+				<button data-settings-close>Close</button>
+			</div>
+		</div>
+
+		<div id="rebind-prompt" data-rebind-prompt class="rebind-prompt" style="display: none">
+			Press a key to bind...
+		</div>
+
+		<div id="mobile-audio-modal" class="mobile-audio-modal" style="display: none">
+			<div class="mobile-audio-content">
+				<h2>Audio Settings</h2>
+				<div class="mobile-audio-controls">
+					<div class="horizontal-slider-group">
+						<label>Music Volume</label>
+						<div class="slider-row">
+							<button
+								id="mobile-music-min"
+								class="volume-btn-mobile"
+								aria-label="Mute Music"
+							>
+								🔇
+							</button>
+							<input
+								type="range"
+								id="mobile-music-volume"
+								min="0"
+								max="100"
+								value="100"
+								step="1"
+								class="horizontal-slider"
+							/>
+							<button
+								id="mobile-music-max"
+								class="volume-btn-mobile"
+								aria-label="Max Music"
+							>
+								🔊
+							</button>
+						</div>
+					</div>
+					<div class="horizontal-slider-group">
+						<label>Sound FX Volume</label>
+						<div class="slider-row">
+							<button
+								id="mobile-sfx-min"
+								class="volume-btn-mobile"
+								aria-label="Mute SFX"
+							>
+								🔇
+							</button>
+							<input
+								type="range"
+								id="mobile-sfx-volume"
+								min="0"
+								max="100"
+								value="100"
+								step="1"
+								class="horizontal-slider"
+							/>
+							<button
+								id="mobile-sfx-max"
+								class="volume-btn-mobile"
+								aria-label="Max SFX"
+							>
+								🔊
+							</button>
+						</div>
+					</div>
+				</div>
+				<button id="mobile-audio-close" class="mobile-audio-close-btn">Close</button>
+			</div>
+		</div>
+
+		<div
+			id="debug-indicator"
+			style="
+				display: none;
+				position: fixed;
+				top: 10px;
+				right: 10px;
+				background: #ff6b6b;
+				color: white;
+				padding: 8px 16px;
+				border-radius: 4px;
+				font-weight: bold;
+				z-index: 10000;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+			"
+		>
+			🔍 DEBUG MODE
+		</div>
+
+	</body>
+</html>
