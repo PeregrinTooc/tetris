@@ -33,50 +33,7 @@ const DEBUG_MODE = (import.meta as any).env?.VITE_DEBUG === "true";
 
 main();
 
-function registerServiceWorker() {
-	if ("serviceWorker" in navigator && import.meta.env.PROD) {
-		window.addEventListener("load", () => {
-			navigator.serviceWorker
-				.register("/tetris/sw.js")
-				.then((registration) => {
-					console.log("[SW Client] Service Worker registered:", registration);
-
-					registration.addEventListener("updatefound", () => {
-						const newWorker = registration.installing;
-						console.log("[SW Client] Update found! New worker installing...");
-						if (newWorker) {
-							newWorker.addEventListener("statechange", () => {
-								console.log("[SW Client] New worker state:", newWorker.state);
-								if (
-									newWorker.state === "installed" &&
-									navigator.serviceWorker.controller
-								) {
-									console.log(
-										"[SW Client] New version available! Prompting user to reload..."
-									);
-									if (confirm("A new version is available! Reload to update?")) {
-										console.log("[SW Client] User confirmed reload");
-										newWorker.postMessage({ type: "SKIP_WAITING" });
-										window.location.reload();
-									} else {
-										console.log(
-											"[SW Client] User declined reload. New version will activate on next visit."
-										);
-									}
-								}
-							});
-						}
-					});
-				})
-				.catch((error) => {
-					console.error("[SW Client] Service Worker registration failed:", error);
-				});
-		});
-	}
-}
-
 function main() {
-	registerServiceWorker();
 	keyBindingManager = new KeyBindingManager();
 
 	const audioManager = new AudioManager();
