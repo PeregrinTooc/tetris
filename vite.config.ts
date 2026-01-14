@@ -19,7 +19,17 @@ export default defineConfig({
 	},
 	plugins: [
 		viteStaticCopy({
-			targets: [{ src: "resources", dest: "" }],
+			targets: [
+				{ src: "resources", dest: "" },
+				{
+					src: "public/sw.js",
+					dest: "",
+					transform: (content) => {
+						const buildVersion = process.env.VITE_BUILD_VERSION || "dev";
+						return content.toString().replace(/BUILD_VERSION/g, buildVersion);
+					},
+				},
+			],
 		}),
 	],
 });
