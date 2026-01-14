@@ -18,12 +18,14 @@ const ASSETS_TO_CACHE = [
 ];
 
 self.addEventListener("install", (event) => {
+	console.log(`[SW] Installing service worker for ${CACHE_VERSION}`);
 	event.waitUntil(
 		caches.open(CACHE_NAME).then((cache) => {
+			console.log(`[SW] Caching assets for ${CACHE_NAME}`);
 			return cache.addAll(ASSETS_TO_CACHE);
 		})
 	);
-	self.skipWaiting();
+	// Don't call skipWaiting() here - let the client control it
 });
 
 self.addEventListener("activate", (event) => {

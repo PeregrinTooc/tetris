@@ -39,20 +39,29 @@ function registerServiceWorker() {
 			navigator.serviceWorker
 				.register("/tetris/sw.js")
 				.then((registration) => {
-					console.log("Service Worker registered:", registration);
+					console.log("[SW Client] Service Worker registered:", registration);
 
 					registration.addEventListener("updatefound", () => {
 						const newWorker = registration.installing;
+						console.log("[SW Client] Update found! New worker installing...");
 						if (newWorker) {
 							newWorker.addEventListener("statechange", () => {
+								console.log("[SW Client] New worker state:", newWorker.state);
 								if (
 									newWorker.state === "installed" &&
 									navigator.serviceWorker.controller
 								) {
-									console.log("New version available! Reload to update.");
+									console.log(
+										"[SW Client] New version available! Prompting user to reload..."
+									);
 									if (confirm("A new version is available! Reload to update?")) {
+										console.log("[SW Client] User confirmed reload");
 										newWorker.postMessage({ type: "SKIP_WAITING" });
 										window.location.reload();
+									} else {
+										console.log(
+											"[SW Client] User declined reload. New version will activate on next visit."
+										);
 									}
 								}
 							});
@@ -60,7 +69,7 @@ function registerServiceWorker() {
 					});
 				})
 				.catch((error) => {
-					console.log("Service Worker registration failed:", error);
+					console.error("[SW Client] Service Worker registration failed:", error);
 				});
 		});
 	}
